@@ -5,11 +5,9 @@
 #ifndef TBLANG_VISITOR_H
 #define TBLANG_VISITOR_H
 
-namespace tb_lang
-{
-    class Visitor
-    {
-    };
+namespace tb_lang {
+class Visitor {
+};
 }
 
 #endif //TBLANG_VISITOR_H

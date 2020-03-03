@@ -13,25 +13,21 @@
 
 #include <token.h>
 
-
 #include "tb_dfa.h"
 
-namespace tb_lang::lex
-{
+namespace tb_lang::lex {
 
-    class Lexer
-    {
-    public:
+class Lexer {
+ public:
 
-        virtual ~Lexer() = default;
+  virtual ~Lexer() = default;
 
-        std::vector<Token> lex(const std::string &program);
+  std::vector<Token> lex(const std::string &program);
 
-    protected:
-        TB_DFA dfa_;
-    };
+ protected:
+  TB_DFA dfa_;
+};
 }
-
 
 #endif //TBLANG_LEXER_H
 

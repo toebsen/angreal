@@ -8,37 +8,35 @@
 #include "dfa.h"
 #include "state.h"
 
-namespace tb_lang::lex
-{
+namespace tb_lang::lex {
 
-    class TB_DFA : public DFA<char, State>
-    {
-    public:
-        TB_DFA();
+class TB_DFA : public DFA<char, State> {
+ public:
+  TB_DFA();
 
-        ~TB_DFA() = default;
+  ~TB_DFA() = default;
 
-    protected:
-        void initDFA();
+ protected:
+  void initDFA();
 
-        void addStates();
+  void addStates();
 
-        void setupInitialState();
+  void setupInitialState();
 
-        void setupTransitions();
+  void setupTransitions();
 
-        void setupDigitTransition();
+  void setupDigitTransition();
 
-        void setupCommentTransitions();
+  void setupCommentTransitions();
 
-        void setupIdentifierTransitions();
+  void setupIdentifierTransitions();
 
-        void setupStringTransitions();
+  void setupStringTransitions();
 
-        void setupRelationalTransitions();
+  void setupRelationalTransitions();
 
-        void setupWhitesSpaceTransitions();
-    };
+  void setupWhitesSpaceTransitions();
+};
 }
 
 #endif //TBLANG_TB_DFA_H

@@ -1,7 +1,14 @@
 
 # Readme
 
-## PetLang
+## Setup
+```console
+$ pacman -Syuu
+$ pacman -S mingw-w64-x86_64-toolchain 
+$ pacman -Sy mingw-w64-i686-boost mingw-w64-x86_64-boost
+```
+
+## TBLang
 Small interpreted pet language named *TBLang*!
 
 Inspired by https://drmenguin.com/minilang-interpreter/

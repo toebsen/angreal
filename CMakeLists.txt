@@ -17,16 +17,16 @@ FetchContent_Declare(
 )
 
 if (NOT googletest_POPULATED)
-  FetchContent_Populate(googletest)
-endif()
+    FetchContent_Populate(googletest)
+endif ()
 
 if (MSVC)
-  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 endif ()
 
 if (CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "--coverage")
-endif()
+    set(CMAKE_CXX_FLAGS "--coverage")
+endif ()
 
 # Bring the populated content into the build
 add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
