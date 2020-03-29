@@ -10,13 +10,14 @@
 
 namespace tb_lang::lex {
 
-class TB_DFA : public DFA<char, State> {
- public:
+class TB_DFA : public DFA<char, State>
+{
+public:
   TB_DFA();
 
   ~TB_DFA() = default;
 
- protected:
+protected:
   void initDFA();
 
   void addStates();
@@ -37,6 +38,6 @@ class TB_DFA : public DFA<char, State> {
 
   void setupWhitesSpaceTransitions();
 };
-}
+}// namespace tb_lang::lex
 
-#endif //TBLANG_TB_DFA_H
+#endif//TBLANG_TB_DFA_H

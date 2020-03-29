@@ -17,17 +17,16 @@
 
 namespace tb_lang::lex {
 
-class Lexer {
- public:
-
+class Lexer
+{
+public:
   virtual ~Lexer() = default;
 
   std::vector<Token> lex(const std::string &program);
 
- protected:
+protected:
   TB_DFA dfa_;
 };
-}
+}// namespace tb_lang::lex
 
-#endif //TBLANG_LEXER_H
-
+#endif//TBLANG_LEXER_H

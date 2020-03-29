@@ -15,35 +15,36 @@
 
 namespace tb_lang::parser::AST {
 
-class Program : public Node {
- public:
-  explicit Program(nodes_t nodes) : statements(nodes) {};
+class Program : public Node
+{
+public:
+  explicit Program(nodes_t nodes) : statements(nodes){};
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
-  virtual ~Program() {};
+  virtual ~Program(){};
   nodes_t statements;
 };
 
-class Block : public Statement {
- public:
-  explicit Block(statements_t statements) : statements(statements) {};
+class Block : public Statement
+{
+public:
+  explicit Block(statements_t statements) : statements(statements){};
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
   virtual ~Block() = default;
 
   statements_t statements;
 };
 
-class Declaration : public Statement {
- public:
+class Declaration : public Statement
+{
+public:
+  Declaration(const TypeSystem::Type &type, const std::string &identifier, expression_t expression)
+    : type(type), identifier(identifier), expression(expression){};
 
-  Declaration(const TypeSystem::Type &type, const std::string &identifier,
-              expression_t expression)
-      : type(type), identifier(identifier), expression(expression) {};
-
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
   virtual ~Declaration() = default;
 
@@ -52,12 +53,13 @@ class Declaration : public Statement {
   const std::string identifier;
 };
 
-class Assignment : public Statement {
- public:
+class Assignment : public Statement
+{
+public:
   Assignment(const std::string &identifier, expression_t expression)
-      : identifier(identifier), expression(expression) {};
+    : identifier(identifier), expression(expression){};
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
   virtual ~Assignment() = default;
 
@@ -65,14 +67,16 @@ class Assignment : public Statement {
   const std::string identifier;
 };
 
-class IdentifierLiteral : public Expression {
- public:
+class IdentifierLiteral : public Expression
+{
+public:
   IdentifierLiteral(const std::string &name)
-      : name(name) {};
+    : name(name){};
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
-  bool operator==(const IdentifierLiteral &rhs) const {
+  bool operator==(const IdentifierLiteral &rhs) const
+  {
     return name == rhs.name;
   }
 
@@ -80,61 +84,67 @@ class IdentifierLiteral : public Expression {
 };
 
 template<typename ValueType>
-class ValueLiteral : public Expression {
- public:
+class ValueLiteral : public Expression
+{
+public:
   explicit ValueLiteral(const ValueType &value)
-      : value(value) {};
+    : value(value){};
 
   typedef ValueType value_t;
 
   static TypeSystem::Type type() { return TypeSystem::Type::Unknown; };
 
-  bool operator==(const ValueLiteral &rhs) const {
-    return type() == rhs.type() &&
-        value == rhs.value;
+  bool operator==(const ValueLiteral &rhs) const
+  {
+    return type() == rhs.type() && value == rhs.value;
   }
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
   const ValueType value;
 };
 
-class BoolLiteral : public ValueLiteral<bool> {
- public:
+class BoolLiteral : public ValueLiteral<bool>
+{
+public:
   BoolLiteral(const std::string &value);
 
-  BoolLiteral(bool value) : ValueLiteral(value) {};
+  BoolLiteral(bool value) : ValueLiteral(value){};
 
   static TypeSystem::Type type() { return TypeSystem::Type::Bool; };
 };
 
-class IntLiteral : public ValueLiteral<int> {
- public:
+class IntLiteral : public ValueLiteral<int>
+{
+public:
   IntLiteral(const std::string &value);
 
-  IntLiteral(int value) : ValueLiteral(value) {};
+  IntLiteral(int value) : ValueLiteral(value){};
 
   static TypeSystem::Type type() { return TypeSystem::Type::Int; };
 };
 
-class FloatLiteral : public ValueLiteral<float> {
- public:
+class FloatLiteral : public ValueLiteral<float>
+{
+public:
   FloatLiteral(const std::string &value);
 
-  FloatLiteral(float value) : ValueLiteral(value) {};
+  FloatLiteral(float value) : ValueLiteral(value){};
 
   static TypeSystem::Type type() { return TypeSystem::Type::Float; };
 };
 
-class StringLiteral : public ValueLiteral<std::string> {
- public:
+class StringLiteral : public ValueLiteral<std::string>
+{
+public:
   StringLiteral(const std::string &value);
 
   static TypeSystem::Type type() { return TypeSystem::Type::String; };
 };
 
-class UnaryOperation : public Expression {
- public:
+class UnaryOperation : public Expression
+{
+public:
   enum class OpType {
     Unknown,
     Add,
@@ -142,7 +152,8 @@ class UnaryOperation : public Expression {
     Not,
   };
 
-  static OpType inferType(const std::string &value) {
+  static OpType inferType(const std::string &value)
+  {
     if (value == "+") return OpType::Add;
     if (value == "-") return OpType::Sub;
     if (value == "!") return OpType::Not;
@@ -151,19 +162,20 @@ class UnaryOperation : public Expression {
   }
 
   UnaryOperation(const std::string &opType, expression_t expression)
-      : UnaryOperation(inferType(opType), expression) {};
+    : UnaryOperation(inferType(opType), expression){};
 
   UnaryOperation(OpType opType, expression_t expression)
-      : type(opType), expression(expression) {};
+    : type(opType), expression(expression){};
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
   OpType type;
   expression_t expression;
 };
 
-class BinaryOperation : public Expression {
- public:
+class BinaryOperation : public Expression
+{
+public:
   enum class OpType {
     Unknown,
     Add,
@@ -176,7 +188,8 @@ class BinaryOperation : public Expression {
     NotEquals,
   };
 
-  static OpType inferType(const std::string &value) {
+  static OpType inferType(const std::string &value)
+  {
     if (value == "+") return OpType::Add;
     if (value == "-") return OpType::Sub;
     if (value == "*") return OpType::Mul;
@@ -190,38 +203,39 @@ class BinaryOperation : public Expression {
   }
 
   BinaryOperation(const std::string &opType, expression_t lhs, expression_t rhs)
-      : BinaryOperation(inferType(opType), lhs, rhs) {};
+    : BinaryOperation(inferType(opType), lhs, rhs){};
 
   BinaryOperation(OpType opType, expression_t lhs, expression_t rhs)
-      : type(opType), lhs(lhs), rhs(rhs) {};
+    : type(opType), lhs(lhs), rhs(rhs){};
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
   OpType type;
   expression_t lhs;
   expression_t rhs;
 };
 
-class FunctionCall : public Expression {
- public:
-
+class FunctionCall : public Expression
+{
+public:
   FunctionCall(const std::string &identifier, expressions_t args)
-      : identifier(identifier), args(args) {};
+    : identifier(identifier), args(args){};
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
   std::string identifier;
   expressions_t args;
 };
 
-class FormalParameter : public Expression {
- public:
+class FormalParameter : public Expression
+{
+public:
   FormalParameter(TypeSystem::Type type, const std::string &identifier)
-      : type(type), identifier(identifier) {}
+    : type(type), identifier(identifier) {}
 
-  bool operator==(const FormalParameter &other) const {
-    return type == other.type &&
-        identifier == other.identifier;
+  bool operator==(const FormalParameter &other) const
+  {
+    return type == other.type && identifier == other.identifier;
   }
 
   TypeSystem::Type type;
@@ -229,22 +243,22 @@ class FormalParameter : public Expression {
 };
 
 typedef std::vector<std::shared_ptr<FormalParameter>> formal_parameters;
-class FunctionDeclaration : public Statement {
- public:
-
+class FunctionDeclaration : public Statement
+{
+public:
   FunctionDeclaration(const TypeSystem::Type &type,
-                      const std::string &identifier,
-                      const formal_parameters &parameters,
-                      statements_t statements)
-      : type(type), identifier(identifier), parameters(parameters), statements(statements) {};
+    const std::string &identifier,
+    const formal_parameters &parameters,
+    statements_t statements)
+    : type(type), identifier(identifier), parameters(parameters), statements(statements){};
 
-  virtual void accept(Visitor *visitor) {};
+  virtual void accept(Visitor *visitor){};
 
   std::string identifier;
   const TypeSystem::Type type;
   formal_parameters parameters;
   statements_t statements;
 };
-}
+}// namespace tb_lang::parser::AST
 
-#endif //TBLANG_AST_H
+#endif//TBLANG_AST_H

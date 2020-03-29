@@ -9,23 +9,26 @@
 
 namespace tb_lang::parser::AST {
 
-class Node {
- public:
+class Node
+{
+public:
   virtual void accept(Visitor *) = 0;
 
   virtual ~Node() = default;
 };
 
-class Statement : public Node {
- public:
-  virtual void accept(Visitor *visitor) {};
+class Statement : public Node
+{
+public:
+  virtual void accept(Visitor *visitor){};
 
   virtual ~Statement() = default;
 };
 
-class Expression : public Node {
- public:
-  virtual void accept(Visitor *visitor) {};
+class Expression : public Node
+{
+public:
+  virtual void accept(Visitor *visitor){};
 
   virtual ~Expression() = default;
 };
@@ -39,5 +42,5 @@ typedef std::vector<expression_t> expressions_t;
 typedef std::shared_ptr<Statement> statement_t;
 typedef std::vector<statement_t> statements_t;
 
-}
-#endif //TBLANG_AST_INTERFACES_H
+}// namespace tb_lang::parser::AST
+#endif//TBLANG_AST_INTERFACES_H

@@ -14,8 +14,9 @@
 
 namespace tb_lang::parser {
 
-class TypeSystem {
- public:
+class TypeSystem
+{
+public:
   enum class Type {
     Bool,
     Int,
@@ -31,9 +32,8 @@ class TypeSystem {
   static TypeSystem::Type mapTokenToDeclarationType(Token::Type token);
 
   static std::shared_ptr<AST::Expression>
-  mapTypeToLiteral(TypeSystem::Type expected, const std::string &value);
-
+    mapTypeToLiteral(TypeSystem::Type expected, const std::string &value);
 };
-}
+}// namespace tb_lang::parser
 
-#endif //TBLANG_TYPE_SYSTEM_H
+#endif//TBLANG_TYPE_SYSTEM_H

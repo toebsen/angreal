@@ -12,16 +12,16 @@
 
 namespace tb_lang::parser {
 
-class Parser {
- public:
+class Parser
+{
+public:
   virtual ~Parser() = default;
 
   std::shared_ptr<AST::Program> parseProgram(const std::vector<Token> &tokens);
 
   std::shared_ptr<AST::Expression> parseExpression(const std::vector<Token> &tokens);
 
- protected:
-
+protected:
   std::shared_ptr<AST::FunctionDeclaration> parseFunctionDeclaration();
 
   AST::formal_parameters parseFormalParameters();
@@ -60,12 +60,11 @@ class Parser {
 
   std::vector<Token>::const_iterator current_token;
   std::vector<Token>::const_iterator next_token;
-  int current_line_number{0};
+  int current_line_number{ 0 };
 
   AST::expressions_t parseActualParams();
-
 };
 
-}
+}// namespace tb_lang::parser
 
-#endif //TBLANG_PARSER_H
+#endif//TBLANG_PARSER_H

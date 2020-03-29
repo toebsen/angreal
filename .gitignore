@@ -31,3 +31,4 @@
 *.out
 *.app
 /cmake-build-debug/_deps/googletest-src/googlemock/
+/cmake-build-debug/_deps/googletest-src/googlemock/

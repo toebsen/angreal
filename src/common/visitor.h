@@ -6,8 +6,9 @@
 #define TBLANG_VISITOR_H
 
 namespace tb_lang {
-class Visitor {
+class Visitor
+{
 };
-}
+}// namespace tb_lang
 
-#endif //TBLANG_VISITOR_H
+#endif//TBLANG_VISITOR_H
