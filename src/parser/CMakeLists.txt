@@ -13,4 +13,4 @@ set(PARSER_HEADERS_DIR
 
 add_library(tb_parser STATIC ${Parser_SOURCE})
 
-target_include_directories(tb_parser PRIVATE ${LEX_HEADERS_DIR} ${PARSER_HEADERS_DIR} ${TB_LANG_COMMON_INCLUDES})
+target_include_directories(tb_parser PRIVATE ${LEX_HEADERS_DIR} ${PARSER_HEADERS_DIR})

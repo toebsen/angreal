@@ -4,3 +4,4 @@ include_directories(${TB_LANG_COMMON_INCLUDES})
 
 add_subdirectory(lexer)
 add_subdirectory(parser)
+add_subdirectory(interpreter)

@@ -5,7 +5,11 @@
 #ifndef TBLANG_AST_INTERFACES_H
 #define TBLANG_AST_INTERFACES_H
 
+#include <vector>
+#include <memory>
+
 #include <visitor.h>
+
 
 namespace tb_lang::parser::AST {
 
@@ -20,7 +24,7 @@ public:
 class Statement : public Node
 {
 public:
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) = 0;
 
   virtual ~Statement() = default;
 };
@@ -28,7 +32,7 @@ public:
 class Expression : public Node
 {
 public:
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) = 0;
 
   virtual ~Expression() = default;
 };

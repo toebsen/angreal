@@ -20,7 +20,7 @@ class Program : public Node
 public:
   explicit Program(nodes_t nodes) : statements(nodes){};
 
-  virtual void accept(Visitor *visitor){};
+  void accept(Visitor *visitor) override;
 
   virtual ~Program(){};
   nodes_t statements;
@@ -31,7 +31,7 @@ class Block : public Statement
 public:
   explicit Block(statements_t statements) : statements(statements){};
 
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) override;
 
   virtual ~Block() = default;
 
@@ -44,7 +44,7 @@ public:
   Declaration(const TypeSystem::Type &type, const std::string &identifier, expression_t expression)
     : type(type), identifier(identifier), expression(expression){};
 
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) override;
 
   virtual ~Declaration() = default;
 
@@ -59,7 +59,7 @@ public:
   Assignment(const std::string &identifier, expression_t expression)
     : identifier(identifier), expression(expression){};
 
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) override;
 
   virtual ~Assignment() = default;
 
@@ -73,7 +73,7 @@ public:
   IdentifierLiteral(const std::string &name)
     : name(name){};
 
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) override;
 
   bool operator==(const IdentifierLiteral &rhs) const
   {
@@ -99,10 +99,15 @@ public:
     return type() == rhs.type() && value == rhs.value;
   }
 
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) override;
 
   const ValueType value;
 };
+template<typename ValueType>
+void ValueLiteral<ValueType>::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
 
 class BoolLiteral : public ValueLiteral<bool>
 {
@@ -167,7 +172,7 @@ public:
   UnaryOperation(OpType opType, expression_t expression)
     : type(opType), expression(expression){};
 
-  virtual void accept(Visitor *visitor){};
+  void accept(Visitor *visitor) override;
 
   OpType type;
   expression_t expression;
@@ -208,7 +213,7 @@ public:
   BinaryOperation(OpType opType, expression_t lhs, expression_t rhs)
     : type(opType), lhs(lhs), rhs(rhs){};
 
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) override;
 
   OpType type;
   expression_t lhs;
@@ -221,7 +226,7 @@ public:
   FunctionCall(const std::string &identifier, expressions_t args)
     : identifier(identifier), args(args){};
 
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) override;
 
   std::string identifier;
   expressions_t args;
@@ -238,6 +243,8 @@ public:
     return type == other.type && identifier == other.identifier;
   }
 
+  virtual void accept(Visitor *visitor) override;
+
   TypeSystem::Type type;
   std::string identifier;
 };
@@ -252,7 +259,7 @@ public:
     statements_t statements)
     : type(type), identifier(identifier), parameters(parameters), statements(statements){};
 
-  virtual void accept(Visitor *visitor){};
+  virtual void accept(Visitor *visitor) override;
 
   std::string identifier;
   const TypeSystem::Type type;

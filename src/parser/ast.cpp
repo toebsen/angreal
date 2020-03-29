@@ -18,4 +18,52 @@ FloatLiteral::FloatLiteral(const std::string &value)
 StringLiteral::StringLiteral(const std::string &value)
   : ValueLiteral<std::string>(value){};
 
+void Program::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+
+void Block::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+
+void Declaration::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+
+void Assignment::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+
+void IdentifierLiteral::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+
+void UnaryOperation::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+
+void BinaryOperation::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+
+void FunctionCall::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+
+void FunctionDeclaration::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
+void FormalParameter::accept(Visitor *visitor)
+{
+  visitor->visit(this);
+}
 }// namespace tb_lang::parser::AST
