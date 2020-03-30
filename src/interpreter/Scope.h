@@ -5,25 +5,26 @@
 #ifndef TBLANG_SRC_VIRTUAL_MACHINE_SCOPE_H_
 #define TBLANG_SRC_VIRTUAL_MACHINE_SCOPE_H_
 
-#include <string>
 #include <stack>
-
+#include <string>
 #include <unordered_map>
+
+#include <any>
+
 namespace tb_lang::interpreter {
 
-class Scope
-{
-public:
-  std::string value(const std::string& name);
-  void defineValue(const std::string& name, const std::string& value);
+class Scope {
+   public:
+    const std::any& Value(const std::string &name);
+    void DefineValue(const std::string &name, const std::any &value);
 
-  std::stack<std::string>& Stack();
+    std::stack<std::any> &Stack();
 
-protected:
-  std::unordered_map<std::string, std::string> lut_;
-  std::stack<std::string> stack_;
+   protected:
+    std::unordered_map<std::string, std::any> lut_;
+    std::stack<std::any> stack_;
 };
 
-}
+}  // namespace tb_lang::interpreter
 
-#endif//TBLANG_SRC_VIRTUAL_MACHINE_SCOPE_H_
+#endif  // TBLANG_SRC_VIRTUAL_MACHINE_SCOPE_H_

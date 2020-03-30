@@ -46,7 +46,7 @@
 #if defined(_MSC_VER)
 #  pragma warning(push)
 #  pragma warning(disable : 26495) // Variable 'magic_enum::detail::static_string<N>::chars' is uninitialized.
-#  pragma warning(disable : 26451) // Arithmetic overflow: 'indexes[static_cast<U>(value) - min_v<E>]' using operator '-' on a 4 byte value and then casting the result to a 8 byte value.
+#  pragma warning(disable : 26451) // Arithmetic overflow: 'indexes[static_cast<U>(value) - min_v<E>]' using operator '-' on a 4 byte value and then casting the result to a 8 byte Value.
 #endif
 
 // Checks magic_enum compiler compatibility.
@@ -55,13 +55,13 @@
 #  define MAGIC_ENUM_SUPPORTED 1
 #endif
 
-// Enum value must be greater or Equals than MAGIC_ENUM_RANGE_MIN. By default MAGIC_ENUM_RANGE_MIN = -128.
+// Enum Value must be greater or Equals than MAGIC_ENUM_RANGE_MIN. By default MAGIC_ENUM_RANGE_MIN = -128.
 // If need another min range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MIN.
 #if !defined(MAGIC_ENUM_RANGE_MIN)
 #  define MAGIC_ENUM_RANGE_MIN -128
 #endif
 
-// Enum value must be less or Equals than MAGIC_ENUM_RANGE_MAX. By default MAGIC_ENUM_RANGE_MAX = 128.
+// Enum Value must be less or Equals than MAGIC_ENUM_RANGE_MAX. By default MAGIC_ENUM_RANGE_MAX = 128.
 // If need another max range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MAX.
 #if !defined(MAGIC_ENUM_RANGE_MAX)
 #  define MAGIC_ENUM_RANGE_MAX 128
@@ -69,7 +69,7 @@
 
 namespace magic_enum {
 
-// Enum value must be in range [MAGIC_ENUM_RANGE_MIN, MAGIC_ENUM_RANGE_MAX]. By default MAGIC_ENUM_RANGE_MIN = -128, MAGIC_ENUM_RANGE_MAX = 128.
+// Enum Value must be in range [MAGIC_ENUM_RANGE_MIN, MAGIC_ENUM_RANGE_MAX]. By default MAGIC_ENUM_RANGE_MIN = -128, MAGIC_ENUM_RANGE_MAX = 128.
 // If need another range for all enum types by default, redefine the macro MAGIC_ENUM_RANGE_MIN and MAGIC_ENUM_RANGE_MAX.
 // If need another range for specific enum type, add specialization enum_range for necessary enum type.
 template<typename E>
@@ -186,7 +186,7 @@ constexpr auto n() noexcept {
 #  endif
   return static_string<name.size()>{name};
 #else
-  static_assert(supported<E>::value, "magic_enum: Unsupported compiler (https://github.com/Neargye/magic_enum#compiler-compatibility).");
+  static_assert(supported<E>::Value, "magic_enum: Unsupported compiler (https://github.com/Neargye/magic_enum#compiler-compatibility).");
   return std::string_view{}; // Unsupported compiler.
 #endif
 }
@@ -205,7 +205,7 @@ constexpr auto n() noexcept {
 #  endif
   return static_string<name.size()>{name};
 #else
-  static_assert(supported<E>::value, "magic_enum: Unsupported compiler (https://github.com/Neargye/magic_enum#compiler-compatibility).");
+  static_assert(supported<E>::Value, "magic_enum: Unsupported compiler (https://github.com/Neargye/magic_enum#compiler-compatibility).");
   return std::string_view{}; // Unsupported compiler.
 #endif
 }
@@ -432,7 +432,7 @@ template<typename T>
 using Enum = detail::enum_concept<T>;
 
 // Checks whether T is an Unscoped enumeration type.
-// Provides the member constant value which is equal to true, if T is an [Unscoped enumeration](https://en.cppreference.com/w/cpp/language/enum#Unscoped_enumeration) type. Otherwise, value is equal to false.
+// Provides the member constant value which is equal to true, if T is an [Unscoped enumeration](https://en.cppreference.com/w/cpp/language/enum#Unscoped_enumeration) type. Otherwise, Value is equal to false.
 template<typename T>
 struct is_unscoped_enum : detail::is_unscoped_enum<T> {
 };
@@ -441,7 +441,7 @@ template<typename T>
 inline constexpr bool is_unscoped_enum_v = is_unscoped_enum<T>::value;
 
 // Checks whether T is an Scoped enumeration type.
-// Provides the member constant value which is equal to true, if T is an [Scoped enumeration](https://en.cppreference.com/w/cpp/language/enum#Scoped_enumerations) type. Otherwise, value is equal to false.
+// Provides the member constant Value which is equal to true, if T is an [Scoped enumeration](https://en.cppreference.com/w/cpp/language/enum#Scoped_enumerations) type. Otherwise, value is equal to false.
 template<typename T>
 struct is_scoped_enum : detail::is_scoped_enum<T> {
 };
@@ -462,8 +462,8 @@ using underlying_type_t = typename underlying_type<T>::type;
 template<typename E>
 using enum_traits = detail::enum_traits<std::decay_t<E>>;
 
-// Obtains enum value from enum string name.
-// Returns std::optional with enum value.
+// Obtains enum Value from enum string name.
+// Returns std::optional with enum Value.
 template<typename E>
 [[nodiscard]] constexpr auto
 enum_cast(std::string_view value) noexcept -> detail::enable_if_enum_t<E, std::optional<std::decay_t<E>>> {
@@ -483,11 +483,11 @@ enum_cast(std::string_view value) noexcept -> detail::enable_if_enum_t<E, std::o
     }
   }
 
-  return std::nullopt; // Invalid value or out of range.
+  return std::nullopt; // Invalid Value or out of range.
 }
 
-// Obtains enum value from integer value.
-// Returns std::optional with enum value.
+// Obtains enum value from integer Value.
+// Returns std::optional with enum Value.
 template<typename E>
 [[nodiscard]] constexpr auto
 enum_cast(underlying_type_t<E> value) noexcept -> detail::enable_if_enum_t<E, std::optional<std::decay_t<E>>> {
@@ -497,16 +497,16 @@ enum_cast(underlying_type_t<E> value) noexcept -> detail::enable_if_enum_t<E, st
     return static_cast<D>(value);
   }
 
-  return std::nullopt; // Invalid value or out of range.
+  return std::nullopt; // Invalid Value or out of range.
 }
 
-// Returns integer value from enum value.
+// Returns integer value from enum Value.
 template<typename E>
 [[nodiscard]] constexpr auto enum_integer(E value) noexcept -> detail::enable_if_enum_t<E, underlying_type_t<E>> {
   return static_cast<underlying_type_t<E>>(value);
 }
 
-// Obtains index in enum value sequence from enum value.
+// Obtains index in enum value sequence from enum Value.
 // Returns std::optional with index.
 template<typename E>
 [[nodiscard]] constexpr auto
@@ -518,7 +518,7 @@ enum_index(E value) noexcept -> detail::enable_if_enum_t<E, std::optional<std::s
   return std::nullopt; // Value out of range.
 }
 
-// Returns enum value at specified index.
+// Returns enum Value at specified index.
 // No bounds checking is performed: the behavior is undefined if index >= number of enum values.
 template<typename E>
 [[nodiscard]] constexpr auto
@@ -526,8 +526,8 @@ enum_value(std::size_t index) noexcept -> detail::enable_if_enum_t<E, std::decay
   return enum_traits<E>::value(index);
 }
 
-// Obtains value enum sequence.
-// Returns std::array with enum values, sorted by enum value.
+// Obtains Value enum sequence.
+// Returns std::array with enum values, sorted by enum Value.
 template<typename E>
 [[nodiscard]] constexpr auto
 enum_values() noexcept -> detail::enable_if_enum_t<E, decltype(enum_traits<E>::values) &> {
@@ -545,28 +545,28 @@ template<typename E>
 template<auto V>
 [[nodiscard]] constexpr auto enum_name() noexcept -> detail::enable_if_enum_t<decltype(V), std::string_view> {
   constexpr std::string_view name = detail::name_v<std::decay_t<decltype(V)>, V>;
-  static_assert(name.size() > 0, "Enum value does not have a name.");
+  static_assert(name.size() > 0, "Enum Value does not have a name.");
 
   return name;
 }
 
-// Returns string enum name from enum value.
-// If enum value does not have name or value out of range, returns empty string.
+// Returns string enum name from enum Value.
+// If enum Value does not have name or value out of range, returns empty string.
 template<typename E>
 [[nodiscard]] constexpr auto enum_name(E value) noexcept -> detail::enable_if_enum_t<E, std::string_view> {
   return enum_traits<E>::name(value);
 }
 
 // Obtains string enum name sequence.
-// Returns std::array with string enum names, sorted by enum value.
+// Returns std::array with string enum names, sorted by enum Value.
 template<typename E>
 [[nodiscard]] constexpr auto
 enum_names() noexcept -> detail::enable_if_enum_t<E, decltype(enum_traits<E>::names) &> {
   return enum_traits<E>::names;
 }
 
-// Obtains pair (value enum, string enum name) sequence.
-// Returns std::array with std::pair (value enum, string enum name), sorted by enum value.
+// Obtains pair (Value enum, string enum name) sequence.
+// Returns std::array with std::pair (Value enum, string enum name), sorted by enum value.
 template<typename E>
 [[nodiscard]] constexpr auto
 enum_entries() noexcept -> detail::enable_if_enum_t<E, decltype(enum_traits<E>::entries) &> {

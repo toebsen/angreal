@@ -1,7 +1,7 @@
 
 set(Interpreter_SOURCE
         interpreter.cpp
-        Scope.cpp
+        scope.cpp
         )
 
 

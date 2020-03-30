@@ -3,12 +3,14 @@ project(tblang)
 
 set(CMAKE_CXX_STANDARD 20)
 
-########## Dependencies ##############
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/.cmake)
+########## Dependencies ##############list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/.cmake)
 set(BOOST_REQUESTED_VERSION 1.66)
+# see https://cmake.org/cmake/help/latest/module/FindBoost.html
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+
 
 include(.cmake/gtest.cmake)
-
 ########## Project ##############
 set(TB_LANG_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 

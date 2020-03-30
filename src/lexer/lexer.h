@@ -5,11 +5,11 @@
 #ifndef TBLANG_LEXER_H
 #define TBLANG_LEXER_H
 
-#include <string>
 #include <array>
-#include <vector>
-#include <iostream>
 #include <functional>
+#include <iostream>
+#include <string>
+#include <vector>
 
 #include <token.h>
 
@@ -17,16 +17,15 @@
 
 namespace tb_lang::lex {
 
-class Lexer
-{
-public:
-  virtual ~Lexer() = default;
+class Lexer {
+   public:
+    virtual ~Lexer() = default;
 
-  std::vector<Token> lex(const std::string &program);
+    std::vector<Token> lex(const std::string &program);
 
-protected:
-  TB_DFA dfa_;
+   protected:
+    TB_DFA dfa_;
 };
-}// namespace tb_lang::lex
+}  // namespace tb_lang::lex
 
-#endif//TBLANG_LEXER_H
+#endif  // TBLANG_LEXER_H

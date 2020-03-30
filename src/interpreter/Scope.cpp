@@ -3,16 +3,15 @@
 //
 
 #include "Scope.h"
-std::string tb_lang::interpreter::Scope::value(const std::string& name)
-{
-  return lut_[name];
-}
-void tb_lang::interpreter::Scope::defineValue(const std::string &name, const std::string &value)
-{
-  lut_[name] = value;
+
+void tb_lang::interpreter::Scope::DefineValue(const std::string &name,
+                                              const std::any &value) {
+    lut_[name] = value;
 }
 
-std::stack<std::string> &tb_lang::interpreter::Scope::Stack()
-{
-  return stack_;
+std::stack<std::any> &tb_lang::interpreter::Scope::Stack() { return stack_; }
+
+const std::any &tb_lang::interpreter::Scope::Value(
+    const std::string &name) {
+    return lut_[name];
 }
