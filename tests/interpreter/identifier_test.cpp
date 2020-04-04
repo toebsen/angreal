@@ -24,8 +24,5 @@ TEST_F(DeclarationTest, Identifier) {
 
 TEST_F(DeclarationTest, IdentifierNotFound) {
     AST::IdentifierLiteral literal{"test"};
-    interpreter.visit(&literal);
-
-    auto obj  = scope.Stack().top();
-    ASSERT_FALSE(obj);
+    EXPECT_THROW(interpreter.visit(&literal), std::runtime_error);
 }

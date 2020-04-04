@@ -6,6 +6,7 @@
 #define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_VM_H_
 
 #include <any>
+#include <iostream>
 #include <map>
 #include <memory>
 
@@ -13,6 +14,8 @@
 #include "object.h"
 
 namespace tb_lang::interpreter::virtual_machine {
+
+
 using obj_t = std::shared_ptr<Object>;
 
 class VM {
@@ -28,14 +31,9 @@ class VM {
     VM& operator=(VM&& vm) = delete;
 
     obj_t Get(const std::string& name);
-    obj_t Get(const ObjectID &id);
+    obj_t Get(const ObjectID& id);
 
-    void Declare(const std::string& name, const obj_t& obj);
-    void Declare(const std::string& name, int value);
-    void Declare(const std::string& name, bool value);
-    void Declare(const std::string& name, float value);
-
-    void Declare(const std::string& name, const tb_lang::string_t& value);
+    void Declare(std::string name, const obj_t& obj);
 
    private:
     std::map<ObjectID, obj_t> objects_;

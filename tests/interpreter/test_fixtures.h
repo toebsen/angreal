@@ -60,4 +60,9 @@ class DeclarationTest : public BaseTest {
 
 };
 
+class BinaryOpTest : public DeclarationTest
+{
+
+};
+
 #endif  // TBLANG_TESTS_INTERPRETER_TEST_FIXTURES_H_

@@ -12,6 +12,9 @@ add_definitions(-DBOOST_UUID_FORCE_AUTO_LINK)
 
 include(.cmake/gtest.cmake)
 ########## Project ##############
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+
 set(TB_LANG_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 set(THIRD_PARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party")

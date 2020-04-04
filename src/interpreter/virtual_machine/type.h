@@ -11,16 +11,21 @@ namespace tb_lang::interpreter::virtual_machine {
 
 class Type {
    public:
+    enum class TypeName {
+        Bool,
+        Int,
+        Float,
+        String,
+    };
+
+    Type(TypeName type_name) : type_name_(type_name) {}
+
     virtual ~Type() = default;
 
-    //   public:
-    //    enum class Type
-    //    {
-    //        Bool,
-    //        Int,
-    //        Float,
-    //        String,
-    //    };
+    TypeName GetTypeName() const { return type_name_; };
+
+   private:
+    TypeName type_name_;
 };
 
 using type_t = std::shared_ptr<Type>;
