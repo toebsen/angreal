@@ -8,7 +8,7 @@ set(BOOST_REQUESTED_VERSION 1.66)
 # see https://cmake.org/cmake/help/latest/module/FindBoost.html
 find_package(Boost REQUIRED)
 include_directories(${Boost_INCLUDE_DIR})
-
+add_definitions(-DBOOST_UUID_FORCE_AUTO_LINK)
 
 include(.cmake/gtest.cmake)
 ########## Project ##############

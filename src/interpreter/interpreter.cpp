@@ -16,35 +16,38 @@ void Interpreter::visit(Block *node) {}
 
 void Interpreter::visit(Declaration *node) {
     node->expression->accept(this);
-    scope_.DefineValue(node->identifier, scope_.Stack().top());
+    vm_.Declare(node->identifier, scope_.Stack().top());
     scope_.Stack().pop();
 }
 
 void Interpreter::visit(Assignment *node) {
     node->expression->accept(this);
-    scope_.DefineValue(node->identifier, scope_.Stack().top());
+    vm_.Declare(node->identifier, scope_.Stack().top());
     scope_.Stack().pop();
 }
 
 void Interpreter::visit(IdentifierLiteral *node) {
-    std::any value = scope_.Value(node->name);
-    scope_.Stack().push(value);
+    scope_.Stack().push(vm_.Get(node->name));
 }
 
 void Interpreter::visit(BoolLiteral *node) {
-    scope_.Stack().push(node->value);
+    vm_.Declare("_", node->value);
+    scope_.Stack().push(vm_.Get("_"));
 }
 
 void Interpreter::visit(IntLiteral *node) {
-    scope_.Stack().push(node->value);
+    vm_.Declare("_", node->value);
+    scope_.Stack().push(vm_.Get("_"));
 }
 
 void Interpreter::visit(FloatLiteral *node) {
-    scope_.Stack().push(node->value);
+    vm_.Declare("_", node->value);
+    scope_.Stack().push(vm_.Get("_"));
 }
 
 void Interpreter::visit(StringLiteral *node) {
-    scope_.Stack().push(node->value);
+    vm_.Declare("_", node->value);
+    scope_.Stack().push(vm_.Get("_"));
 }
 
 void Interpreter::visit(UnaryOperation *node) {}

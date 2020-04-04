@@ -1,8 +1,10 @@
 
-set(Interpreter_SOURCE
+add_subdirectory(virtual_machine)
+
+set(INTERPRETER_SOURCE
         interpreter.cpp
         scope.cpp
-        )
+        ../common/common.h)
 
 
 set(INTERPRETER_HEADERS_DIR
@@ -10,6 +12,6 @@ set(INTERPRETER_HEADERS_DIR
         PARENT_SCOPE
         )
 
-add_library(tb_interpreter STATIC ${Interpreter_SOURCE})
+add_library(tb_interpreter STATIC ${INTERPRETER_SOURCE})
 
 target_include_directories(tb_interpreter PRIVATE ${PARSER_HEADERS_DIR})

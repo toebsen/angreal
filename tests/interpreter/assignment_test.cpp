@@ -10,11 +10,15 @@
 TEST_F(DeclarationTest, Assignment) {
     AST::Declaration declaration{DeclareString("test", "Hello")};
     interpreter.visit(&declaration);
-    ASSERT_EQ(std::any_cast<std::string>(scope.Value("test")), "Hello");
+    auto obj = vm.Get("test");
+    auto type = std::dynamic_pointer_cast<StringType>(obj->GetType());
+    ASSERT_EQ(type->Value(), "Hello");
 
     AST::Assignment assignment{"test", std::make_shared<StringLiteral>("Hello World!")};
     interpreter.visit(&assignment);
 
-    ASSERT_EQ(std::any_cast<std::string>(scope.Value("test")), "Hello World!");
+    auto assigned_obj = vm.Get("test");
+    type = std::dynamic_pointer_cast<StringType>(assigned_obj->GetType());
+    ASSERT_EQ(type->Value(), "Hello World!");
 }
 

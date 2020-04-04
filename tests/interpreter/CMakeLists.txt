@@ -7,5 +7,5 @@ SET(TEST_FILES
 
 
 add_executable(${TEST_NAME} main.cpp ${TEST_FILES})
-target_link_libraries(${TEST_NAME} tb_lexer tb_parser tb_interpreter gtest gtest_main)
+target_link_libraries(${TEST_NAME} tb_lexer tb_parser tb_interpreter tb_vm gtest gtest_main)
 target_include_directories(${TEST_NAME} PRIVATE ${TB_LANG_SRC}/lexer ${TB_LANG_SRC}/parser ${TB_LANG_SRC}/interpreter ${TB_LANG_SRC}/common)

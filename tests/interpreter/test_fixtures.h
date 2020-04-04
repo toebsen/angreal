@@ -8,19 +8,23 @@
 #include <gtest/gtest.h>
 
 #include "interpreter/interpreter.h"
+#include "virtual_machine/vm.h"
 #include "parser/ast.h"
 
 using namespace tb_lang;
 using namespace tb_lang::parser;
 using namespace tb_lang::interpreter;
+using namespace tb_lang::interpreter::virtual_machine;
 
 class BaseTest : public ::testing::Test {
    public:
-    BaseTest() : interpreter(scope) {}
+    BaseTest() : interpreter(scope, vm) {}
 
    protected:
     Scope scope;
+    VM vm;
     Interpreter interpreter;
+
 };
 
 class DeclarationTest : public BaseTest {
