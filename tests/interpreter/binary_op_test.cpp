@@ -15,14 +15,14 @@ TEST_F(DeclarationTest, BinaryOp) {
     auto a = DeclareInt("a", 1);
     auto b = DeclareInt("b", 2);
 
-    interpreter.visit(&a);
-    interpreter.visit(&b);
+    context_.interpreter->visit(&a);
+    context_.interpreter->visit(&b);
 
     auto bin_op = BinaryOperation("+", std::make_shared<IdentifierLiteral>("a"),
                                   std::make_shared<IdentifierLiteral>("b"));
-    interpreter.visit(&bin_op);
+    context_.interpreter->visit(&bin_op);
 
-    auto obj = scope.Stack().top();
+    auto obj = context_.global.Stack().top();
     auto type = std::dynamic_pointer_cast<IntType>(obj->GetType());
     int val = type->Value();
 

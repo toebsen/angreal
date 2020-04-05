@@ -19,7 +19,7 @@ class Program : public Node {
    public:
     explicit Program(nodes_t nodes) : statements(nodes){};
 
-    void accept(Visitor* visitor) override;
+    void accept(visitor_t visitor) override;
 
     virtual ~Program(){};
     nodes_t statements;
@@ -29,7 +29,7 @@ class Block : public Statement {
    public:
     explicit Block(statements_t statements) : statements(statements){};
 
-    virtual void accept(Visitor* visitor) override;
+    virtual void accept(visitor_t visitor) override;
 
     virtual ~Block() = default;
 
@@ -42,7 +42,7 @@ class Declaration : public Statement {
                 expression_t expression)
         : type(type), identifier(identifier), expression(expression){};
 
-    virtual void accept(Visitor* visitor) override;
+    virtual void accept(visitor_t visitor) override;
 
     virtual ~Declaration() = default;
 
@@ -56,7 +56,7 @@ class Assignment : public Statement {
     Assignment(const std::string& identifier, expression_t expression)
         : identifier(identifier), expression(expression){};
 
-    virtual void accept(Visitor* visitor) override;
+    virtual void accept(visitor_t visitor) override;
 
     virtual ~Assignment() = default;
 
@@ -68,7 +68,7 @@ class IdentifierLiteral : public Expression {
    public:
     IdentifierLiteral(std::string identifier) : name(std::move(identifier)){};
 
-    virtual void accept(Visitor* visitor) override;
+    virtual void accept(visitor_t visitor) override;
 
     bool operator==(const IdentifierLiteral& rhs) const {
         return name == rhs.name;
@@ -101,7 +101,7 @@ class BoolLiteral : public ValueLiteral<bool> {
 
     static TypeSystem::Type type() { return TypeSystem::Type::Bool; };
 
-    virtual void accept(Visitor* visitor) override { visitor->visit(this); };
+    virtual void accept(visitor_t visitor) override { visitor->visit(this); };
 };
 
 class IntLiteral : public ValueLiteral<int> {
@@ -112,7 +112,7 @@ class IntLiteral : public ValueLiteral<int> {
 
     static TypeSystem::Type type() { return TypeSystem::Type::Int; };
 
-    virtual void accept(Visitor* visitor) override { visitor->visit(this); };
+    virtual void accept(visitor_t visitor) override { visitor->visit(this); };
 };
 
 class FloatLiteral : public ValueLiteral<float> {
@@ -123,7 +123,7 @@ class FloatLiteral : public ValueLiteral<float> {
 
     static TypeSystem::Type type() { return TypeSystem::Type::Float; };
 
-    virtual void accept(Visitor* visitor) override { visitor->visit(this); };
+    virtual void accept(visitor_t visitor) override { visitor->visit(this); };
 };
 
 class StringLiteral : public ValueLiteral<std::string> {
@@ -132,7 +132,7 @@ class StringLiteral : public ValueLiteral<std::string> {
 
     static TypeSystem::Type type() { return TypeSystem::Type::String; };
 
-    virtual void accept(Visitor* visitor) override { visitor->visit(this); };
+    virtual void accept(visitor_t visitor) override { visitor->visit(this); };
 };
 
 class UnaryOperation : public Expression {
@@ -158,7 +158,7 @@ class UnaryOperation : public Expression {
     UnaryOperation(OpType opType, expression_t expression)
         : type(opType), expression(expression){};
 
-    void accept(Visitor* visitor) override;
+    void accept(visitor_t visitor) override;
 
     OpType type;
     expression_t expression;
@@ -198,7 +198,7 @@ class BinaryOperation : public Expression {
     BinaryOperation(OpType opType, expression_t lhs, expression_t rhs)
         : type(opType), lhs(lhs), rhs(rhs){};
 
-    void accept(Visitor* visitor) override;
+    void accept(visitor_t visitor) override;
 
     OpType type;
     expression_t lhs;
@@ -210,7 +210,7 @@ class FunctionCall : public Expression {
     FunctionCall(const std::string& identifier, expressions_t args)
         : identifier(identifier), args(args){};
 
-    void accept(Visitor* visitor) override;
+    void accept(visitor_t visitor) override;
 
     std::string identifier;
     expressions_t args;
@@ -225,7 +225,7 @@ class FormalParameter : public Expression {
         return type == other.type && identifier == other.identifier;
     }
 
-    void accept(Visitor* visitor) override;
+    void accept(visitor_t visitor) override;
 
     TypeSystem::Type type;
     std::string identifier;
@@ -243,7 +243,7 @@ class FunctionDeclaration : public Statement {
           parameters(parameters),
           statements(statements){};
 
-    void accept(Visitor* visitor) override;
+    void accept(visitor_t visitor) override;
 
     std::string identifier;
     const TypeSystem::Type type;

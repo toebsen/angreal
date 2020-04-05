@@ -5,13 +5,13 @@
 #ifndef TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
 #define TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
 
-#include "scope.h"
 #include "environment/environment.h"
+#include "scope.h"
 #include "visitor.h"
 
 namespace tb_lang::interpreter {
 
-class Interpreter : Visitor {
+class Interpreter : public Visitor{
    public:
     Interpreter(Scope& scope, environment::Environment& env)
         : scope_(scope), environment_(env) {}
@@ -35,6 +35,7 @@ class Interpreter : Visitor {
     Scope& scope_;
     environment::Environment& environment_;
 };
+
 
 }  // namespace tb_lang::interpreter
 

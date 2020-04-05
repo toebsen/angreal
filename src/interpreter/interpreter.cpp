@@ -15,13 +15,13 @@ void Interpreter::visit(Program* node) {}
 void Interpreter::visit(Block* node) {}
 
 void Interpreter::visit(Declaration* node) {
-    node->expression->accept(this);
+    node->expression->accept(shared_from_this());
     environment_.Declare(node->identifier, scope_.Stack().top());
     scope_.Stack().pop();
 }
 
 void Interpreter::visit(Assignment* node) {
-    node->expression->accept(this);
+    node->expression->accept(shared_from_this());
     environment_.Declare(node->identifier, scope_.Stack().top());
     scope_.Stack().pop();
 }
@@ -63,8 +63,8 @@ void Interpreter::visit(StringLiteral* node) {
 void Interpreter::visit(UnaryOperation* node) {}
 
 void Interpreter::visit(BinaryOperation* node) {
-    node->lhs->accept(this);
-    node->rhs->accept(this);
+    node->lhs->accept(shared_from_this());
+    node->rhs->accept(shared_from_this());
 
     if (node->type == BinaryOperation::OpType::Add) {
         auto a = scope_.Stack().top();

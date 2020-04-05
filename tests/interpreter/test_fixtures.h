@@ -7,8 +7,7 @@
 
 #include <gtest/gtest.h>
 
-#include "interpreter/interpreter.h"
-#include "environment/environment.h"
+#include "context.h"
 #include "parser/ast.h"
 
 using namespace tb_lang;
@@ -18,13 +17,9 @@ using namespace tb_lang::interpreter::environment;
 
 class BaseTest : public ::testing::Test {
    public:
-    BaseTest() : interpreter(scope, environment_) {}
 
    protected:
-    Scope scope;
-    Environment environment_;
-    Interpreter interpreter;
-
+    Context context_;
 };
 
 class DeclarationTest : public BaseTest {

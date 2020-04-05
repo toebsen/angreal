@@ -12,23 +12,25 @@
 
 namespace tb_lang::parser::AST {
 
+using visitor_t = std::shared_ptr<Visitor>;
+
 class Node {
    public:
-    virtual void accept(Visitor *) = 0;
+    virtual void accept(visitor_t visitor) = 0;
 
     virtual ~Node() = default;
 };
 
 class Statement : public Node {
    public:
-    virtual void accept(Visitor *visitor) = 0;
+    virtual void accept(visitor_t visitor) = 0;
 
     virtual ~Statement() = default;
 };
 
 class Expression : public Node {
    public:
-    virtual void accept(Visitor *visitor) = 0;
+    virtual void accept(visitor_t visitor) = 0;
 
     virtual ~Expression() = default;
 };

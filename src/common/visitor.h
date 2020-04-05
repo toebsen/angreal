@@ -29,22 +29,22 @@ class FunctionDeclaration;
 
 using namespace parser::AST;
 
-class Visitor {
+class Visitor : public std::enable_shared_from_this<Visitor> {
    public:
-    virtual void visit(Program *node) = 0;
-    virtual void visit(Block *node) = 0;
-    virtual void visit(Declaration *node) = 0;
-    virtual void visit(Assignment *node) = 0;
-    virtual void visit(IdentifierLiteral *node) = 0;
-    virtual void visit(BoolLiteral *node) = 0;
-    virtual void visit(IntLiteral *node) = 0;
-    virtual void visit(FloatLiteral *node) = 0;
-    virtual void visit(StringLiteral *node) = 0;
-    virtual void visit(UnaryOperation *node) = 0;
-    virtual void visit(BinaryOperation *node) = 0;
-    virtual void visit(FunctionCall *node) = 0;
-    virtual void visit(FormalParameter *node) = 0;
-    virtual void visit(FunctionDeclaration *node) = 0;
+    virtual void visit(Program* node) = 0;
+    virtual void visit(Block* node) = 0;
+    virtual void visit(Declaration* node) = 0;
+    virtual void visit(Assignment* node) = 0;
+    virtual void visit(IdentifierLiteral* node) = 0;
+    virtual void visit(BoolLiteral* node) = 0;
+    virtual void visit(IntLiteral* node) = 0;
+    virtual void visit(FloatLiteral* node) = 0;
+    virtual void visit(StringLiteral* node) = 0;
+    virtual void visit(UnaryOperation* node) = 0;
+    virtual void visit(BinaryOperation* node) = 0;
+    virtual void visit(FunctionCall* node) = 0;
+    virtual void visit(FormalParameter* node) = 0;
+    virtual void visit(FunctionDeclaration* node) = 0;
 };
 }  // namespace tb_lang
 

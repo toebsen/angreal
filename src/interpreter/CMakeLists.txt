@@ -4,7 +4,7 @@ add_subdirectory(environment)
 set(INTERPRETER_SOURCE
         interpreter.cpp
         scope.cpp
-        ../common/common.h)
+        ../common/common.h context.h)
 
 
 set(INTERPRETER_HEADERS_DIR
