@@ -80,37 +80,36 @@ digit ::= [0-9]
 
 | Token  | Lexer  | Parser  | Environment  | -  |
 |---|---|---|---|---|
-|program | :heavy_check_mark: | :heavy_check_mark: |  |
-|block | :heavy_check_mark: | :heavy_check_mark: |  |
-|statement | :heavy_check_mark: | :heavy_check_mark: |  |                                  
-|variable_decl | :heavy_check_mark: | :heavy_check_mark: |  |
-|assignment |:heavy_check_mark: |:heavy_check_mark:  |  |
-|print_statement |:heavy_check_mark: | :x: |  |
-|if_statement |:heavy_check_mark: |:x:  |  |
-|while_statement | :heavy_check_mark:| :x: |  |
-|return_statement | :heavy_check_mark:| :x: |  |
-|function_decl | :heavy_check_mark:| :heavy_check_mark: |  |
-|formal_params |:heavy_check_mark: | :heavy_check_mark: |  |
-|formal_param |:heavy_check_mark: | :heavy_check_mark: |  | 
-|function_call | :heavy_check_mark:|:heavy_check_mark: |  |
-|actual_params |:heavy_check_mark: | :heavy_check_mark: |  |
-|expression | :heavy_check_mark:| :heavy_check_mark: |  |
-|simple_expression | :heavy_check_mark:| :heavy_check_mark: |  |
-|term | :heavy_check_mark:| :heavy_check_mark: |  |
-|factor | :heavy_check_mark:|:heavy_check_mark:  |  |
-|sub_expression |:heavy_check_mark: |:heavy_check_mark: |  | 
-|unary-op | :heavy_check_mark:| :heavy_check_mark: |  | 
-|comp-op |:heavy_check_mark: |  :heavy_check_mark:|  |
-|additive_op | :heavy_check_mark:| :heavy_check_mark: |  | 
-|multiplicative_op | :heavy_check_mark:|:heavy_check_mark: |  |
-|type | :heavy_check_mark:|  :heavy_check_mark:|  |
-|identifier |:heavy_check_mark: |:heavy_check_mark:  |  |
-|literal | :heavy_check_mark:| :heavy_check_mark: |  | 
-|float_literal |:heavy_check_mark: |  :heavy_check_mark:|  |
-|fraction_literal |:heavy_check_mark: | :heavy_check_mark: |  |
-|int_literal |:heavy_check_mark: |:heavy_check_mark:  |  |
-|bool_literal |:heavy_check_mark: | :heavy_check_mark: |  |
-|string_literal |:heavy_check_mark: | :heavy_check_mark: |  |
-|printable |:heavy_check_mark: |:heavy_check_mark:  |  |
-|letter |:heavy_check_mark: |:heavy_check_mark:  |  |
-|digit |:heavy_check_mark: | :heavy_check_mark: |  |
+|program | :heavy_check_mark: | :heavy_check_mark: | :x: |
+|block | :heavy_check_mark: | :heavy_check_mark: | :x: |
+|statement | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                                  
+|variable_decl | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:  |
+|assignment |:heavy_check_mark: |:heavy_check_mark:  | :heavy_check_mark: |
+|print_statement |:heavy_check_mark: | :x: |  :x:|
+|if_statement |:heavy_check_mark: |:x:  | :x: |
+|while_statement | :heavy_check_mark:| :x: | :x: |
+|return_statement | :heavy_check_mark:| :x: | :x: |
+|function_decl | :heavy_check_mark:| :heavy_check_mark: |:x: |
+|formal_params |:heavy_check_mark: | :heavy_check_mark: | :x: |
+|function_call | :heavy_check_mark:|:heavy_check_mark: |  :x:|
+|actual_params |:heavy_check_mark: | :heavy_check_mark: | :x: |
+|expression | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: |
+|simple_expression | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: |
+|term | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: |
+|factor | :heavy_check_mark:|:heavy_check_mark:  | :heavy_check_mark: |
+|sub_expression |:heavy_check_mark: |:heavy_check_mark: | :heavy_check_mark: | 
+|unary-op | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: | 
+|comp-op |:heavy_check_mark: |  :heavy_check_mark:| :heavy_check_mark: |
+|additive_op | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: | 
+|multiplicative_op | :heavy_check_mark:|:heavy_check_mark: |:heavy_check_mark:  |
+|type | :heavy_check_mark:|  :heavy_check_mark:| :heavy_check_mark: |
+|identifier |:heavy_check_mark: |:heavy_check_mark:  | :heavy_check_mark: |
+|literal | :heavy_check_mark:| :heavy_check_mark: | :heavy_check_mark: | 
+|float_literal |:heavy_check_mark: |  :heavy_check_mark:| :heavy_check_mark: |
+|fraction_literal |:heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+|int_literal |:heavy_check_mark: |:heavy_check_mark:  |  :heavy_check_mark: |
+|bool_literal |:heavy_check_mark: | :heavy_check_mark: |  :heavy_check_mark: |
+|string_literal |:heavy_check_mark: | :heavy_check_mark: |  :heavy_check_mark:  |
+|printable |:heavy_check_mark: |:heavy_check_mark:  |  :heavy_check_mark:  |
+|letter |:heavy_check_mark: |:heavy_check_mark:  |  :heavy_check_mark:  |
+|digit |:heavy_check_mark: | :heavy_check_mark: |  :heavy_check_mark:  |

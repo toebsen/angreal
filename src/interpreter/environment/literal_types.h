@@ -7,46 +7,35 @@
 
 #include "common.h"
 #include "type.h"
+#include "../parser/ast.h"
 
 namespace tb_lang::interpreter::environment {
 
 
-
-namespace binary_ops
-{
-    type_t add_op(type_t lhs, type_t rhs);
+namespace binary_ops {
+type_t add_op(type_t lhs, type_t rhs);
 }
 
-template <typename T>
-class LiteralType : public Type {
+
+
+class IntType : public Type {
    public:
-    LiteralType(const T& value, TypeName type_name);
-
-    virtual T Value() const;
-    virtual void setValue(const T& value);
-
-   private:
-    T value_;
+    explicit IntType(int value);
 };
 
-class IntType : public LiteralType<int> {
+class FloatType : public Type {
    public:
-    IntType(int value);
+    explicit FloatType(float value);
 };
 
-class FloatType : public LiteralType<float> {
+class StringType : public Type {
    public:
-    FloatType(float value);
+    explicit StringType(tb_lang::string_t value);
 };
 
-class StringType : public LiteralType<tb_lang::string_t> {
+class BoolType : public Type {
    public:
-    StringType(tb_lang::string_t value);
-};
-
-class BoolType : public LiteralType<bool> {
-   public:
-    BoolType(bool value);
+    explicit BoolType(bool value);
 };
 
 }  // namespace tb_lang::interpreter::environment

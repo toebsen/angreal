@@ -29,7 +29,7 @@ class FunctionDeclaration;
 
 using namespace parser::AST;
 
-class Visitor : public std::enable_shared_from_this<Visitor> {
+class Visitor : public std::enable_shared_from_this<Visitor>, private NonCopyable {
    public:
     virtual void visit(Program* node) = 0;
     virtual void visit(Block* node) = 0;

@@ -15,7 +15,8 @@
 
 namespace tb_lang {
 
-struct Token {
+class Token {
+   public:
     enum class Type {
         Integer = 1,
         Float,
@@ -64,11 +65,11 @@ struct Token {
         int line;
     };
 
-    Token(const std::string &value, tb_lang::State finalState,
-          const Position &pos)
+    Token(const std::string& value, tb_lang::State finalState,
+          const Position& pos)
         : value_(value), type_(infer(value, finalState)), position_(pos) {}
 
-    Token(const std::string &value, const Type &type)
+    Token(const std::string& value, const Type& type)
         : value_(value), type_(type) {}
 
     virtual ~Token() = default;
@@ -79,16 +80,16 @@ struct Token {
 
     [[nodiscard]] Position position() const { return position_; };
 
-    friend std::ostream &operator<<(std::ostream &os,
-                                    const tb_lang::Token &tok) {
+    friend std::ostream& operator<<(std::ostream& os,
+                                    const tb_lang::Token& tok) {
         os << "Token(" << magic_enum::enum_name(tok.type()) << ", '"
            << tok.value() << "'";
         os << " Line: " << tok.position().line << ")";
         return os;
     }
 
-    static Token::Type infer(const std::string &value,
-                             const tb_lang::State &finalSate) {
+    static Token::Type infer(const std::string& value,
+                             const tb_lang::State& finalSate) {
         switch (finalSate) {
             case tb_lang::State::Digit:
                 return Type::Integer;
@@ -152,6 +153,7 @@ struct Token {
         return Type::Error;
     }
 
+   private:
     Position position_{-1};
     Type type_{Type::Error};
     std::string value_{""};

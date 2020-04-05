@@ -8,35 +8,22 @@
 
 #include "test_fixtures.h"
 
-
 TEST_F(DeclarationTest, String) {
-    AST::Declaration declaration{DeclareString("test", "Hello World!")};
-    context_.interpreter->visit(&declaration);
-    auto obj = context_.env.Get("test");
-    auto type = std::dynamic_pointer_cast<StringType>(obj->GetType());
-    ASSERT_EQ(type->Value(), "Hello World!");
+    DeclareString("test", "Hello World!");
+    ASSERT_EQ(GetResultType("test")->AsString(), "Hello World!");
 }
 
 TEST_F(DeclarationTest, Int) {
-    AST::Declaration declaration{DeclareInt("test", 42)};
-    context_.interpreter->visit(&declaration);
-    auto obj = context_.env.Get("test");
-    auto type = std::dynamic_pointer_cast<IntType>(obj->GetType());
-    ASSERT_EQ(type->Value(), 42);
+    DeclareInt("test", 42);
+    ASSERT_EQ(GetResultType("test")->AsInteger(), 42);
 }
 
 TEST_F(DeclarationTest, Float) {
-    AST::Declaration declaration{DeclareFloat("test", 4.2)};
-    context_.interpreter->visit(&declaration);
-    auto obj = context_.env.Get("test");
-    auto type = std::dynamic_pointer_cast<FloatType>(obj->GetType());
-    ASSERT_NEAR(type->Value(), 4.2, 1e-6);
+    DeclareFloat("test", 4.2);
+    ASSERT_NEAR(GetResultType("test")->AsFloat(), 4.2, 1e-6);
 }
 
 TEST_F(DeclarationTest, Bool) {
-    AST::Declaration declaration{DeclareBool("test", false)};
-    context_.interpreter->visit(&declaration);
-    auto obj = context_.env.Get("test");
-    auto type = std::dynamic_pointer_cast<BoolType>(obj->GetType());
-    ASSERT_EQ(type->Value(), false);
+    DeclareBool("test", false);
+    ASSERT_EQ(GetResultType("test")->AsBoolean(), false);
 }

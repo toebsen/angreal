@@ -6,26 +6,34 @@
 #define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_
 
 #include <memory>
+#include <variant>
 
 namespace tb_lang::interpreter::environment {
 
 class Type {
-   public:
-    enum class TypeName {
-        Bool,
-        Int,
-        Float,
-        String,
-    };
+    using value_t = std::variant<std::nullptr_t, bool, int, float, string_t>;
 
-    Type(TypeName type_name) : type_name_(type_name) {}
+   public:
+    explicit Type() : value_(nullptr) {}
+    explicit Type(value_t value) : value_(std::move(value)) {}
 
     virtual ~Type() = default;
 
-    TypeName GetTypeName() const { return type_name_; };
+    virtual bool IsNull() { return std::holds_alternative<std::nullptr_t>(value_); }
+    virtual bool IsBoolean() { return std::holds_alternative<bool>(value_); }
+    virtual bool IsFloat() { return std::holds_alternative<float>(value_); };
+    virtual bool IsInteger() { return std::holds_alternative<int>(value_); };
+    virtual bool IsString() {
+        return std::holds_alternative<string_t>(value_);
+    };
 
-   private:
-    TypeName type_name_;
+    virtual bool AsBoolean() { return std::get<bool>(value_); };
+    virtual float AsFloat() { return std::get<float>(value_); };
+    virtual int AsInteger() { return std::get<int>(value_); };
+    virtual string_t AsString() { return std::get<string_t>(value_); };
+
+   protected:
+    value_t value_;
 };
 
 using type_t = std::shared_ptr<Type>;

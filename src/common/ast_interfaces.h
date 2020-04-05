@@ -8,17 +8,18 @@
 #include <memory>
 #include <vector>
 
-#include <visitor.h>
+#include "common.h"
+#include "visitor.h"
 
 namespace tb_lang::parser::AST {
 
 using visitor_t = std::shared_ptr<Visitor>;
 
-class Node {
+class Node : private NonCopyable {
    public:
-    virtual void accept(visitor_t visitor) = 0;
-
     virtual ~Node() = default;
+
+    virtual void accept(visitor_t visitor) = 0;
 };
 
 class Statement : public Node {
@@ -35,14 +36,14 @@ class Expression : public Node {
     virtual ~Expression() = default;
 };
 
-typedef std::shared_ptr<Node> node_t;
-typedef std::vector<node_t> nodes_t;
+using node_t = std::shared_ptr<Node>;
+using nodes_t = std::vector<node_t>;
 
-typedef std::shared_ptr<Expression> expression_t;
-typedef std::vector<expression_t> expressions_t;
+using expression_t = std::shared_ptr<Expression>;
+using expressions_t = std::vector<expression_t>;
 
-typedef std::shared_ptr<Statement> statement_t;
-typedef std::vector<statement_t> statements_t;
+using statement_t = std::shared_ptr<Statement>;
+using statements_t = std::vector<statement_t>;
 
 }  // namespace tb_lang::parser::AST
 #endif  // TBLANG_AST_INTERFACES_H

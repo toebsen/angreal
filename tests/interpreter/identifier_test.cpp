@@ -8,18 +8,13 @@
 #include "test_fixtures.h"
 
 TEST_F(DeclarationTest, Identifier) {
-    AST::Declaration declaration{DeclareString("test", "Hello World!")};
-    context_.interpreter->visit(&declaration);
-
-    AST::Declaration other_declaration{DeclareFloat("test2", 1.23)};
-    context_.interpreter->visit(&other_declaration);
+    DeclareString("test", "Hello World!");
+    DeclareFloat("test2", 1.23);
 
     AST::IdentifierLiteral literal{"test"};
     context_.interpreter->visit(&literal);
-    auto obj = context_.global.Stack().top();
 
-    auto type = std::dynamic_pointer_cast<StringType>(obj->GetType());
-    ASSERT_EQ(type->Value(), "Hello World!");
+    ASSERT_EQ(GetResultType()->AsString(), "Hello World!");
 }
 
 TEST_F(DeclarationTest, IdentifierNotFound) {

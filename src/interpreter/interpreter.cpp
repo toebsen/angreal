@@ -4,11 +4,11 @@
 
 #include "interpreter.h"
 
-#include <../parser/ast.h>
+#include "../parser/ast.h"
+#include "environment/unary_op.h"
+#include "environment/binary_op.h"
 
 namespace tb_lang::interpreter {
-
-void Interpreter::visit(FunctionDeclaration* node) {}
 
 void Interpreter::visit(Program* node) {}
 
@@ -31,7 +31,7 @@ void Interpreter::visit(IdentifierLiteral* node) {
     if (o) {
         scope_.Stack().push(o);
     } else {
-        throw std::runtime_error("Identfier <" + node->name +
+        throw std::runtime_error("Identifier <" + node->name +
                                  "> does not exist");
     }
 }
@@ -60,26 +60,33 @@ void Interpreter::visit(StringLiteral* node) {
     scope_.Stack().push(o);
 }
 
-void Interpreter::visit(UnaryOperation* node) {}
+void Interpreter::visit(UnaryOperation* node) {
+    node->expression->accept(shared_from_this());
+    auto a = scope_.Stack().top();
+    scope_.Stack().pop();
+
+    UnaryOP op(node->type, a->GetType());
+    obj_t o = std::make_shared<Object>(op.Call());
+    scope_.Stack().push(o);
+}
 
 void Interpreter::visit(BinaryOperation* node) {
     node->lhs->accept(shared_from_this());
+    auto a = scope_.Stack().top();
+    scope_.Stack().pop();
+
     node->rhs->accept(shared_from_this());
+    auto b = scope_.Stack().top();
+    scope_.Stack().pop();
 
-    if (node->type == BinaryOperation::OpType::Add) {
-        auto a = scope_.Stack().top();
-        scope_.Stack().pop();
-
-        auto b = scope_.Stack().top();
-        scope_.Stack().pop();
-
-        auto type = binary_ops::add_op(a->GetType(), b->GetType());
-        obj_t o = std::make_shared<Object>(type);
-        scope_.Stack().push(o);
-    }
+    BinaryOp op(node->type, a->GetType(), b->GetType());
+    obj_t o = std::make_shared<Object>(op.Call());
+    scope_.Stack().push(o);
 }
 
 void Interpreter::visit(FunctionCall* node) {}
 
 void Interpreter::visit(FormalParameter* node) {}
+
+void Interpreter::visit(FunctionDeclaration* node) {}
 }  // namespace tb_lang::interpreter

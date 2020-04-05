@@ -8,23 +8,82 @@
 #include "test_fixtures.h"
 
 TEST_F(DeclarationTest, BinaryOp) {
-    //    a = 1
-    //    b = 2
-    //    a + b
-
-    auto a = DeclareInt("a", 1);
-    auto b = DeclareInt("b", 2);
-
-    context_.interpreter->visit(&a);
-    context_.interpreter->visit(&b);
+    DeclareInt("a", 1);
+    DeclareInt("b", 2);
 
     auto bin_op = BinaryOperation("+", std::make_shared<IdentifierLiteral>("a"),
                                   std::make_shared<IdentifierLiteral>("b"));
     context_.interpreter->visit(&bin_op);
 
-    auto obj = context_.global.Stack().top();
-    auto type = std::dynamic_pointer_cast<IntType>(obj->GetType());
-    int val = type->Value();
+    ASSERT_EQ(3, GetResultType()->AsInteger());
+}
 
-    ASSERT_EQ(3, val);
+
+TEST_F(FloatBinaryOpTest, PureFloat)
+{
+    DeclareBinaryOp("+", "a", "b");
+    EXPECT_NEAR(15.0, GetResultType()->AsFloat(), 1e6);
+
+    DeclareBinaryOp("-", "a", "b");
+    EXPECT_NEAR(5.0, GetResultType()->AsFloat(), 1e6);
+
+    DeclareBinaryOp("/", "a", "b");
+    EXPECT_NEAR(2.0, GetResultType()->AsFloat(), 1e6);
+
+    DeclareBinaryOp("*", "a", "b");
+    EXPECT_NEAR(50.0, GetResultType()->AsFloat(), 1e6);
+
+    DeclareBinaryOp("==", "a", "b");
+    EXPECT_EQ(false, GetResultType()->AsBoolean() );
+
+    DeclareBinaryOp("!=", "a", "b");
+    EXPECT_EQ(true, GetResultType()->AsBoolean());
+}
+
+TEST_F(IntBinaryOpTest, PureInt)
+{
+    DeclareBinaryOp("+", "a", "b");
+    EXPECT_NEAR(15, GetResultType()->AsInteger(), 1e6);
+
+    DeclareBinaryOp("-", "a", "b");
+    EXPECT_NEAR(5, GetResultType()->AsInteger(), 1e6);
+
+    DeclareBinaryOp("/", "a", "b");
+    EXPECT_NEAR(2, GetResultType()->AsInteger(), 1e6);
+
+    DeclareBinaryOp("*", "a", "b");
+    EXPECT_NEAR(50, GetResultType()->AsInteger(), 1e6);
+
+    DeclareBinaryOp("==", "a", "b");
+    EXPECT_EQ(false, GetResultType()->AsBoolean() );
+
+    DeclareBinaryOp("!=", "a", "b");
+    EXPECT_EQ(true, GetResultType()->AsBoolean());
+}
+
+TEST_F(BooleanBinaryOpTest, PureBool)
+{
+    DeclareBinaryOp("or", "a", "b");
+    EXPECT_EQ(true, GetResultType()->AsBoolean() );
+
+    DeclareBinaryOp("and", "a", "b");
+    EXPECT_EQ(false, GetResultType()->AsBoolean());
+
+    DeclareBinaryOp("==", "a", "b");
+    EXPECT_EQ(false, GetResultType()->AsBoolean() );
+
+    DeclareBinaryOp("!=", "a", "b");
+    EXPECT_EQ(true, GetResultType()->AsBoolean());
+}
+
+TEST_F(StringBinaryOpTest, PureString)
+{
+    DeclareBinaryOp("+", "a", "b");
+    EXPECT_EQ("ab", GetResultType()->AsString() );
+
+    DeclareBinaryOp("==", "a", "b");
+    EXPECT_EQ(false, GetResultType()->AsBoolean() );
+
+    DeclareBinaryOp("!=", "a", "b");
+    EXPECT_EQ(true, GetResultType()->AsBoolean());
 }

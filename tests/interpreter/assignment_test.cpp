@@ -8,17 +8,12 @@
 #include "test_fixtures.h"
 
 TEST_F(DeclarationTest, Assignment) {
-    AST::Declaration declaration{DeclareString("test", "Hello")};
-    context_.interpreter->visit(&declaration);
-    auto obj = context_.env.Get("test");
-    auto type = std::dynamic_pointer_cast<StringType>(obj->GetType());
-    ASSERT_EQ(type->Value(), "Hello");
+    DeclareString("test", "Hello");
+    ASSERT_EQ(GetResultType("test")->AsString(), "Hello");
 
-    AST::Assignment assignment{"test", std::make_shared<StringLiteral>("Hello World!")};
+    AST::Assignment assignment{"test",
+                               std::make_shared<StringLiteral>("Hello World!")};
     context_.interpreter->visit(&assignment);
 
-    auto assigned_obj = context_.env.Get("test");
-    type = std::dynamic_pointer_cast<StringType>(assigned_obj->GetType());
-    ASSERT_EQ(type->Value(), "Hello World!");
+    ASSERT_EQ(GetResultType("test")->AsString(), "Hello World!");
 }
-
