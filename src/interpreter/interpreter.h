@@ -6,15 +6,15 @@
 #define TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
 
 #include "scope.h"
-#include "virtual_machine/vm.h"
+#include "environment/environment.h"
 #include "visitor.h"
 
 namespace tb_lang::interpreter {
 
 class Interpreter : Visitor {
    public:
-    Interpreter(Scope& scope, virtual_machine::VM& vm)
-        : scope_(scope), vm_(vm) {}
+    Interpreter(Scope& scope, environment::Environment& env)
+        : scope_(scope), environment_(env) {}
 
     void visit(Program* node) override;
     void visit(Block* node) override;
@@ -33,7 +33,7 @@ class Interpreter : Visitor {
 
    protected:
     Scope& scope_;
-    virtual_machine::VM& vm_;
+    environment::Environment& environment_;
 };
 
 }  // namespace tb_lang::interpreter

@@ -13,22 +13,22 @@
 #include "literal_types.h"
 #include "object.h"
 
-namespace tb_lang::interpreter::virtual_machine {
+namespace tb_lang::interpreter::environment {
 
 
 using obj_t = std::shared_ptr<Object>;
 
-class VM {
+class Environment {
    public:
-    VM() = default;
+    Environment() = default;
 
-    virtual ~VM() = default;
+    virtual ~Environment() = default;
 
-    VM(const VM& object) = delete;
-    VM(VM&& object) noexcept = delete;
+    Environment(const Environment& object) = delete;
+    Environment(Environment&& object) noexcept = delete;
 
-    VM& operator=(const VM& vm) = delete;
-    VM& operator=(VM&& vm) = delete;
+    Environment& operator=(const Environment& vm) = delete;
+    Environment& operator=(Environment&& vm) = delete;
 
     obj_t Get(const std::string& name);
     obj_t Get(const ObjectID& id);
@@ -43,6 +43,6 @@ class VM {
     void Remove(obj_t& obj);
 };
 
-}  // namespace tb_lang::interpreter::virtual_machine
+}  // namespace tb_lang::interpreter::environment
 
 #endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_VM_H_

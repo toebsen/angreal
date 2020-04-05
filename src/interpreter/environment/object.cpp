@@ -3,7 +3,7 @@
 //
 #include "object.h"
 
-namespace tb_lang::interpreter::virtual_machine {
+namespace tb_lang::interpreter::environment {
 
 namespace ID {
 static ObjectID Create() { return boost::uuids::random_generator()(); }
@@ -17,4 +17,4 @@ ObjectID Object::ID() const { return id_; }
 
 type_t& Object::GetType() { return type_; }
 
-}  // namespace tb_lang::interpreter::virtual_machine
+}  // namespace tb_lang::interpreter::environment

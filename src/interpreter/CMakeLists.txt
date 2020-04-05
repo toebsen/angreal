@@ -1,5 +1,5 @@
 
-add_subdirectory(virtual_machine)
+add_subdirectory(environment)
 
 set(INTERPRETER_SOURCE
         interpreter.cpp

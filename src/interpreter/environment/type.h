@@ -7,7 +7,7 @@
 
 #include <memory>
 
-namespace tb_lang::interpreter::virtual_machine {
+namespace tb_lang::interpreter::environment {
 
 class Type {
    public:
@@ -29,6 +29,6 @@ class Type {
 };
 
 using type_t = std::shared_ptr<Type>;
-}  // namespace tb_lang::interpreter::virtual_machine
+}  // namespace tb_lang::interpreter::environment
 
 #endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_

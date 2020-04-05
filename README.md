@@ -78,7 +78,7 @@ digit ::= [0-9]
 
 ## Current state:
 
-| Token  | Lexer  | Parser  | VM  | -  |
+| Token  | Lexer  | Parser  | Environment  | -  |
 |---|---|---|---|---|
 |program | :heavy_check_mark: | :heavy_check_mark: |  |
 |block | :heavy_check_mark: | :heavy_check_mark: |  |

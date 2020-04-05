@@ -16,18 +16,18 @@ void Interpreter::visit(Block* node) {}
 
 void Interpreter::visit(Declaration* node) {
     node->expression->accept(this);
-    vm_.Declare(node->identifier, scope_.Stack().top());
+    environment_.Declare(node->identifier, scope_.Stack().top());
     scope_.Stack().pop();
 }
 
 void Interpreter::visit(Assignment* node) {
     node->expression->accept(this);
-    vm_.Declare(node->identifier, scope_.Stack().top());
+    environment_.Declare(node->identifier, scope_.Stack().top());
     scope_.Stack().pop();
 }
 
 void Interpreter::visit(IdentifierLiteral* node) {
-    auto o = vm_.Get(node->name);
+    auto o = environment_.Get(node->name);
     if (o) {
         scope_.Stack().push(o);
     } else {

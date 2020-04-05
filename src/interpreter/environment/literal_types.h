@@ -8,7 +8,7 @@
 #include "common.h"
 #include "type.h"
 
-namespace tb_lang::interpreter::virtual_machine {
+namespace tb_lang::interpreter::environment {
 
 
 
@@ -49,5 +49,5 @@ class BoolType : public LiteralType<bool> {
     BoolType(bool value);
 };
 
-}  // namespace tb_lang::interpreter::virtual_machine
+}  // namespace tb_lang::interpreter::environment
 #endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_

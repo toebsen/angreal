@@ -13,7 +13,7 @@
 #include "common.h"
 #include "type.h"
 
-namespace tb_lang::interpreter::virtual_machine {
+namespace tb_lang::interpreter::environment {
 
 using ObjectID = boost::uuids::uuid;
 
@@ -38,5 +38,5 @@ class Object {
     type_t type_;
 };
 
-}  // namespace tb_lang::interpreter::virtual_machine
+}  // namespace tb_lang::interpreter::environment
 #endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_

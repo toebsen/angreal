@@ -8,21 +8,21 @@
 #include <gtest/gtest.h>
 
 #include "interpreter/interpreter.h"
-#include "virtual_machine/vm.h"
+#include "environment/environment.h"
 #include "parser/ast.h"
 
 using namespace tb_lang;
 using namespace tb_lang::parser;
 using namespace tb_lang::interpreter;
-using namespace tb_lang::interpreter::virtual_machine;
+using namespace tb_lang::interpreter::environment;
 
 class BaseTest : public ::testing::Test {
    public:
-    BaseTest() : interpreter(scope, vm) {}
+    BaseTest() : interpreter(scope, environment_) {}
 
    protected:
     Scope scope;
-    VM vm;
+    Environment environment_;
     Interpreter interpreter;
 
 };

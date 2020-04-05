@@ -9,10 +9,11 @@
 #include <stack>
 #include <string>
 #include <unordered_map>
-#include "virtual_machine/vm.h"
+
+#include "environment/environment.h"
 
 namespace tb_lang::interpreter {
-using namespace virtual_machine;
+using namespace environment;
 
 class Scope {
    public:

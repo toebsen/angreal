@@ -3,7 +3,7 @@
 //
 #include "literal_types.h"
 
-namespace tb_lang::interpreter::virtual_machine {
+namespace tb_lang::interpreter::environment {
 
 template <typename T>
 LiteralType<T>::LiteralType(const T& value, TypeName type_name)
@@ -45,4 +45,4 @@ type_t binary_ops::add_op(type_t lhs, type_t rhs) {
     return type_t();
 }
 
-}  // namespace tb_lang::interpreter::virtual_machine
+}  // namespace tb_lang::interpreter::environment
