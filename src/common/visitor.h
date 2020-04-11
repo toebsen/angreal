@@ -26,6 +26,7 @@ class BinaryOperation;
 class FunctionCall;
 class FormalParameter;
 class FunctionDeclaration;
+class Print;
 }  // namespace parser::AST
 
 using namespace parser::AST;
@@ -37,6 +38,7 @@ class Visitor : public std::enable_shared_from_this<Visitor>, private NonCopyabl
     virtual void visit(std::shared_ptr<Declaration> node) = 0;
     virtual void visit(std::shared_ptr<Assignment> node) = 0;
     virtual void visit(std::shared_ptr<Return> node) = 0;
+    virtual void visit(std::shared_ptr<Print> node) = 0;
     virtual void visit(std::shared_ptr<IdentifierLiteral> node) = 0;
     virtual void visit(std::shared_ptr<BoolLiteral> node) = 0;
     virtual void visit(std::shared_ptr<IntLiteral> node) = 0;

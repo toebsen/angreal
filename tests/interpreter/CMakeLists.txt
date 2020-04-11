@@ -5,7 +5,7 @@ MESSAGE(STATUS "Creating ${TEST_NAME}")
 
 SET(TEST_FILES
         test_fixtures.h test_fixtures.cpp
-        declaration_test.cpp identifier_test.cpp assignment_test.cpp binary_op_test.cpp unary_op_test.cpp callable_test.cpp)
+        declaration_test.cpp identifier_test.cpp assignment_test.cpp binary_op_test.cpp unary_op_test.cpp callable_test.cpp ../acceptance/test_fixtures.h)
 
 
 add_executable(${TEST_NAME} ${TEST_FILES})

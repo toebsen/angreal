@@ -5,6 +5,7 @@
 #ifndef TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
 #define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
 
+#include <cstddef>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -21,7 +22,7 @@ using type_t = std::shared_ptr<Type>;
 
 class Object {
    public:
-
+    explicit Object();
     explicit Object(type_t type);
 
     Object(const Object& object) = delete;
@@ -33,8 +34,10 @@ class Object {
 
     bool operator==(const Object& rhs) const;
 
+    bool HasSameType(const Object& rhs) const;
+
     [[nodiscard]] ObjectID ID() const;
-    [[nodiscard]] type_t& GetType();
+    [[nodiscard]] const type_t& GetType() const;
 
    private:
     ObjectID id_;

@@ -50,6 +50,9 @@ void Assignment::accept(visitor_t visitor) {
 
 void Return::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
 
+void Print::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
+
+
 void IdentifierLiteral::accept(visitor_t visitor) {
     visitor->visit(shared_from_this());
 }

@@ -31,8 +31,11 @@ class Interpreter : public Visitor {
     void visit(std::shared_ptr<FunctionCall> node) override;
     void visit(std::shared_ptr<FormalParameter> node) override;
     void visit(std::shared_ptr<FunctionDeclaration> node) override;
+    void visit(std::shared_ptr<Print> node) override;
 
     obj_t invoke(statements_t statements, const std::shared_ptr<environment::Environment>& env);
+
+    void interpret(const string_t& code);
 
    protected:
     Scope& scope_;

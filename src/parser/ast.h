@@ -77,6 +77,18 @@ class Return : public Statement, public std::enable_shared_from_this<Return>{
     expression_t expression;
 };
 
+class Print : public Statement, public std::enable_shared_from_this<Print>{
+   public:
+    Print(expressions_t expressions)
+        : expressions(expressions){};
+
+    void accept(visitor_t visitor) override;
+
+    virtual ~Print() = default;
+
+    expressions_t expressions;
+};
+
 class IdentifierLiteral : public Expression, public std::enable_shared_from_this<IdentifierLiteral> {
    public:
     IdentifierLiteral(std::string identifier) : name(std::move(identifier)){};

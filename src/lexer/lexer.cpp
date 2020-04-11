@@ -30,6 +30,10 @@ std::vector<Token> Lexer::lex(const std::string &program) {
         if (dfa_.isAccepted() && !dfa_.acceptable(c_next)) {
             if (dfa_.state() != State::WhiteSpace) {
                 boost::replace_all(lexeme, "\n", R"(\n)");
+                if(dfa_.state() == State::EndString)
+                {
+                    boost::replace_all(lexeme, "\"", "");
+                }
                 tokens.emplace_back(Token{lexeme, dfa_.state(), pos});
             }
 

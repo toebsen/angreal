@@ -48,6 +48,8 @@ class Parser {
 
     std::shared_ptr<AST::Statement> parseReturnDeclaration();
 
+    std::shared_ptr<AST::Statement> parsePrintStatement();
+
     std::shared_ptr<AST::Expression> parseTypeLiteral(
         TypeSystem::Type expected);
 

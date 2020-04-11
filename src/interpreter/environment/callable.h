@@ -19,6 +19,9 @@ namespace environment {
 class Object;
 using obj_t = std::shared_ptr<Object>;
 
+class Type;
+using type_t = std::shared_ptr<Type>;
+
 class Environment;
 using environment_t = std::shared_ptr<Environment>;
 
@@ -30,6 +33,8 @@ class Callable : private NonCopyable {
     virtual obj_t Call(const interpreter_t& interp,
                        const std::vector<obj_t>& args) = 0;
     virtual string_t Stringify(void) const = 0;
+
+    virtual type_t ReturnType() const = 0;
 };
 
 
@@ -48,9 +53,12 @@ class Function final : public Callable,
     obj_t Call(const interpreter_t& interp,
                        const std::vector<obj_t>& args) override ;
 
+    type_t ReturnType() const override;
+
     string_t Stringify(void) const override ;
 
    private:
+
     std::shared_ptr<FunctionDeclaration> function_decl_;
     environment_t env_;
 

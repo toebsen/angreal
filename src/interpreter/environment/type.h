@@ -17,14 +17,13 @@ namespace tb_lang::interpreter::environment {
 using CallablePtr = std::shared_ptr<Callable>;
 
 class Type {
-
     using value_t =
         std::variant<std::nullptr_t, bool, int, float, string_t, CallablePtr>;
 
    public:
     explicit Type() : value_(nullptr) {}
     explicit Type(value_t value) : value_(std::move(value)) {}
-//    explicit Type(CallablePtr value) : value_(std::move(value)) {}
+    //    explicit Type(CallablePtr value) : value_(std::move(value)) {}
 
     virtual ~Type() = default;
 
@@ -47,9 +46,25 @@ class Type {
     virtual string_t AsString() { return std::get<string_t>(value_); };
     virtual CallablePtr AsCallable() { return std::get<CallablePtr>(value_); };
 
+    string_t Stringify()
+    {
+        std::stringstream ss;
+        if(IsBoolean()) ss << std::boolalpha << AsBoolean();
+        if(IsFloat()) ss << AsFloat();
+        if(IsInteger()) ss <<  AsInteger();
+        if(IsNull()) ss <<  "None";
+        if(IsString()) ss <<  AsString();
+
+        return ss.str();
+    }
+
+    bool HasSameType(const Type& rhs) const {
+        return value_.index() == rhs.value_.index();
+    };
+
    protected:
     value_t value_;
-};
+};  // namespace tb_lang::interpreter::environment
 
 using type_t = std::shared_ptr<Type>;
 }  // namespace tb_lang::interpreter::environment

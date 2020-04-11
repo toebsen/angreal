@@ -13,7 +13,7 @@
 
 namespace tb_lang::parser {
 std::shared_ptr<AST::Program> Parser::parseProgram(
-    const std::vector<Token> &tokens) {
+    const std::vector<Token>& tokens) {
     auto statements = AST::nodes_t();
     current_token = tokens.begin();
     next_token = tokens.begin() + 1;
@@ -27,18 +27,19 @@ std::shared_ptr<AST::Program> Parser::parseProgram(
             statements.push_back(parseAssignmentStatement());
         } else if (current_token->type() == Token::Type::DefStatement) {
             statements.push_back(parseFunctionDeclaration());
-        } else if (current_token->type() == Token::Type::ReturnStatement) {
-            statements.push_back(parseReturnDeclaration());
-        } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
+        } else if (current_token->type() == Token::Type::PrintStatement) {
+            statements.push_back(parsePrintStatement());
+        } else if (current_token->type() == Token::Type::RightCurlyBracket) {
             statements.push_back(parseBlock());
+        } else {
+            consume();
         }
-        consume();
     }
     return std::make_shared<AST::Program>(statements);
 }
 
 std::shared_ptr<AST::Expression> Parser::parseExpression(
-    const std::vector<Token> &tokens) {
+    const std::vector<Token>& tokens) {
     current_token = tokens.begin();
     next_token = tokens.begin() + 1;
     return parseExpression();
@@ -77,7 +78,7 @@ void Parser::expectTokensOneOf(std::initializer_list<Token::Type> types) {
                 [&](Token::Type t) { return allowed.contains(t); });
 }
 
-void Parser::expectToken(const std::string &description,
+void Parser::expectToken(const std::string& description,
                          std::function<bool(Token::Type t)> predicate) {
     if (!predicate(current_token->type())) {
         std::stringstream ss;
@@ -89,7 +90,7 @@ void Parser::expectToken(const std::string &description,
     }
 }
 
-void Parser::error(const std::string &message) {
+void Parser::error(const std::string& message) {
     std::cout << "ERROR: " << message << std::endl;
     throw std::runtime_error(message);
 }
@@ -296,16 +297,44 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
     AST::statements_t statements;
     expectToken(Token::Type::LeftCurlyBracket);
     consume();
+    while (current_token->type() != Token::Type::RightCurlyBracket) {
+        current_line_number = current_token->position().line;
+        if (current_token->type() == Token::Type::VarStatement) {
+            statements.push_back(parseVariableDeclaration());
+        } else if (current_token->type() == Token::Type::SetStatement) {
+            statements.push_back(parseAssignmentStatement());
+        } else if (current_token->type() == Token::Type::DefStatement) {
+            statements.push_back(parseFunctionDeclaration());
+        } else if (current_token->type() == Token::Type::ReturnStatement) {
+            statements.push_back(parseReturnDeclaration());
+        } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
+            statements.push_back(parseBlock());
+        }
+        consume();
+    }
     expectToken(Token::Type::RightCurlyBracket);
     consume();
-
     return std::make_shared<AST::Block>(statements);
 }
+
 std::shared_ptr<AST::Statement> Parser::parseReturnDeclaration() {
     std::string identifier;
     AST::expression_t expression;
     consume();
-
+    expression = parseExpression();
     return std::make_shared<AST::Return>(expression);
 }
+
+std::shared_ptr<AST::Statement> Parser::parsePrintStatement() {
+    AST::expressions_t args;
+    consume();  // identifier
+    consume();  //(
+    if (current_token->type() != Token::Type::RightBracket) {
+        args = parseActualParams();
+        consume();
+    }
+    expectToken(Token::Type::RightBracket);
+    return std::make_shared<AST::Print>(args);
+}
+
 }  // namespace tb_lang::parser

@@ -112,4 +112,37 @@ class StringBinaryOpTest : public BinaryOpTest {
     }
 };
 
+class FunctionTest : public DeclarationTest
+{
+   protected:
+    void DeclareArityZeroFunction(const std::string& name, TypeSystem::Type return_type = TypeSystem::Type::String)
+    {
+        statements_t statements{
+            std::make_shared<AST::Declaration>(TypeSystem::Type::String, "text",
+                                               std::make_shared<StringLiteral>("World")),
+            std::make_shared<AST::Return>(std::make_shared<AST::IdentifierLiteral>("text"))};
+
+        formal_parameters parameters = {};
+        auto declaration = std::make_shared<FunctionDeclaration>(return_type, name, parameters, statements);
+        context_.interpreter->visit(declaration);
+    }
+
+    void DeclareArityOneIntFunction(const std::string& name, int init_value)
+    {
+        statements_t statements{
+            std::make_shared<AST::Declaration>(TypeSystem::Type::Int, "test",
+                                               std::make_shared<BinaryOperation>(
+                                                   "+",
+                                                   std::make_shared<IntLiteral>(init_value),
+                                                   std::make_shared<IdentifierLiteral>("arg1")
+                                                   )
+                                               ),
+
+            std::make_shared<AST::Return>(std::make_shared<AST::IdentifierLiteral>("test"))};
+
+        formal_parameters parameters = {std::make_shared<FormalParameter>(TypeSystem::Type::Int, "arg1")};
+        auto declaration = std::make_shared<FunctionDeclaration>(TypeSystem::Type::Int, name, parameters, statements);
+        context_.interpreter->visit(declaration);
+    }
+};
 #endif  // TBLANG_TESTS_INTERPRETER_TEST_FIXTURES_H_
