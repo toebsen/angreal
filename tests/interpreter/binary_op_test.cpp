@@ -7,18 +7,6 @@
 
 #include "test_fixtures.h"
 
-TEST_F(DeclarationTest, BinaryOp) {
-    DeclareInt("a", 1);
-    DeclareInt("b", 2);
-
-    auto bin_op = BinaryOperation("+", std::make_shared<IdentifierLiteral>("a"),
-                                  std::make_shared<IdentifierLiteral>("b"));
-    context_.interpreter->visit(&bin_op);
-
-    ASSERT_EQ(3, GetResultType()->AsInteger());
-}
-
-
 TEST_F(FloatBinaryOpTest, PureFloat)
 {
     DeclareBinaryOp("+", "a", "b");

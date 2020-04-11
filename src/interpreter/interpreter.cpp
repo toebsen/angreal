@@ -7,27 +7,33 @@
 #include "../parser/ast.h"
 #include "environment/unary_op.h"
 #include "environment/binary_op.h"
+#include "environment/callable.h"
 
 namespace tb_lang::interpreter {
 
-void Interpreter::visit(Program* node) {}
+void Interpreter::visit(std::shared_ptr<Program> node) {}
 
-void Interpreter::visit(Block* node) {}
+void Interpreter::visit(std::shared_ptr<Block> node) {}
 
-void Interpreter::visit(Declaration* node) {
+void Interpreter::visit(std::shared_ptr<Declaration> node) {
     node->expression->accept(shared_from_this());
-    environment_.Declare(node->identifier, scope_.Stack().top());
+    environment_->Declare(node->identifier, scope_.Stack().top());
     scope_.Stack().pop();
 }
 
-void Interpreter::visit(Assignment* node) {
+void Interpreter::visit(std::shared_ptr<Assignment> node) {
     node->expression->accept(shared_from_this());
-    environment_.Declare(node->identifier, scope_.Stack().top());
+    environment_->Declare(node->identifier, scope_.Stack().top());
     scope_.Stack().pop();
 }
 
-void Interpreter::visit(IdentifierLiteral* node) {
-    auto o = environment_.Get(node->name);
+
+void Interpreter::visit(std::shared_ptr<Return> node) {
+    node->expression->accept(shared_from_this());
+}
+
+void Interpreter::visit(std::shared_ptr<IdentifierLiteral> node) {
+    auto o = environment_->Get(node->name);
     if (o) {
         scope_.Stack().push(o);
     } else {
@@ -36,31 +42,31 @@ void Interpreter::visit(IdentifierLiteral* node) {
     }
 }
 
-void Interpreter::visit(IntLiteral* node) {
+void Interpreter::visit(std::shared_ptr<IntLiteral> node) {
     type_t type = std::make_shared<IntType>(node->value);
     obj_t o = std::make_shared<Object>(type);
     scope_.Stack().push(o);
 }
 
-void Interpreter::visit(BoolLiteral* node) {
+void Interpreter::visit(std::shared_ptr<BoolLiteral> node) {
     type_t type = std::make_shared<BoolType>(node->value);
     obj_t o = std::make_shared<Object>(type);
     scope_.Stack().push(o);
 }
 
-void Interpreter::visit(FloatLiteral* node) {
+void Interpreter::visit(std::shared_ptr<FloatLiteral> node) {
     type_t type = std::make_shared<FloatType>(node->value);
     obj_t o = std::make_shared<Object>(type);
     scope_.Stack().push(o);
 }
 
-void Interpreter::visit(StringLiteral* node) {
+void Interpreter::visit(std::shared_ptr<StringLiteral> node) {
     type_t type = std::make_shared<StringType>(node->value);
     obj_t o = std::make_shared<Object>(type);
     scope_.Stack().push(o);
 }
 
-void Interpreter::visit(UnaryOperation* node) {
+void Interpreter::visit(std::shared_ptr<UnaryOperation> node) {
     node->expression->accept(shared_from_this());
     auto a = scope_.Stack().top();
     scope_.Stack().pop();
@@ -70,7 +76,7 @@ void Interpreter::visit(UnaryOperation* node) {
     scope_.Stack().push(o);
 }
 
-void Interpreter::visit(BinaryOperation* node) {
+void Interpreter::visit(std::shared_ptr<BinaryOperation> node) {
     node->lhs->accept(shared_from_this());
     auto a = scope_.Stack().top();
     scope_.Stack().pop();
@@ -84,9 +90,53 @@ void Interpreter::visit(BinaryOperation* node) {
     scope_.Stack().push(o);
 }
 
-void Interpreter::visit(FunctionCall* node) {}
+void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
+    auto callable = environment_->Get(node->identifier);
+    if(callable->GetType()->IsCallable())
+    {
+        std::vector<obj_t> args;
+        for (const auto& item : node->args) {
+            item->accept(shared_from_this());
+            args.push_back(scope_.Stack().top());
+            scope_.Stack().pop();
+        }
 
-void Interpreter::visit(FormalParameter* node) {}
+        auto fun = callable->GetType()->AsCallable();
+        scope_.Stack().push(fun->Call(this, args));
+    }
+}
 
-void Interpreter::visit(FunctionDeclaration* node) {}
+void Interpreter::visit(std::shared_ptr<FormalParameter> node) {
+    //
+}
+
+void Interpreter::visit(std::shared_ptr<FunctionDeclaration> node) {
+
+    auto type = std::make_shared<Type>(std::make_shared<Function>(node, environment_));
+    obj_t o = std::make_shared<Object>(type);
+    environment_->Declare(node->identifier, o);
+}
+
+obj_t Interpreter::invoke(statements_t statements,
+                         const std::shared_ptr<environment::Environment>& env) {
+
+    auto orig_env = env;
+    try {
+        environment_ = env;
+        for (auto& stmt : statements)
+        {
+            stmt->accept(shared_from_this());
+        }
+    }
+    catch (...) {
+        environment_ = orig_env;
+        throw;
+    }
+
+    auto return_value = scope_.Stack().top();
+    scope_.Stack().pop();
+
+    environment_ = orig_env;
+    return return_value;
+}
 }  // namespace tb_lang::interpreter

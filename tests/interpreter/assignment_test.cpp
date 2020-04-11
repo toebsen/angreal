@@ -11,9 +11,9 @@ TEST_F(DeclarationTest, Assignment) {
     DeclareString("test", "Hello");
     ASSERT_EQ(GetResultType("test")->AsString(), "Hello");
 
-    AST::Assignment assignment{"test",
-                               std::make_shared<StringLiteral>("Hello World!")};
-    context_.interpreter->visit(&assignment);
+    auto assignment = std::make_shared<AST::Assignment>("test",
+                               std::make_shared<StringLiteral>("Hello World!"));
+    context_.interpreter->visit(assignment);
 
     ASSERT_EQ(GetResultType("test")->AsString(), "Hello World!");
 }

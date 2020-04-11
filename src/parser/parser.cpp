@@ -27,6 +27,8 @@ std::shared_ptr<AST::Program> Parser::parseProgram(
             statements.push_back(parseAssignmentStatement());
         } else if (current_token->type() == Token::Type::DefStatement) {
             statements.push_back(parseFunctionDeclaration());
+        } else if (current_token->type() == Token::Type::ReturnStatement) {
+            statements.push_back(parseReturnDeclaration());
         } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
             statements.push_back(parseBlock());
         }
@@ -298,5 +300,12 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
     consume();
 
     return std::make_shared<AST::Block>(statements);
+}
+std::shared_ptr<AST::Statement> Parser::parseReturnDeclaration() {
+    std::string identifier;
+    AST::expression_t expression;
+    consume();
+
+    return std::make_shared<AST::Return>(expression);
 }
 }  // namespace tb_lang::parser

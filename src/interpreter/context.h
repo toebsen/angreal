@@ -12,10 +12,13 @@ namespace tb_lang::interpreter {
 
 class Context {
    public:
-    Context() { interpreter = std::make_shared<Interpreter>(global, env); }
+    Context() {
+        env = std::make_shared<Environment>();
+        interpreter = std::make_shared<Interpreter>(global, env);
+    }
 
     Scope global;
-    Environment env;
+    std::shared_ptr<Environment> env;
     std::shared_ptr<Interpreter> interpreter;
 };
 }  // namespace tb_lang::interpreter

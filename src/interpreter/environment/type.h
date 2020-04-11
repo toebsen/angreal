@@ -8,29 +8,44 @@
 #include <memory>
 #include <variant>
 
+#include "callable.h"
+#include "common.h"
+#include "object.h"
+
 namespace tb_lang::interpreter::environment {
 
+using CallablePtr = std::shared_ptr<Callable>;
+
 class Type {
-    using value_t = std::variant<std::nullptr_t, bool, int, float, string_t>;
+
+    using value_t =
+        std::variant<std::nullptr_t, bool, int, float, string_t, CallablePtr>;
 
    public:
     explicit Type() : value_(nullptr) {}
     explicit Type(value_t value) : value_(std::move(value)) {}
+//    explicit Type(CallablePtr value) : value_(std::move(value)) {}
 
     virtual ~Type() = default;
 
-    virtual bool IsNull() { return std::holds_alternative<std::nullptr_t>(value_); }
+    virtual bool IsNull() {
+        return std::holds_alternative<std::nullptr_t>(value_);
+    }
     virtual bool IsBoolean() { return std::holds_alternative<bool>(value_); }
     virtual bool IsFloat() { return std::holds_alternative<float>(value_); };
     virtual bool IsInteger() { return std::holds_alternative<int>(value_); };
     virtual bool IsString() {
         return std::holds_alternative<string_t>(value_);
     };
+    virtual bool IsCallable() {
+        return std::holds_alternative<CallablePtr>(value_);
+    };
 
     virtual bool AsBoolean() { return std::get<bool>(value_); };
     virtual float AsFloat() { return std::get<float>(value_); };
     virtual int AsInteger() { return std::get<int>(value_); };
     virtual string_t AsString() { return std::get<string_t>(value_); };
+    virtual CallablePtr AsCallable() { return std::get<CallablePtr>(value_); };
 
    protected:
     value_t value_;

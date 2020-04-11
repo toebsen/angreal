@@ -46,6 +46,8 @@ class Parser {
 
     std::shared_ptr<AST::FunctionCall> parserFunctionCall();
 
+    std::shared_ptr<AST::Statement> parseReturnDeclaration();
+
     std::shared_ptr<AST::Expression> parseTypeLiteral(
         TypeSystem::Type expected);
 
@@ -67,6 +69,7 @@ class Parser {
     int current_line_number{0};
 
     AST::expressions_t parseActualParams();
+
 };
 
 }  // namespace tb_lang::parser

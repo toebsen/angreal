@@ -24,10 +24,10 @@ class Environment {
 
     virtual ~Environment() = default;
 
-    Environment(const Environment& object) = delete;
+    Environment(const Environment& object) = default;
     Environment(Environment&& object) noexcept = delete;
 
-    Environment& operator=(const Environment& vm) = delete;
+    Environment& operator=(const Environment& vm) = default;
     Environment& operator=(Environment&& vm) = delete;
 
     obj_t Get(const std::string& name);

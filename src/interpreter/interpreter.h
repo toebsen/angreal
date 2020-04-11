@@ -11,29 +11,32 @@
 
 namespace tb_lang::interpreter {
 
-class Interpreter : public Visitor{
+class Interpreter : public Visitor {
    public:
-    Interpreter(Scope& scope, environment::Environment& env)
+    Interpreter(Scope& scope, std::shared_ptr<environment::Environment> env)
         : scope_(scope), environment_(env) {}
 
-    void visit(Program* node) override;
-    void visit(Block* node) override;
-    void visit(Declaration* node) override;
-    void visit(Assignment* node) override;
-    void visit(IdentifierLiteral* node) override;
-    void visit(BoolLiteral* node) override;
-    void visit(IntLiteral* node) override;
-    void visit(FloatLiteral* node) override;
-    void visit(StringLiteral* node) override;
-    void visit(UnaryOperation* node) override;
-    void visit(BinaryOperation* node) override;
-    void visit(FunctionCall* node) override;
-    void visit(FormalParameter* node) override;
-    void visit(FunctionDeclaration* node) override;
+    void visit(std::shared_ptr<Program> node) override;
+    void visit(std::shared_ptr<Block> node) override;
+    void visit(std::shared_ptr<Declaration> node) override;
+    void visit(std::shared_ptr<Assignment> node) override;
+    void visit(std::shared_ptr<Return> node) override;
+    void visit(std::shared_ptr<IdentifierLiteral> node) override;
+    void visit(std::shared_ptr<BoolLiteral> node) override;
+    void visit(std::shared_ptr<IntLiteral> node) override;
+    void visit(std::shared_ptr<FloatLiteral> node) override;
+    void visit(std::shared_ptr<StringLiteral> node) override;
+    void visit(std::shared_ptr<UnaryOperation> node) override;
+    void visit(std::shared_ptr<BinaryOperation> node) override;
+    void visit(std::shared_ptr<FunctionCall> node) override;
+    void visit(std::shared_ptr<FormalParameter> node) override;
+    void visit(std::shared_ptr<FunctionDeclaration> node) override;
+
+    obj_t invoke(statements_t statements, const std::shared_ptr<environment::Environment>& env);
 
    protected:
     Scope& scope_;
-    environment::Environment& environment_;
+    std::shared_ptr<environment::Environment> environment_;
 };
 
 

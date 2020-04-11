@@ -12,12 +12,6 @@
 namespace tb_lang::interpreter::environment {
 
 
-namespace binary_ops {
-type_t add_op(type_t lhs, type_t rhs);
-}
-
-
-
 class IntType : public Type {
    public:
     explicit IntType(int value);

@@ -1,5 +1,5 @@
 set(ENVIRONMENT_SOURCE
-        environment.cpp object.cpp object.h object.cpp literal_types.cpp type.h unary_op.cpp unary_op.h binary_op.cpp binary_op.h)
+        environment.cpp object.cpp object.h object.cpp literal_types.cpp type.h unary_op.cpp unary_op.h binary_op.cpp binary_op.h callable.cpp callable.h)
 
 set(ENVIRONMENT_HEADERS_DIR
         ${CMAKE_CURRENT_SOURCE_DIR};

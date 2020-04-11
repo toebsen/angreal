@@ -15,7 +15,7 @@ namespace tb_lang::parser::AST {
 
 using visitor_t = std::shared_ptr<Visitor>;
 
-class Node : private NonCopyable {
+   class Node : private NonCopyable {
    public:
     virtual ~Node() = default;
 

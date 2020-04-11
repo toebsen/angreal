@@ -5,7 +5,6 @@
 #ifndef TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
 #define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
 
-#include <any>
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -17,8 +16,12 @@ namespace tb_lang::interpreter::environment {
 
 using ObjectID = boost::uuids::uuid;
 
+class Type;
+using type_t = std::shared_ptr<Type>;
+
 class Object {
    public:
+
     explicit Object(type_t type);
 
     Object(const Object& object) = delete;
@@ -37,6 +40,8 @@ class Object {
     ObjectID id_;
     type_t type_;
 };
+
+using obj_t = std::shared_ptr<Object>;
 
 }  // namespace tb_lang::interpreter::environment
 #endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_

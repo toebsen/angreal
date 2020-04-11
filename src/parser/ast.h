@@ -15,7 +15,7 @@
 
 namespace tb_lang::parser::AST {
 
-class Program : public Node {
+class Program : public Node, public std::enable_shared_from_this<Program>{
    public:
     explicit Program(nodes_t nodes) : statements(nodes){};
 
@@ -25,7 +25,7 @@ class Program : public Node {
     nodes_t statements;
 };
 
-class Block : public Statement {
+class Block : public Statement, public std::enable_shared_from_this<Block> {
    public:
     explicit Block(statements_t statements) : statements(statements){};
 
@@ -36,7 +36,7 @@ class Block : public Statement {
     statements_t statements;
 };
 
-class Declaration : public Statement {
+class Declaration : public Statement, public std::enable_shared_from_this<Declaration>{
    public:
     Declaration(const TypeSystem::Type& type, const std::string& identifier,
                 expression_t expression)
@@ -51,7 +51,7 @@ class Declaration : public Statement {
     const std::string identifier;
 };
 
-class Assignment : public Statement {
+class Assignment : public Statement, public std::enable_shared_from_this<Assignment>{
    public:
     Assignment(const std::string& identifier, expression_t expression)
         : identifier(identifier), expression(expression){};
@@ -64,7 +64,20 @@ class Assignment : public Statement {
     const std::string identifier;
 };
 
-class IdentifierLiteral : public Expression {
+
+class Return : public Statement, public std::enable_shared_from_this<Return>{
+   public:
+    Return(expression_t expression)
+        : expression(expression){};
+
+    void accept(visitor_t visitor) override;
+
+    virtual ~Return() = default;
+
+    expression_t expression;
+};
+
+class IdentifierLiteral : public Expression, public std::enable_shared_from_this<IdentifierLiteral> {
    public:
     IdentifierLiteral(std::string identifier) : name(std::move(identifier)){};
 
@@ -93,7 +106,7 @@ class ValueLiteral : public Expression {
     const ValueType value;
 };
 
-class BoolLiteral : public ValueLiteral<bool> {
+class BoolLiteral : public ValueLiteral<bool>, public std::enable_shared_from_this<BoolLiteral> {
    public:
     BoolLiteral(const std::string& value);
 
@@ -101,10 +114,10 @@ class BoolLiteral : public ValueLiteral<bool> {
 
     static TypeSystem::Type type() { return TypeSystem::Type::Bool; };
 
-    void accept(visitor_t visitor) override { visitor->visit(this); };
+    void accept(visitor_t visitor) override;
 };
 
-class IntLiteral : public ValueLiteral<int> {
+class IntLiteral : public ValueLiteral<int>, public std::enable_shared_from_this<IntLiteral>  {
    public:
     IntLiteral(const std::string& value);
 
@@ -112,10 +125,10 @@ class IntLiteral : public ValueLiteral<int> {
 
     static TypeSystem::Type type() { return TypeSystem::Type::Int; };
 
-    void accept(visitor_t visitor) override { visitor->visit(this); };
+    void accept(visitor_t visitor) override;
 };
 
-class FloatLiteral : public ValueLiteral<float> {
+class FloatLiteral : public ValueLiteral<float>, public std::enable_shared_from_this<FloatLiteral>  {
    public:
     FloatLiteral(const std::string& value);
 
@@ -123,19 +136,19 @@ class FloatLiteral : public ValueLiteral<float> {
 
     static TypeSystem::Type type() { return TypeSystem::Type::Float; };
 
-    void accept(visitor_t visitor) override { visitor->visit(this); };
+    void accept(visitor_t visitor) override;
 };
 
-class StringLiteral : public ValueLiteral<std::string> {
+class StringLiteral : public ValueLiteral<std::string>, public std::enable_shared_from_this<StringLiteral> {
    public:
     StringLiteral(const std::string& value);
 
     static TypeSystem::Type type() { return TypeSystem::Type::String; };
 
-    void accept(visitor_t visitor) override { visitor->visit(this); };
+    void accept(visitor_t visitor) override;
 };
 
-class UnaryOperation : public Expression {
+class UnaryOperation : public Expression, public std::enable_shared_from_this<UnaryOperation> {
    public:
     enum class OpType {
         Unknown,
@@ -164,7 +177,7 @@ class UnaryOperation : public Expression {
     expression_t expression;
 };
 
-class BinaryOperation : public Expression {
+class BinaryOperation : public Expression, public std::enable_shared_from_this<BinaryOperation> {
    public:
     enum class OpType {
         Unknown,
@@ -205,7 +218,7 @@ class BinaryOperation : public Expression {
     expression_t rhs;
 };
 
-class FunctionCall : public Expression {
+class FunctionCall : public Expression, public std::enable_shared_from_this<FunctionCall> {
    public:
     FunctionCall(const std::string& identifier, expressions_t args)
         : identifier(identifier), args(args){};
@@ -216,7 +229,7 @@ class FunctionCall : public Expression {
     expressions_t args;
 };
 
-class FormalParameter : public Expression {
+class FormalParameter : public Expression, public std::enable_shared_from_this<FormalParameter> {
    public:
     FormalParameter(TypeSystem::Type type, const std::string& identifier)
         : type(type), identifier(identifier) {}
@@ -232,7 +245,7 @@ class FormalParameter : public Expression {
 };
 
 using formal_parameters = std::vector<std::shared_ptr<FormalParameter>>;
-class FunctionDeclaration : public Statement {
+class FunctionDeclaration : public Statement, public std::enable_shared_from_this<FunctionDeclaration> {
    public:
     FunctionDeclaration(const TypeSystem::Type& type,
                         const std::string& identifier,

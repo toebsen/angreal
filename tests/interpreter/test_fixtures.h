@@ -29,32 +29,32 @@ class DeclarationTest : public BaseTest {
     }
 
     type_t GetResultType(const std::string& name) {
-        auto obj = context_.env.Get(name);
+        auto obj = context_.env->Get(name);
         return obj->GetType();
     }
 
     void DeclareString(const std::string& name, const std::string& value) {
-        AST::Declaration decl{TypeSystem::Type::String, name,
-                              std::make_shared<StringLiteral>(value)};
-        context_.interpreter->visit(&decl);
+        auto decl = std::make_shared<AST::Declaration>(TypeSystem::Type::String, name,
+                              std::make_shared<StringLiteral>(value));
+        context_.interpreter->visit(decl);
     }
 
     void DeclareInt(const std::string& name, int value) {
-        AST::Declaration decl{TypeSystem::Type::Int, name,
-                              std::make_shared<IntLiteral>(value)};
-        context_.interpreter->visit(&decl);
+        auto decl = std::make_shared<AST::Declaration>(TypeSystem::Type::Int, name,
+                              std::make_shared<IntLiteral>(value));
+        context_.interpreter->visit(decl);
     }
 
     void DeclareBool(const std::string& name, bool value) {
-        AST::Declaration decl{TypeSystem::Type::Bool, name,
-                              std::make_shared<BoolLiteral>(value)};
-        context_.interpreter->visit(&decl);
+        auto decl = std::make_shared<AST::Declaration>(TypeSystem::Type::Bool, name,
+                              std::make_shared<BoolLiteral>(value));
+        context_.interpreter->visit(decl);
     }
 
     void DeclareFloat(const std::string& name, float value) {
-        AST::Declaration decl{TypeSystem::Type::Float, name,
-                              std::make_shared<FloatLiteral>(value)};
-        context_.interpreter->visit(&decl);
+        auto decl = std::make_shared<AST::Declaration>(TypeSystem::Type::Float, name,
+                              std::make_shared<FloatLiteral>(value));
+        context_.interpreter->visit(decl);
     }
 };
 
@@ -63,9 +63,8 @@ class UnaryOpTest : public DeclarationTest
    protected:
     void DeclareUnaryOp(const std::string& op, const std::string& lit)
     {
-        auto unary_op =
-            UnaryOperation(op, std::make_shared<IdentifierLiteral>(lit));
-        context_.interpreter->visit(&unary_op);
+        auto unary_op = std::make_shared<UnaryOperation>(op, std::make_shared<IdentifierLiteral>(lit));
+        context_.interpreter->visit(unary_op);
     }
 };
 
@@ -74,10 +73,10 @@ class BinaryOpTest : public DeclarationTest {
     void DeclareBinaryOp(const std::string op, const std::string lhs,
                          const std::string rhs) {
         auto bin_op =
-            BinaryOperation(op, std::make_shared<IdentifierLiteral>(lhs),
+            std::make_shared<BinaryOperation>(op, std::make_shared<IdentifierLiteral>(lhs),
                             std::make_shared<IdentifierLiteral>(rhs));
 
-        context_.interpreter->visit(&bin_op);
+        context_.interpreter->visit(bin_op);
     }
 };
 
