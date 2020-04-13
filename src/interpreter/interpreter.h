@@ -42,6 +42,8 @@ class Interpreter : public Visitor {
     std::stack<environment::obj_t>& Stack(){return stack_;};
 
    protected:
+    void ExecuteBlock(statements_t statements, std::shared_ptr<environment::Environment> environment);
+
     std::stack<environment::obj_t> stack_;
     std::shared_ptr<environment::Environment> environment_;
 };

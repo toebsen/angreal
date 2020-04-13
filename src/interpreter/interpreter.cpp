@@ -4,13 +4,12 @@
 
 #include "interpreter.h"
 
+#include "../lexer/lexer.h"
 #include "../parser/ast.h"
 #include "../parser/parser.h"
-#include "../lexer/lexer.h"
 #include "environment/binary_op.h"
 #include "environment/callable.h"
 #include "environment/unary_op.h"
-
 
 namespace tb_lang::interpreter {
 
@@ -23,20 +22,20 @@ void Interpreter::visit(std::shared_ptr<Program> node) {
 }
 
 void Interpreter::visit(std::shared_ptr<Block> node) {
-    for (const auto& stmt : node->statements) {
-        stmt->accept(shared_from_this());
-    }
+    ExecuteBlock(node->statements, std::make_shared<Environment>(environment_));
 }
 
 void Interpreter::visit(std::shared_ptr<Declaration> node) {
+//    std::cout << "Declaring Var " << node->identifier << std::endl;
     node->expression->accept(shared_from_this());
     environment_->Declare(node->identifier, stack_.top());
     stack_.pop();
 }
 
 void Interpreter::visit(std::shared_ptr<Assignment> node) {
+//    std::cout << "Assign Var " << node->identifier << std::endl;
     node->expression->accept(shared_from_this());
-    environment_->Declare(node->identifier, stack_.top());
+    environment_->Assign(node->identifier, stack_.top());
     stack_.pop();
 }
 
@@ -49,7 +48,7 @@ void Interpreter::visit(std::shared_ptr<IdentifierLiteral> node) {
     if (o) {
         stack_.push(o);
     } else {
-        throw std::runtime_error("Identifier <" + node->name +
+        throw RuntimeError("Identifier <" + node->name +
                                  "> does not exist");
     }
 }
@@ -103,9 +102,9 @@ void Interpreter::visit(std::shared_ptr<BinaryOperation> node) {
 }
 
 void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
+//    std::cout << "Calling Function " << node->identifier << std::endl;
     auto callable = environment_->Get(node->identifier);
     if (callable->GetType()->IsCallable()) {
-
         auto fun = callable->GetType()->AsCallable();
 
         std::vector<obj_t> args;
@@ -118,7 +117,7 @@ void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
         auto ret_obj = fun->Call(this, args);
         if (ret_obj) {
             if (!ret_obj->GetType()->HasSameType(*fun->ReturnType())) {
-                throw std::runtime_error(node->identifier +
+                throw RuntimeError(node->identifier +
                                          "returns wrong Type");
             }
             if (!ret_obj->GetType()->IsNull()) {
@@ -133,26 +132,45 @@ void Interpreter::visit(std::shared_ptr<FormalParameter> node) {
 }
 
 void Interpreter::visit(std::shared_ptr<FunctionDeclaration> node) {
+//    std::cout << "Declaring Function " << node->identifier << std::endl;
     auto fun_decl = std::make_shared<Function>(node, environment_);
     auto type = std::make_shared<Type>(fun_decl);
     obj_t o = std::make_shared<Object>(type);
     environment_->Declare(node->identifier, o);
 }
 
+void Interpreter::ExecuteBlock(
+    statements_t statements,
+    std::shared_ptr<environment::Environment> environment) {
+
+    auto previous_env = environment_;
+    try
+    {
+        environment_ = environment;
+        for (const auto& stmt : statements) {
+            stmt->accept(shared_from_this());
+        }
+    }
+    catch (...)
+    {
+        environment_ = previous_env;
+    }
+}
+
 obj_t Interpreter::invoke(
     statements_t statements,
     const std::shared_ptr<environment::Environment>& env) {
-    auto orig_env = env;
+    auto previous_env = env;
     try {
         environment_ = env;
         for (auto& stmt : statements) {
             stmt->accept(shared_from_this());
         }
     } catch (...) {
-        environment_ = orig_env;
+        environment_ = previous_env;
         throw;
     }
-    environment_ = orig_env;
+    environment_ = previous_env;
 
     auto return_value = stack_.top();
     stack_.pop();
@@ -163,23 +181,20 @@ obj_t Interpreter::invoke(
 void Interpreter::interpret(const string_t& code) {
     lex::Lexer lexer;
     parser::Parser parser;
-    try
-    {
+    try {
         auto lexemes = lexer.lex(code);
-        auto program =  parser.parseProgram(lexemes);
+        auto program = parser.parseProgram(lexemes);
         program->accept(shared_from_this());
-    }
-    catch (std::exception& e)
-    {
+    } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
     }
-
 }
 void Interpreter::visit(std::shared_ptr<Print> node) {
     for (const auto& stmt : node->expressions) {
         stmt->accept(shared_from_this());
         auto val = stack_.top();
-        std::cout << val->GetType()->Stringify() << std::endl;;
+        std::cout << val->GetType()->Stringify() << std::endl;
+        ;
         stack_.pop();
     }
 }

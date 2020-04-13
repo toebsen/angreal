@@ -20,21 +20,16 @@ using ObjectID = boost::uuids::uuid;
 class Type;
 using type_t = std::shared_ptr<Type>;
 
-class Object {
+class Object final: public NonCopyable{
    public:
     explicit Object();
     explicit Object(type_t type);
 
-    Object(const Object& object) = delete;
-    Object(Object&& object) noexcept = delete;
-    virtual ~Object() = default;
-
-    Object& operator=(const Object& object) = delete;
-    Object& operator=(Object&& object) = delete;
+    ~Object() override = default;
 
     bool operator==(const Object& rhs) const;
 
-    bool HasSameType(const Object& rhs) const;
+    [[nodiscard]] bool HasSameType(const Object& rhs) const;
 
     [[nodiscard]] ObjectID ID() const;
     [[nodiscard]] const type_t& GetType() const;

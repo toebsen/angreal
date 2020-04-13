@@ -58,7 +58,7 @@ class Type {
         return ss.str();
     }
 
-    bool HasSameType(const Type& rhs) const {
+    inline bool HasSameType(const Type& rhs) const {
         return value_.index() == rhs.value_.index();
     };
 

@@ -14,7 +14,7 @@
 namespace tb_lang::parser {
 std::shared_ptr<AST::Program> Parser::parseProgram(
     const std::vector<Token>& tokens) {
-    auto statements = AST::nodes_t();
+    AST::statements_t statements;
     current_token = tokens.begin();
     next_token = tokens.begin() + 1;
 
@@ -92,7 +92,7 @@ void Parser::expectToken(const std::string& description,
 
 void Parser::error(const std::string& message) {
     std::cout << "ERROR: " << message << std::endl;
-    throw std::runtime_error(message);
+    throw RuntimeError(message);
 }
 
 std::shared_ptr<AST::Expression> Parser::parseExpression() {

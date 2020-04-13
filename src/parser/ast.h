@@ -17,12 +17,12 @@ namespace tb_lang::parser::AST {
 
 class Program : public Node, public std::enable_shared_from_this<Program>{
    public:
-    explicit Program(nodes_t nodes) : statements(nodes){};
+    explicit Program(statements_t statements) : statements(statements){};
 
     void accept(visitor_t visitor) override;
 
     virtual ~Program(){};
-    nodes_t statements;
+    statements_t statements;
 };
 
 class Block : public Statement, public std::enable_shared_from_this<Block> {

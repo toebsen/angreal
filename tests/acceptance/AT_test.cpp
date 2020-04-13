@@ -39,6 +39,8 @@ TEST_F(BaseTest, Scoping) {
 
     testing::internal::CaptureStdout();
     context_.interpreter->interpret(code);
+
     std::string output = testing::internal::GetCapturedStdout();
+    std::cout << "Output: " << output << std::endl;
     EXPECT_EQ("global\nglobal\n", output);
 }

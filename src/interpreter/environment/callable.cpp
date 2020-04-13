@@ -38,7 +38,7 @@ size_t Function::Arity(void) const { return function_decl_->parameters.size(); }
 
 obj_t Function::Call(const interpreter_t& interp,
                      const std::vector<obj_t>& args) {
-    auto local_env = std::make_shared<Environment>(*env_);
+    auto local_env = std::make_shared<Environment>(env_);
 
     if (CheckArity(args) == false) {
         std::stringstream ss;
@@ -46,7 +46,7 @@ obj_t Function::Call(const interpreter_t& interp,
            << "> with wrong args";
         ss << "Expected <" << Arity() << "> but got: " << args.size()
            << std::endl;
-        throw std::runtime_error(ss.str());
+        throw RuntimeError(ss.str());
     }
 
     for (size_t kI = 0; kI < args.size(); ++kI) {
@@ -57,7 +57,7 @@ obj_t Function::Call(const interpreter_t& interp,
             ss << "Called function <" << function_decl_->identifier
                << "> with wrongly typed arg";
             ss << "Expected <" << param_decl->identifier << std::endl;
-            throw std::runtime_error(ss.str());
+            throw RuntimeError(ss.str());
         }
 
         local_env->Declare(function_decl_->parameters[kI]->identifier,
