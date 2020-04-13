@@ -1,6 +1,5 @@
 
 SET(TEST_NAME test_at)
-MESSAGE(STATUS "Creating ${TEST_NAME}")
 
 SET(TEST_FILES
     AT_test.cpp)

@@ -1,7 +1,6 @@
 
 SET(TEST_NAME test_interpreter)
 
-MESSAGE(STATUS "Creating ${TEST_NAME}")
 
 SET(TEST_FILES
         test_fixtures.h test_fixtures.cpp
