@@ -106,6 +106,7 @@ template <typename ValueType>
 class ValueLiteral : public Expression {
    public:
     explicit ValueLiteral(const ValueType& value) : value(value){};
+    virtual ~ValueLiteral() = default;
 
     typedef ValueType value_t;
 

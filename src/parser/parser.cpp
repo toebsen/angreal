@@ -29,7 +29,7 @@ std::shared_ptr<AST::Program> Parser::parseProgram(
             statements.push_back(parseFunctionDeclaration());
         } else if (current_token->type() == Token::Type::PrintStatement) {
             statements.push_back(parsePrintStatement());
-        } else if (current_token->type() == Token::Type::RightCurlyBracket) {
+        } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
             statements.push_back(parseBlock());
         } else {
             consume();

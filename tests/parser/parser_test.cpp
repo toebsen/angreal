@@ -362,6 +362,9 @@ TEST_F(BlockTest, SimpleBlock) {
     statements_t statements{};
     auto block = std::make_shared<AST::Block>(statements);
     parseBlock("{\n}", block);
+
+    statements.push_back(std::make_shared<AST::Declaration>(TypeSystem::Type::Int, "x", std::make_shared<IntLiteral>(42)));
+    parseBlock("{\nvar x: int = 42;\n}", std::make_shared<AST::Block>(statements));
 }
 
 TEST_F(VariableDeclarationTest, SimpleDeclaration) {
