@@ -21,3 +21,24 @@ TEST_F(BaseTest, HelloWorld) {
     std::string output = testing::internal::GetCapturedStdout();
     EXPECT_EQ("Hello World\n", output);
 }
+
+TEST_F(BaseTest, Scoping) {
+    std::string code = R"(
+    var x: string = "global";
+    {
+        def printVar() : int {
+            print(x);
+            return 0;
+        }
+
+        printVar();
+        var x: string = "local";
+        printVar();
+    }
+    )";
+
+    testing::internal::CaptureStdout();
+    context_.interpreter->interpret(code);
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("global\nglobal\n", output);
+}
