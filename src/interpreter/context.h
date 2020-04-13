@@ -6,19 +6,19 @@
 #define TBLANG_SRC_INTERPRETER_CONTEXT_H_
 
 #include "interpreter.h"
-#include "scope.h"
+#include "environment/environment.h"
 
 namespace tb_lang::interpreter {
+
+using namespace environment;
 
 class Context {
    public:
     Context() {
-        env = std::make_shared<Environment>();
-        interpreter = std::make_shared<Interpreter>(global, env);
+        global = std::make_shared<Environment>();
+        interpreter = std::make_shared<Interpreter>(global);
     }
-
-    Scope global;
-    std::shared_ptr<Environment> env;
+    std::shared_ptr<Environment> global;
     std::shared_ptr<Interpreter> interpreter;
 };
 }  // namespace tb_lang::interpreter

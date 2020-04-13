@@ -3,7 +3,6 @@ add_subdirectory(environment)
 
 set(INTERPRETER_SOURCE
         interpreter.cpp
-        scope.cpp
         ../common/common.h context.h)
 
 

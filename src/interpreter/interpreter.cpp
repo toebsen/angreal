@@ -11,7 +11,10 @@
 #include "environment/callable.h"
 #include "environment/unary_op.h"
 
+
 namespace tb_lang::interpreter {
+
+using namespace environment;
 
 void Interpreter::visit(std::shared_ptr<Program> node) {
     for (const auto& stmt : node->statements) {
@@ -27,14 +30,14 @@ void Interpreter::visit(std::shared_ptr<Block> node) {
 
 void Interpreter::visit(std::shared_ptr<Declaration> node) {
     node->expression->accept(shared_from_this());
-    environment_->Declare(node->identifier, scope_.Stack().top());
-    scope_.Stack().pop();
+    environment_->Declare(node->identifier, stack_.top());
+    stack_.pop();
 }
 
 void Interpreter::visit(std::shared_ptr<Assignment> node) {
     node->expression->accept(shared_from_this());
-    environment_->Declare(node->identifier, scope_.Stack().top());
-    scope_.Stack().pop();
+    environment_->Declare(node->identifier, stack_.top());
+    stack_.pop();
 }
 
 void Interpreter::visit(std::shared_ptr<Return> node) {
@@ -44,7 +47,7 @@ void Interpreter::visit(std::shared_ptr<Return> node) {
 void Interpreter::visit(std::shared_ptr<IdentifierLiteral> node) {
     auto o = environment_->Get(node->name);
     if (o) {
-        scope_.Stack().push(o);
+        stack_.push(o);
     } else {
         throw std::runtime_error("Identifier <" + node->name +
                                  "> does not exist");
@@ -54,49 +57,49 @@ void Interpreter::visit(std::shared_ptr<IdentifierLiteral> node) {
 void Interpreter::visit(std::shared_ptr<IntLiteral> node) {
     type_t type = std::make_shared<IntType>(node->value);
     obj_t o = std::make_shared<Object>(type);
-    scope_.Stack().push(o);
+    stack_.push(o);
 }
 
 void Interpreter::visit(std::shared_ptr<BoolLiteral> node) {
     type_t type = std::make_shared<BoolType>(node->value);
     obj_t o = std::make_shared<Object>(type);
-    scope_.Stack().push(o);
+    stack_.push(o);
 }
 
 void Interpreter::visit(std::shared_ptr<FloatLiteral> node) {
     type_t type = std::make_shared<FloatType>(node->value);
     obj_t o = std::make_shared<Object>(type);
-    scope_.Stack().push(o);
+    stack_.push(o);
 }
 
 void Interpreter::visit(std::shared_ptr<StringLiteral> node) {
     type_t type = std::make_shared<StringType>(node->value);
     obj_t o = std::make_shared<Object>(type);
-    scope_.Stack().push(o);
+    stack_.push(o);
 }
 
 void Interpreter::visit(std::shared_ptr<UnaryOperation> node) {
     node->expression->accept(shared_from_this());
-    auto a = scope_.Stack().top();
-    scope_.Stack().pop();
+    auto a = stack_.top();
+    stack_.pop();
 
     UnaryOP op(node->type, a->GetType());
     obj_t o = std::make_shared<Object>(op.Call());
-    scope_.Stack().push(o);
+    stack_.push(o);
 }
 
 void Interpreter::visit(std::shared_ptr<BinaryOperation> node) {
     node->lhs->accept(shared_from_this());
-    auto a = scope_.Stack().top();
-    scope_.Stack().pop();
+    auto a = stack_.top();
+    stack_.pop();
 
     node->rhs->accept(shared_from_this());
-    auto b = scope_.Stack().top();
-    scope_.Stack().pop();
+    auto b = stack_.top();
+    stack_.pop();
 
     BinaryOp op(node->type, a->GetType(), b->GetType());
     obj_t o = std::make_shared<Object>(op.Call());
-    scope_.Stack().push(o);
+    stack_.push(o);
 }
 
 void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
@@ -108,8 +111,8 @@ void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
         std::vector<obj_t> args;
         for (const auto& item : node->args) {
             item->accept(shared_from_this());
-            args.push_back(scope_.Stack().top());
-            scope_.Stack().pop();
+            args.push_back(stack_.top());
+            stack_.pop();
         }
 
         auto ret_obj = fun->Call(this, args);
@@ -119,7 +122,7 @@ void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
                                          "returns wrong Type");
             }
             if (!ret_obj->GetType()->IsNull()) {
-                scope_.Stack().push(ret_obj);
+                stack_.push(ret_obj);
             }
         }
     }
@@ -151,8 +154,8 @@ obj_t Interpreter::invoke(
     }
     environment_ = orig_env;
 
-    auto return_value = scope_.Stack().top();
-    scope_.Stack().pop();
+    auto return_value = stack_.top();
+    stack_.pop();
 
     return return_value;
 }
@@ -175,9 +178,9 @@ void Interpreter::interpret(const string_t& code) {
 void Interpreter::visit(std::shared_ptr<Print> node) {
     for (const auto& stmt : node->expressions) {
         stmt->accept(shared_from_this());
-        auto val = scope_.Stack().top();
+        auto val = stack_.top();
         std::cout << val->GetType()->Stringify() << std::endl;;
-        scope_.Stack().pop();
+        stack_.pop();
     }
 }
 

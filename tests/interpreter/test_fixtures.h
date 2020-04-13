@@ -24,12 +24,12 @@ class BaseTest : public ::testing::Test {
 class DeclarationTest : public BaseTest {
    public:
     type_t GetResultType() {
-        auto obj = context_.global.Stack().top();
+        auto obj = context_.interpreter->Stack().top();
         return obj->GetType();
     }
 
     type_t GetResultType(const std::string& name) {
-        auto obj = context_.env->Get(name);
+        auto obj = context_.global->Get(name);
         return obj->GetType();
     }
 

@@ -5,16 +5,17 @@
 #ifndef TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
 #define TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
 
+#include <stack>
+
 #include "environment/environment.h"
-#include "scope.h"
 #include "visitor.h"
 
 namespace tb_lang::interpreter {
 
 class Interpreter : public Visitor {
    public:
-    Interpreter(Scope& scope, std::shared_ptr<environment::Environment> env)
-        : scope_(scope), environment_(env) {}
+    Interpreter(std::shared_ptr<environment::Environment> global)
+        : environment_(global) {}
 
     void visit(std::shared_ptr<Program> node) override;
     void visit(std::shared_ptr<Block> node) override;
@@ -33,15 +34,17 @@ class Interpreter : public Visitor {
     void visit(std::shared_ptr<FunctionDeclaration> node) override;
     void visit(std::shared_ptr<Print> node) override;
 
-    obj_t invoke(statements_t statements, const std::shared_ptr<environment::Environment>& env);
+    environment::obj_t invoke(statements_t statements,
+                 const std::shared_ptr<environment::Environment>& env);
 
     void interpret(const string_t& code);
 
+    std::stack<environment::obj_t>& Stack(){return stack_;};
+
    protected:
-    Scope& scope_;
+    std::stack<environment::obj_t> stack_;
     std::shared_ptr<environment::Environment> environment_;
 };
-
 
 }  // namespace tb_lang::interpreter
 
