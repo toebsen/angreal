@@ -10,6 +10,7 @@
 #include "environment/binary_op.h"
 #include "environment/callable.h"
 #include "environment/unary_op.h"
+#include "executor.h"
 
 namespace tb_lang::interpreter {
 
@@ -26,14 +27,14 @@ void Interpreter::visit(std::shared_ptr<Block> node) {
 }
 
 void Interpreter::visit(std::shared_ptr<Declaration> node) {
-//    std::cout << "Declaring Var " << node->identifier << std::endl;
+    //    std::cout << "Declaring Var " << node->identifier << std::endl;
     node->expression->accept(shared_from_this());
     environment_->Declare(node->identifier, stack_.top());
     stack_.pop();
 }
 
 void Interpreter::visit(std::shared_ptr<Assignment> node) {
-//    std::cout << "Assign Var " << node->identifier << std::endl;
+    //    std::cout << "Assign Var " << node->identifier << std::endl;
     node->expression->accept(shared_from_this());
     environment_->Assign(node->identifier, stack_.top());
     stack_.pop();
@@ -48,8 +49,7 @@ void Interpreter::visit(std::shared_ptr<IdentifierLiteral> node) {
     if (o) {
         stack_.push(o);
     } else {
-        throw RuntimeError("Identifier <" + node->name +
-                                 "> does not exist");
+        throw RuntimeError("Identifier <" + node->name + "> does not exist");
     }
 }
 
@@ -102,7 +102,7 @@ void Interpreter::visit(std::shared_ptr<BinaryOperation> node) {
 }
 
 void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
-//    std::cout << "Calling Function " << node->identifier << std::endl;
+    //    std::cout << "Calling Function " << node->identifier << std::endl;
     auto callable = environment_->Get(node->identifier);
     if (callable->GetType()->IsCallable()) {
         auto fun = callable->GetType()->AsCallable();
@@ -117,8 +117,7 @@ void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
         auto ret_obj = fun->Call(this, args);
         if (ret_obj) {
             if (!ret_obj->GetType()->HasSameType(*fun->ReturnType())) {
-                throw RuntimeError(node->identifier +
-                                         "returns wrong Type");
+                throw RuntimeError(node->identifier + "returns wrong Type");
             }
             if (!ret_obj->GetType()->IsNull()) {
                 stack_.push(ret_obj);
@@ -132,7 +131,7 @@ void Interpreter::visit(std::shared_ptr<FormalParameter> node) {
 }
 
 void Interpreter::visit(std::shared_ptr<FunctionDeclaration> node) {
-//    std::cout << "Declaring Function " << node->identifier << std::endl;
+    //    std::cout << "Declaring Function " << node->identifier << std::endl;
     auto fun_decl = std::make_shared<Function>(node, environment_);
     auto type = std::make_shared<Type>(fun_decl);
     obj_t o = std::make_shared<Object>(type);
@@ -142,35 +141,16 @@ void Interpreter::visit(std::shared_ptr<FunctionDeclaration> node) {
 void Interpreter::ExecuteBlock(
     statements_t statements,
     std::shared_ptr<environment::Environment> environment) {
-
-    auto previous_env = environment_;
-    try
-    {
-        environment_ = environment;
-        for (const auto& stmt : statements) {
-            stmt->accept(shared_from_this());
-        }
-    }
-    catch (...)
-    {
-        environment_ = previous_env;
-    }
+    Executor executor{*this};
+    executor.execute(statements, environment);
 }
 
 obj_t Interpreter::invoke(
     statements_t statements,
     const std::shared_ptr<environment::Environment>& env) {
-    auto previous_env = env;
-    try {
-        environment_ = env;
-        for (auto& stmt : statements) {
-            stmt->accept(shared_from_this());
-        }
-    } catch (...) {
-        environment_ = previous_env;
-        throw;
-    }
-    environment_ = previous_env;
+
+    Executor executor{*this};
+    executor.execute(statements, env);
 
     auto return_value = stack_.top();
     stack_.pop();

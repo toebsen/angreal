@@ -12,6 +12,8 @@
 
 namespace tb_lang::interpreter {
 
+class Executor;
+
 class Interpreter : public Visitor {
    public:
     Interpreter(std::shared_ptr<environment::Environment> global)
@@ -42,6 +44,8 @@ class Interpreter : public Visitor {
     std::stack<environment::obj_t>& Stack(){return stack_;};
 
    protected:
+    friend class Executor;
+
     void ExecuteBlock(statements_t statements, std::shared_ptr<environment::Environment> environment);
 
     std::stack<environment::obj_t> stack_;
