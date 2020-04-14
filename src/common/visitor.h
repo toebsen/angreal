@@ -12,6 +12,7 @@ namespace tb_lang {
 namespace parser::AST {
 class Program;
 class Block;
+class ExpressionStatement;
 class Declaration;
 class Assignment;
 class Return;
@@ -35,6 +36,7 @@ class Visitor : public std::enable_shared_from_this<Visitor>, private NonCopyabl
    public:
     virtual void visit(std::shared_ptr<Program> node) = 0;
     virtual void visit(std::shared_ptr<Block> node) = 0;
+    virtual void visit(std::shared_ptr<ExpressionStatement> node) = 0;
     virtual void visit(std::shared_ptr<Declaration> node) = 0;
     virtual void visit(std::shared_ptr<Assignment> node) = 0;
     virtual void visit(std::shared_ptr<Return> node) = 0;

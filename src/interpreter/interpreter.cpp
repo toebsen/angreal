@@ -178,5 +178,8 @@ void Interpreter::visit(std::shared_ptr<Print> node) {
         stack_.pop();
     }
 }
+void Interpreter::visit(std::shared_ptr<ExpressionStatement> node) {
+    node->expression->accept(shared_from_this());
+}
 
 }  // namespace tb_lang::interpreter

@@ -40,6 +40,8 @@ void Program::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
 
 void Block::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
 
+void ExpressionStatement::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
+
 void Declaration::accept(visitor_t visitor) {
     visitor->visit(shared_from_this());
 }

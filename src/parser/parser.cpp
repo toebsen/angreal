@@ -20,19 +20,9 @@ std::shared_ptr<AST::Program> Parser::parseProgram(
 
     while (current_token->type() != Token::Type::EndOfProgram &&
            current_token != tokens.end()) {
-        current_line_number = current_token->position().line;
-        if (current_token->type() == Token::Type::VarStatement) {
-            statements.push_back(parseVariableDeclaration());
-        } else if (current_token->type() == Token::Type::SetStatement) {
-            statements.push_back(parseAssignmentStatement());
-        } else if (current_token->type() == Token::Type::DefStatement) {
-            statements.push_back(parseFunctionDeclaration());
-        } else if (current_token->type() == Token::Type::PrintStatement) {
-            statements.push_back(parsePrintStatement());
-        } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
-            statements.push_back(parseBlock());
-        } else {
-            consume();
+        auto stmt = parseStatement();
+        if (stmt) {
+            statements.push_back(stmt);
         }
     }
     return std::make_shared<AST::Program>(statements);
@@ -46,7 +36,7 @@ std::shared_ptr<AST::Expression> Parser::parseExpression(
 }
 
 void Parser::consume() {
-    //        std::cout << "consuming: " << *next_token << std::endl;
+    std::cout << "consuming: " << *next_token << std::endl;
     current_token = next_token;
     next_token = current_token + 1;
 
@@ -97,8 +87,7 @@ void Parser::error(const std::string& message) {
 
 std::shared_ptr<AST::Expression> Parser::parseExpression() {
     std::shared_ptr<AST::Expression> expr = parseSimpleExpression();
-    if (next_token->type() == Token::Type::RelationalOp) {
-        consume();
+    if (current_token->type() == Token::Type::RelationalOp) {
         auto opType = current_token->value();
         consume();
         auto rhs = parseSimpleExpression();
@@ -109,9 +98,8 @@ std::shared_ptr<AST::Expression> Parser::parseExpression() {
 
 std::shared_ptr<AST::Expression> Parser::parseSimpleExpression() {
     std::shared_ptr<AST::Expression> expr = parseTerm();
-    if (next_token->type() == Token::Type::AdditiveOp ||
-        next_token->type() == Token::Type::AndStatement) {
-        consume();
+    if (current_token->type() == Token::Type::AdditiveOp ||
+        current_token->type() == Token::Type::AndStatement) {
         auto opType = current_token->value();
         consume();
         auto rhs = parseTerm();
@@ -122,10 +110,9 @@ std::shared_ptr<AST::Expression> Parser::parseSimpleExpression() {
 
 std::shared_ptr<AST::Expression> Parser::parseTerm() {
     std::shared_ptr<AST::Expression> expr = parseFactor();
-    if (next_token->type() == Token::Type::MulOp ||
-        next_token->type() == Token::Type::DivOp ||
-        next_token->type() == Token::Type::OrStatement) {
-        consume();
+    if (current_token->type() == Token::Type::MulOp ||
+        current_token->type() == Token::Type::DivOp ||
+        current_token->type() == Token::Type::OrStatement) {
         auto opType = current_token->value();
         consume();
         auto rhs = parseFactor();
@@ -138,8 +125,7 @@ AST::expressions_t Parser::parseActualParams() {
     AST::expressions_t params;
     params.push_back(parseExpression());
 
-    while (next_token->type() == Token::Type::Comma) {
-        consume();
+    while (current_token->type() == Token::Type::Comma) {
         consume();
         params.push_back(parseExpression());
     }
@@ -150,12 +136,13 @@ std::shared_ptr<AST::FunctionCall> Parser::parserFunctionCall() {
     std::string identifier = current_token->value();
     AST::expressions_t args;
     consume();  // identifier
+    expectToken(Token::Type::LeftBracket);
     consume();  //(
     if (current_token->type() != Token::Type::RightBracket) {
         args = parseActualParams();
-        consume();
     }
     expectToken(Token::Type::RightBracket);
+    consume();
     return std::make_shared<AST::FunctionCall>(identifier, args);
 }
 
@@ -166,12 +153,16 @@ std::shared_ptr<AST::Expression> Parser::parseFactor() {
         current_token->type() == Token::Type::String) {
         TypeSystem::Type decl =
             TypeSystem::mapTokenToLiteralType(current_token->type());
-        return TypeSystem::mapTypeToLiteral(decl, current_token->value());
+        auto value = current_token->value();
+        consume();
+        return TypeSystem::mapTypeToLiteral(decl, value);
     } else if (current_token->type() == Token::Type::Identifier) {
         if (next_token->type() == Token::Type::LeftBracket) {
             return parserFunctionCall();
         }
-        return std::make_shared<AST::IdentifierLiteral>(current_token->value());
+        auto value = current_token->value();
+        consume();
+        return std::make_shared<AST::IdentifierLiteral>(value);
     } else if (current_token->type() == Token::Type::AdditiveOp ||
                current_token->type() == Token::Type::Exclamation) {
         auto opType = current_token->value();
@@ -181,8 +172,8 @@ std::shared_ptr<AST::Expression> Parser::parseFactor() {
     } else if (current_token->type() == Token::Type::LeftBracket) {
         consume();
         auto expression = parseExpression();
-        consume();
         expectToken(Token::Type::RightBracket);
+        consume();
         return expression;
     }
     return nullptr;
@@ -197,21 +188,21 @@ std::shared_ptr<AST::Declaration> Parser::parseVariableDeclaration() {
     identifier = current_token->value();
     consume();
     expectToken(Token::Type::Colon);
-    type = parseType();
     consume();
+    type = parseType();
     expectToken(Token::Type::Equal);
     consume();
     expression = parseExpression();
-    consume();
     expectToken(Token::Type::SemiColon);
+    consume();
     return std::make_shared<AST::Declaration>(type, identifier, expression);
 }
 
 TypeSystem::Type Parser::parseType() {
-    consume();
     expectTokensOneOf({Token::Type::IntIdentifier, Token::Type::BoolIdentifier,
                        Token::Type::FloatIdentifier,
                        Token::Type::StringIdentifier});
+    consume();
     return TypeSystem::mapTokenToDeclarationType(current_token->type());
 }
 
@@ -225,8 +216,8 @@ std::shared_ptr<AST::Assignment> Parser::parseAssignmentStatement() {
     expectToken(Token::Type::Equal);
     consume();
     expression = parseExpression();
-    consume();
     expectToken(Token::Type::SemiColon);
+    consume();
     return std::make_shared<AST::Assignment>(identifier, expression);
 }
 
@@ -297,21 +288,19 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
     AST::statements_t statements;
     expectToken(Token::Type::LeftCurlyBracket);
     consume();
-    while (current_token->type() != Token::Type::RightCurlyBracket) {
-        current_line_number = current_token->position().line;
-        if (current_token->type() == Token::Type::VarStatement) {
-            statements.push_back(parseVariableDeclaration());
-        } else if (current_token->type() == Token::Type::SetStatement) {
-            statements.push_back(parseAssignmentStatement());
-        } else if (current_token->type() == Token::Type::DefStatement) {
-            statements.push_back(parseFunctionDeclaration());
-        } else if (current_token->type() == Token::Type::ReturnStatement) {
-            statements.push_back(parseReturnDeclaration());
-        } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
-            statements.push_back(parseBlock());
-        }
+    if(current_token->type() == Token::Type::RightCurlyBracket)
+    {
+        // don't parse empty block
         consume();
+        return std::make_shared<AST::Block>(statements);
     }
+
+    do {
+        auto stmt = parseStatement();
+        if (stmt) {
+            statements.push_back(stmt);
+        }
+    } while (current_token->type() != Token::Type::RightCurlyBracket && current_token->type() != Token::Type::EndOfProgram);
     expectToken(Token::Type::RightCurlyBracket);
     consume();
     return std::make_shared<AST::Block>(statements);
@@ -331,10 +320,33 @@ std::shared_ptr<AST::Statement> Parser::parsePrintStatement() {
     consume();  //(
     if (current_token->type() != Token::Type::RightBracket) {
         args = parseActualParams();
-        consume();
     }
     expectToken(Token::Type::RightBracket);
+    consume();
     return std::make_shared<AST::Print>(args);
+}
+std::shared_ptr<AST::Statement> Parser::parseStatement() {
+    current_line_number = current_token->position().line;
+
+    if (current_token->type() == Token::Type::VarStatement) {
+        return parseVariableDeclaration();
+    } else if (current_token->type() == Token::Type::SetStatement) {
+        return parseAssignmentStatement();
+    } else if (current_token->type() == Token::Type::DefStatement) {
+        return parseFunctionDeclaration();
+    } else if (current_token->type() == Token::Type::PrintStatement) {
+        return parsePrintStatement();
+    } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
+        return parseBlock();
+    } else {
+        auto expr = parseExpression();
+        if (expr) {
+            return std::make_shared<ExpressionStatement>(expr);
+        } else {
+            consume();
+        }
+    }
+    return nullptr;
 }
 
 }  // namespace tb_lang::parser

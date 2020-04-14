@@ -36,6 +36,18 @@ class Block : public Statement, public std::enable_shared_from_this<Block> {
     statements_t statements;
 };
 
+class ExpressionStatement : public Statement, public std::enable_shared_from_this<ExpressionStatement> {
+   public:
+    explicit ExpressionStatement(expression_t expression) : expression(expression){};
+
+    void accept(visitor_t visitor) override;
+
+    virtual ~ExpressionStatement() = default;
+
+    expression_t expression;
+};
+
+
 class Declaration : public Statement, public std::enable_shared_from_this<Declaration>{
    public:
     Declaration(const TypeSystem::Type& type, const std::string& identifier,

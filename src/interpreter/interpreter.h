@@ -21,6 +21,7 @@ class Interpreter : public Visitor {
 
     void visit(std::shared_ptr<Program> node) override;
     void visit(std::shared_ptr<Block> node) override;
+    void visit(std::shared_ptr<ExpressionStatement> node) override;
     void visit(std::shared_ptr<Declaration> node) override;
     void visit(std::shared_ptr<Assignment> node) override;
     void visit(std::shared_ptr<Return> node) override;

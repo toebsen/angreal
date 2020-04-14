@@ -55,6 +55,8 @@ class Parser {
 
     TypeSystem::Type parseType();
 
+    std::shared_ptr<AST::Statement> parseStatement();
+
     void consume();
 
     void expectToken(Token::Type t);
