@@ -5,12 +5,12 @@
 #include "interpreter.h"
 
 #include "../lexer/lexer.h"
-#include "../parser/ast.h"
 #include "../parser/parser.h"
 #include "environment/binary_op.h"
 #include "environment/callable.h"
 #include "environment/unary_op.h"
 #include "executor.h"
+#include "analysis/semantic/semantic_analyzer.h"
 
 namespace tb_lang::interpreter {
 
@@ -161,6 +161,8 @@ obj_t Interpreter::invoke(
 void Interpreter::interpret(const string_t& code) {
     lex::Lexer lexer;
     parser::Parser parser;
+    analysis::SemanticAnalyzer semantic_analyzer;
+
     try {
         auto lexemes = lexer.lex(code);
         auto program = parser.parseProgram(lexemes);

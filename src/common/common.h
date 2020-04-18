@@ -11,6 +11,12 @@
 namespace tb_lang {
 using string_t = std::string;
 
+#ifdef DEBUG_
+#define TESTABLE public
+#else
+#define TESTABLE private
+#endif
+
 class NonCopyable {
    public:
     NonCopyable(const NonCopyable&) = delete;

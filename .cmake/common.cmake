@@ -1,5 +1,7 @@
 set(CMAKE_CXX_STANDARD 20)
 
+add_definitions(-DDEBUG_)
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     # using Clang
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")

@@ -1,34 +1,22 @@
 //
-// Created by toebs on 29.03.2020.
+// Created by toebs on 18.04.2020.
 //
 
-#ifndef TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
-#define TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
+#ifndef TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
+#define TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
 
-#include <stack>
-
-#include "environment/environment.h"
 #include "visitor.h"
 
-namespace tb_lang::interpreter {
+namespace tb_lang {
 
-class Executor;
-
-class Interpreter : public Visitor {
+namespace interpreter {
+namespace analysis {
+class SemanticAnalyzer : public Visitor {
    public:
-    Interpreter(std::shared_ptr<environment::Environment> global)
-        : environment_(global) {}
+    SemanticAnalyzer() = default;
 
-    void interpret(const string_t& code);
+    TESTABLE:
 
-    environment::obj_t invoke(
-        statements_t statements,
-        const std::shared_ptr<environment::Environment>& env);
-
-
-    std::stack<environment::obj_t>& Stack() { return stack_; };
-
-   TESTABLE:
     void visit(std::shared_ptr<Program> node) override;
     void visit(std::shared_ptr<Block> node) override;
     void visit(std::shared_ptr<ExpressionStatement> node) override;
@@ -46,18 +34,9 @@ class Interpreter : public Visitor {
     void visit(std::shared_ptr<FormalParameter> node) override;
     void visit(std::shared_ptr<FunctionDeclaration> node) override;
     void visit(std::shared_ptr<Print> node) override;
-
-
-   private:
-    friend class Executor;
-
-    void ExecuteBlock(statements_t statements,
-                      std::shared_ptr<environment::Environment> environment);
-
-    std::stack<environment::obj_t> stack_;
-    std::shared_ptr<environment::Environment> environment_;
 };
+}  // namespace analysis
+}  // namespace interpreter
+}  // namespace tb_lang
 
-}  // namespace tb_lang::interpreter
-
-#endif  // TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
+#endif  // TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_

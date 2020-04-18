@@ -5,7 +5,10 @@
 #ifndef TBLANG_VISITOR_H
 #define TBLANG_VISITOR_H
 
+#include <memory>
 #include <string>
+
+#include "common.h"
 
 namespace tb_lang {
 
@@ -32,7 +35,8 @@ class Print;
 
 using namespace parser::AST;
 
-class Visitor : public std::enable_shared_from_this<Visitor>, private NonCopyable {
+class Visitor : public std::enable_shared_from_this<Visitor>,
+                private NonCopyable {
    public:
     virtual void visit(std::shared_ptr<Program> node) = 0;
     virtual void visit(std::shared_ptr<Block> node) = 0;
