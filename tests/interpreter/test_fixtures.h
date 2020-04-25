@@ -117,10 +117,14 @@ class FunctionTest : public DeclarationTest
    protected:
     void DeclareArityZeroFunction(const std::string& name, TypeSystem::Type return_type = TypeSystem::Type::String)
     {
+        auto inner_decl =  std::make_shared<AST::Declaration>(TypeSystem::Type::String, "text",
+                                                              std::make_shared<StringLiteral>("World"));
+
+        auto ident = std::make_shared<AST::IdentifierLiteral>("text");
+        context_.interpreter->ResolveLocal(ident, 0);
         statements_t statements{
-            std::make_shared<AST::Declaration>(TypeSystem::Type::String, "text",
-                                               std::make_shared<StringLiteral>("World")),
-            std::make_shared<AST::Return>(std::make_shared<AST::IdentifierLiteral>("text"))};
+            inner_decl,
+            std::make_shared<AST::Return>(ident)};
 
         formal_parameters parameters = {};
         auto declaration = std::make_shared<FunctionDeclaration>(return_type, name, parameters, statements);
@@ -129,6 +133,9 @@ class FunctionTest : public DeclarationTest
 
     void DeclareArityOneIntFunction(const std::string& name, int init_value)
     {
+        auto ident = std::make_shared<AST::IdentifierLiteral>("test");
+        context_.interpreter->ResolveLocal(ident, 0);
+
         statements_t statements{
             std::make_shared<AST::Declaration>(TypeSystem::Type::Int, "test",
                                                std::make_shared<BinaryOperation>(
@@ -138,10 +145,12 @@ class FunctionTest : public DeclarationTest
                                                    )
                                                ),
 
-            std::make_shared<AST::Return>(std::make_shared<AST::IdentifierLiteral>("test"))};
+            std::make_shared<AST::Return>(ident)};
 
         formal_parameters parameters = {std::make_shared<FormalParameter>(TypeSystem::Type::Int, "arg1")};
         auto declaration = std::make_shared<FunctionDeclaration>(TypeSystem::Type::Int, name, parameters, statements);
+
+        // Todo: run semantic analyzer
         context_.interpreter->visit(declaration);
     }
 };

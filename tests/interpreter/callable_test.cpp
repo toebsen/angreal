@@ -29,8 +29,8 @@ TEST_F(FunctionTest, StringFunctionWithZeroArity_WrongReturnType) {
 
 TEST_F(FunctionTest, IntFunctionWithOneArity) {
     DeclareArityOneIntFunction("myInt", 42);
-    auto args = expressions_t{{std::make_shared<IntLiteral>(5)}};
-    auto call = std::make_shared<FunctionCall>("myInt", args);
+    expression_t param = std::make_shared<IntLiteral>(5);
+    auto call = std::make_shared<FunctionCall>("myInt", expressions_t{param});
     context_.interpreter->visit(call);
     ASSERT_EQ(GetResultType()->AsInteger(), 47);
 }

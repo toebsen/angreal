@@ -38,23 +38,23 @@ using namespace parser::AST;
 class Visitor : public std::enable_shared_from_this<Visitor>,
                 private NonCopyable {
    public:
-    virtual void visit(std::shared_ptr<Program> node) = 0;
-    virtual void visit(std::shared_ptr<Block> node) = 0;
-    virtual void visit(std::shared_ptr<ExpressionStatement> node) = 0;
-    virtual void visit(std::shared_ptr<Declaration> node) = 0;
-    virtual void visit(std::shared_ptr<Assignment> node) = 0;
-    virtual void visit(std::shared_ptr<Return> node) = 0;
-    virtual void visit(std::shared_ptr<Print> node) = 0;
-    virtual void visit(std::shared_ptr<IdentifierLiteral> node) = 0;
-    virtual void visit(std::shared_ptr<BoolLiteral> node) = 0;
-    virtual void visit(std::shared_ptr<IntLiteral> node) = 0;
-    virtual void visit(std::shared_ptr<FloatLiteral> node) = 0;
-    virtual void visit(std::shared_ptr<StringLiteral> node) = 0;
-    virtual void visit(std::shared_ptr<UnaryOperation> node) = 0;
-    virtual void visit(std::shared_ptr<BinaryOperation> node) = 0;
-    virtual void visit(std::shared_ptr<FunctionCall> node) = 0;
-    virtual void visit(std::shared_ptr<FormalParameter> node) = 0;
-    virtual void visit(std::shared_ptr<FunctionDeclaration> node) = 0;
+    virtual void visit(const std::shared_ptr<Program>& node) = 0;
+    virtual void visit(const std::shared_ptr<Block>& node) = 0;
+    virtual void visit(const std::shared_ptr<ExpressionStatement>& node) = 0;
+    virtual void visit(const std::shared_ptr<Declaration>& node) = 0;
+    virtual void visit(const std::shared_ptr<Assignment>& node) = 0;
+    virtual void visit(const std::shared_ptr<Return>& node) = 0;
+    virtual void visit(const std::shared_ptr<Print>& node) = 0;
+    virtual void visit(const std::shared_ptr<IdentifierLiteral>& node) = 0;
+    virtual void visit(const std::shared_ptr<BoolLiteral>& node) = 0;
+    virtual void visit(const std::shared_ptr<IntLiteral>& node) = 0;
+    virtual void visit(const std::shared_ptr<FloatLiteral>& node) = 0;
+    virtual void visit(const std::shared_ptr<StringLiteral>& node) = 0;
+    virtual void visit(const std::shared_ptr<UnaryOperation>& node) = 0;
+    virtual void visit(const std::shared_ptr<BinaryOperation>& node) = 0;
+    virtual void visit(const std::shared_ptr<FunctionCall>& node) = 0;
+    virtual void visit(const std::shared_ptr<FormalParameter>& node) = 0;
+    virtual void visit(const std::shared_ptr<FunctionDeclaration>& node) = 0;
 };
 }  // namespace tb_lang
 

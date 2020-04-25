@@ -19,19 +19,19 @@ using visitor_t = std::shared_ptr<Visitor>;
    public:
     virtual ~Node() = default;
 
-    virtual void accept(visitor_t visitor) = 0;
+    virtual void accept(const visitor_t& visitor) = 0;
 };
 
 class Statement : public Node {
    public:
-    virtual void accept(visitor_t visitor) = 0;
+    virtual void accept(const visitor_t& visitor) = 0;
 
     virtual ~Statement() = default;
 };
 
 class Expression : public Node {
    public:
-    virtual void accept(visitor_t visitor) = 0;
+    virtual void accept(const visitor_t& visitor) = 0;
 
     virtual ~Expression() = default;
 };

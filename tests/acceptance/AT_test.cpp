@@ -22,11 +22,13 @@ TEST_F(BaseTest, HelloWorld) {
     EXPECT_EQ("Hello World\n", output);
 }
 
-TEST_F(BaseTest, Scoping) {
+
+TEST_F(BaseTest, ScopingWithFunction) {
     std::string code = R"(
     var x: string = "global";
     {
         def printVar() : int {
+            var y: int = 42;
             print(x);
             return 0;
         }
@@ -39,8 +41,27 @@ TEST_F(BaseTest, Scoping) {
 
     testing::internal::CaptureStdout();
     context_.interpreter->interpret(code);
-
     std::string output = testing::internal::GetCapturedStdout();
-    std::cout << "Output: " << output << std::endl;
     EXPECT_EQ("global\nglobal\n", output);
+}
+
+TEST_F(BaseTest, ScopingWithFunction2) {
+    std::string code = R"(
+    var x: string = "global";
+    {
+        def printVar(x: string) : int {
+            print(x);
+            return 0;
+        }
+
+        printVar(x);
+        var x: string = "local";
+        printVar(x);
+    }
+    )";
+
+    testing::internal::CaptureStdout();
+    context_.interpreter->interpret(code);
+    std::string output = testing::internal::GetCapturedStdout();
+    EXPECT_EQ("global\nlocal\n", output);
 }

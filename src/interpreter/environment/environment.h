@@ -17,20 +17,25 @@ namespace tb_lang::interpreter::environment {
 
 using obj_t = std::shared_ptr<Object>;
 
-class Environment final : public NonCopyable {
+class Environment final : public NonCopyable,
+                          public std::enable_shared_from_this<Environment> {
    public:
     Environment() = default;
     explicit Environment(const environment_t& enclosing);
     virtual ~Environment() override = default;
 
     obj_t Get(const std::string& name);
+    obj_t Get(const std::string& name, size_t distance);
     void Declare(const std::string& name, const obj_t& obj);
+    void Declare(const std::string& name, const obj_t& obj, size_t distance);
     void Assign(const std::string& name, const obj_t& obj);
+    void Assign(const std::string& name, const obj_t& obj, size_t distance);
 
    private:
     [[nodiscard]] inline obj_t Get(const ObjectID& id);
     [[nodiscard]] inline bool Contains(const obj_t& obj) const;
     [[nodiscard]] inline bool Contains(const std::string& name) const;
+    environment_t Ancestor(size_t distance);
 
     void Remove(obj_t& obj);
     void Remove(const std::string& name);

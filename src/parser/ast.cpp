@@ -11,71 +11,71 @@ namespace tb_lang::parser::AST {
 BoolLiteral::BoolLiteral(const std::string& value)
     : ValueLiteral<bool>(value == "true") {}
 
-void BoolLiteral::accept(visitor_t visitor) {
+void BoolLiteral::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 };
 
 IntLiteral::IntLiteral(const std::string& value)
     : ValueLiteral<int>(boost::lexical_cast<int>(value)) {}
 
-void IntLiteral::accept(visitor_t visitor) {
+void IntLiteral::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 };
 
 FloatLiteral::FloatLiteral(const std::string& value)
     : ValueLiteral<float>(boost::lexical_cast<float>(value)) {}
 
-void FloatLiteral::accept(visitor_t visitor) {
+void FloatLiteral::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 };
 
 StringLiteral::StringLiteral(const std::string& value)
     : ValueLiteral<std::string>(value) {}
 
-void StringLiteral::accept(visitor_t visitor) {
+void StringLiteral::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 };
 
-void Program::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
+void Program::accept(const visitor_t& visitor) { visitor->visit(shared_from_this()); }
 
-void Block::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
+void Block::accept(const visitor_t& visitor) { visitor->visit(shared_from_this()); }
 
-void ExpressionStatement::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
+void ExpressionStatement::accept(const visitor_t& visitor) { visitor->visit(shared_from_this()); }
 
-void Declaration::accept(visitor_t visitor) {
+void Declaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-void Assignment::accept(visitor_t visitor) {
+void Assignment::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-void Return::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
+void Return::accept(const visitor_t& visitor) { visitor->visit(shared_from_this()); }
 
-void Print::accept(visitor_t visitor) { visitor->visit(shared_from_this()); }
+void Print::accept(const visitor_t& visitor) { visitor->visit(shared_from_this()); }
 
 
-void IdentifierLiteral::accept(visitor_t visitor) {
+void IdentifierLiteral::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-void UnaryOperation::accept(visitor_t visitor) {
+void UnaryOperation::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-void BinaryOperation::accept(visitor_t visitor) {
+void BinaryOperation::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-void FunctionCall::accept(visitor_t visitor) {
+void FunctionCall::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-void FunctionDeclaration::accept(visitor_t visitor) {
+void FunctionDeclaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-void FormalParameter::accept(visitor_t visitor) {
+void FormalParameter::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 }  // namespace tb_lang::parser::AST

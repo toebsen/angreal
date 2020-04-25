@@ -19,6 +19,7 @@ obj_t Environment::Get(const std::string& name) {
     if (enclosing_) {
         return enclosing_->Get(name);
     }
+
     throw RuntimeError("<" + name + "> is not defined!");
 }
 
@@ -27,6 +28,10 @@ obj_t Environment::Get(const ObjectID& id) {
         return objects_[id];
     }
     return {};
+}
+
+obj_t Environment::Get(const std::string& name, size_t distance) {
+    return Ancestor(distance)->Get(name);
 }
 
 void Environment::Remove(obj_t& obj) {
@@ -60,6 +65,11 @@ void Environment::Declare(const std::string& name, const obj_t& obj) {
     }
 }
 
+void Environment::Declare(const std::string& name, const obj_t& obj,
+                          size_t distance) {
+    Ancestor(distance)->Declare(name, obj);
+}
+
 void Environment::Assign(const std::string& name, const obj_t& obj) {
     if (obj) {
         if (Contains(name)) {
@@ -78,11 +88,24 @@ void Environment::Assign(const std::string& name, const obj_t& obj) {
     }
 }
 
+void Environment::Assign(const std::string& name, const obj_t& obj,
+                         size_t distance) {
+    Ancestor(distance)->Assign(name, obj);
+}
+
 bool Environment::Contains(const obj_t& obj) const {
     return objects_.find(obj->ID()) != objects_.end();
 }
 bool Environment::Contains(const std::string& name) const {
     return name_to_id_.find(name) != name_to_id_.end();
+}
+
+environment_t Environment::Ancestor(size_t distance) {
+    auto envp(shared_from_this());
+    for (int i = 0; i < distance; ++i) {
+        envp = envp->enclosing_;
+    }
+    return envp;
 }
 
 }  // namespace tb_lang::interpreter::environment

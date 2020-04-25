@@ -17,9 +17,9 @@ namespace tb_lang::parser::AST {
 
 class Program : public Node, public std::enable_shared_from_this<Program>{
    public:
-    explicit Program(statements_t statements) : statements(statements){};
+    explicit Program(const statements_t& statements) : statements(statements){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     virtual ~Program(){};
     statements_t statements;
@@ -27,9 +27,9 @@ class Program : public Node, public std::enable_shared_from_this<Program>{
 
 class Block : public Statement, public std::enable_shared_from_this<Block> {
    public:
-    explicit Block(statements_t statements) : statements(statements){};
+    explicit Block(const statements_t& statements) : statements(statements){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     virtual ~Block() = default;
 
@@ -38,9 +38,9 @@ class Block : public Statement, public std::enable_shared_from_this<Block> {
 
 class ExpressionStatement : public Statement, public std::enable_shared_from_this<ExpressionStatement> {
    public:
-    explicit ExpressionStatement(expression_t expression) : expression(expression){};
+    explicit ExpressionStatement(const expression_t& expression) : expression(expression){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     virtual ~ExpressionStatement() = default;
 
@@ -51,10 +51,10 @@ class ExpressionStatement : public Statement, public std::enable_shared_from_thi
 class Declaration : public Statement, public std::enable_shared_from_this<Declaration>{
    public:
     Declaration(const TypeSystem::Type& type, const std::string& identifier,
-                expression_t expression)
+                const expression_t& expression)
         : type(type), identifier(identifier), expression(expression){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     virtual ~Declaration() = default;
 
@@ -65,10 +65,10 @@ class Declaration : public Statement, public std::enable_shared_from_this<Declar
 
 class Assignment : public Statement, public std::enable_shared_from_this<Assignment>{
    public:
-    Assignment(const std::string& identifier, expression_t expression)
+    Assignment(const std::string& identifier, const expression_t& expression)
         : identifier(identifier), expression(expression){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     virtual ~Assignment() = default;
 
@@ -79,10 +79,10 @@ class Assignment : public Statement, public std::enable_shared_from_this<Assignm
 
 class Return : public Statement, public std::enable_shared_from_this<Return>{
    public:
-    Return(expression_t expression)
+    Return(const expression_t& expression)
         : expression(expression){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     virtual ~Return() = default;
 
@@ -91,10 +91,10 @@ class Return : public Statement, public std::enable_shared_from_this<Return>{
 
 class Print : public Statement, public std::enable_shared_from_this<Print>{
    public:
-    Print(expressions_t expressions)
+    Print(const expressions_t& expressions)
         : expressions(expressions){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     virtual ~Print() = default;
 
@@ -105,7 +105,7 @@ class IdentifierLiteral : public Expression, public std::enable_shared_from_this
    public:
     IdentifierLiteral(std::string identifier) : name(std::move(identifier)){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     bool operator==(const IdentifierLiteral& rhs) const {
         return name == rhs.name;
@@ -139,7 +139,7 @@ class BoolLiteral : public ValueLiteral<bool>, public std::enable_shared_from_th
 
     static TypeSystem::Type type() { return TypeSystem::Type::Bool; };
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 };
 
 class IntLiteral : public ValueLiteral<int>, public std::enable_shared_from_this<IntLiteral>  {
@@ -150,7 +150,7 @@ class IntLiteral : public ValueLiteral<int>, public std::enable_shared_from_this
 
     static TypeSystem::Type type() { return TypeSystem::Type::Int; };
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 };
 
 class FloatLiteral : public ValueLiteral<float>, public std::enable_shared_from_this<FloatLiteral>  {
@@ -161,7 +161,7 @@ class FloatLiteral : public ValueLiteral<float>, public std::enable_shared_from_
 
     static TypeSystem::Type type() { return TypeSystem::Type::Float; };
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 };
 
 class StringLiteral : public ValueLiteral<std::string>, public std::enable_shared_from_this<StringLiteral> {
@@ -170,7 +170,7 @@ class StringLiteral : public ValueLiteral<std::string>, public std::enable_share
 
     static TypeSystem::Type type() { return TypeSystem::Type::String; };
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 };
 
 class UnaryOperation : public Expression, public std::enable_shared_from_this<UnaryOperation> {
@@ -190,13 +190,13 @@ class UnaryOperation : public Expression, public std::enable_shared_from_this<Un
         return OpType::Unknown;
     }
 
-    UnaryOperation(const std::string& opType, expression_t expression)
+    UnaryOperation(const std::string& opType, const expression_t& expression)
         : UnaryOperation(inferType(opType), expression){};
 
-    UnaryOperation(OpType opType, expression_t expression)
+    UnaryOperation(OpType opType, const expression_t& expression)
         : type(opType), expression(expression){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     OpType type;
     expression_t expression;
@@ -229,14 +229,14 @@ class BinaryOperation : public Expression, public std::enable_shared_from_this<B
         return OpType::Unknown;
     }
 
-    BinaryOperation(const std::string& opType, expression_t lhs,
-                    expression_t rhs)
+    BinaryOperation(const std::string& opType, const expression_t& lhs,
+                    const expression_t& rhs)
         : BinaryOperation(inferType(opType), lhs, rhs){};
 
     BinaryOperation(OpType opType, expression_t lhs, expression_t rhs)
         : type(opType), lhs(lhs), rhs(rhs){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     OpType type;
     expression_t lhs;
@@ -245,10 +245,10 @@ class BinaryOperation : public Expression, public std::enable_shared_from_this<B
 
 class FunctionCall : public Expression, public std::enable_shared_from_this<FunctionCall> {
    public:
-    FunctionCall(const std::string& identifier, expressions_t args)
+    FunctionCall(const std::string& identifier, const expressions_t& args)
         : identifier(identifier), args(args){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     std::string identifier;
     expressions_t args;
@@ -263,7 +263,7 @@ class FormalParameter : public Expression, public std::enable_shared_from_this<F
         return type == other.type && identifier == other.identifier;
     }
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     TypeSystem::Type type;
     std::string identifier;
@@ -275,13 +275,13 @@ class FunctionDeclaration : public Statement, public std::enable_shared_from_thi
     FunctionDeclaration(const TypeSystem::Type& type,
                         const std::string& identifier,
                         const formal_parameters& parameters,
-                        statements_t statements)
+                        const statements_t& statements)
         : type(type),
           identifier(identifier),
           parameters(parameters),
           statements(statements){};
 
-    void accept(visitor_t visitor) override;
+    void accept(const visitor_t& visitor) override;
 
     std::string identifier;
     const TypeSystem::Type type;

@@ -6,46 +6,56 @@
 
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
+#include "analysis/semantic/semantic_analyzer.h"
 #include "environment/binary_op.h"
 #include "environment/callable.h"
 #include "environment/unary_op.h"
 #include "executor.h"
-#include "analysis/semantic/semantic_analyzer.h"
 
 namespace tb_lang::interpreter {
 
 using namespace environment;
 
-void Interpreter::visit(std::shared_ptr<Program> node) {
+void Interpreter::visit(const std::shared_ptr<Program>& node) {
     for (const auto& stmt : node->statements) {
         stmt->accept(shared_from_this());
     }
 }
 
-void Interpreter::visit(std::shared_ptr<Block> node) {
+void Interpreter::interpret(const statement_t& statement) {
+    statement->accept(shared_from_this());
+}
+
+void Interpreter::interpret(const expression_t& expression) {
+    expression->accept(shared_from_this());
+}
+
+void Interpreter::visit(const std::shared_ptr<Block>& node) {
     ExecuteBlock(node->statements, std::make_shared<Environment>(environment_));
 }
 
-void Interpreter::visit(std::shared_ptr<Declaration> node) {
-    //    std::cout << "Declaring Var " << node->identifier << std::endl;
+void Interpreter::visit(const std::shared_ptr<Declaration>& node) {
     node->expression->accept(shared_from_this());
     environment_->Declare(node->identifier, stack_.top());
     stack_.pop();
 }
 
-void Interpreter::visit(std::shared_ptr<Assignment> node) {
-    //    std::cout << "Assign Var " << node->identifier << std::endl;
+void Interpreter::visit(const std::shared_ptr<Assignment>& node) {
     node->expression->accept(shared_from_this());
-    environment_->Assign(node->identifier, stack_.top());
+    if (locals_.contains(node)) {
+        environment_->Assign(node->identifier, stack_.top(), locals_[node]);
+    } else {
+        globals_->Assign(node->identifier, stack_.top());
+    }
     stack_.pop();
 }
 
-void Interpreter::visit(std::shared_ptr<Return> node) {
+void Interpreter::visit(const std::shared_ptr<Return>& node) {
     node->expression->accept(shared_from_this());
 }
 
-void Interpreter::visit(std::shared_ptr<IdentifierLiteral> node) {
-    auto o = environment_->Get(node->name);
+void Interpreter::visit(const std::shared_ptr<IdentifierLiteral>& node) {
+    auto o = LookupVariable(node->name, node);
     if (o) {
         stack_.push(o);
     } else {
@@ -53,31 +63,31 @@ void Interpreter::visit(std::shared_ptr<IdentifierLiteral> node) {
     }
 }
 
-void Interpreter::visit(std::shared_ptr<IntLiteral> node) {
+void Interpreter::visit(const std::shared_ptr<IntLiteral>& node) {
     type_t type = std::make_shared<IntType>(node->value);
     obj_t o = std::make_shared<Object>(type);
     stack_.push(o);
 }
 
-void Interpreter::visit(std::shared_ptr<BoolLiteral> node) {
+void Interpreter::visit(const std::shared_ptr<BoolLiteral>& node) {
     type_t type = std::make_shared<BoolType>(node->value);
     obj_t o = std::make_shared<Object>(type);
     stack_.push(o);
 }
 
-void Interpreter::visit(std::shared_ptr<FloatLiteral> node) {
+void Interpreter::visit(const std::shared_ptr<FloatLiteral>& node) {
     type_t type = std::make_shared<FloatType>(node->value);
     obj_t o = std::make_shared<Object>(type);
     stack_.push(o);
 }
 
-void Interpreter::visit(std::shared_ptr<StringLiteral> node) {
+void Interpreter::visit(const std::shared_ptr<StringLiteral>& node) {
     type_t type = std::make_shared<StringType>(node->value);
     obj_t o = std::make_shared<Object>(type);
     stack_.push(o);
 }
 
-void Interpreter::visit(std::shared_ptr<UnaryOperation> node) {
+void Interpreter::visit(const std::shared_ptr<UnaryOperation>& node) {
     node->expression->accept(shared_from_this());
     auto a = stack_.top();
     stack_.pop();
@@ -87,7 +97,7 @@ void Interpreter::visit(std::shared_ptr<UnaryOperation> node) {
     stack_.push(o);
 }
 
-void Interpreter::visit(std::shared_ptr<BinaryOperation> node) {
+void Interpreter::visit(const std::shared_ptr<BinaryOperation>& node) {
     node->lhs->accept(shared_from_this());
     auto a = stack_.top();
     stack_.pop();
@@ -101,9 +111,9 @@ void Interpreter::visit(std::shared_ptr<BinaryOperation> node) {
     stack_.push(o);
 }
 
-void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
+void Interpreter::visit(const std::shared_ptr<FunctionCall>& node) {
     //    std::cout << "Calling Function " << node->identifier << std::endl;
-    auto callable = environment_->Get(node->identifier);
+    auto callable = LookupVariable(node->identifier, node);
     if (callable->GetType()->IsCallable()) {
         auto fun = callable->GetType()->AsCallable();
 
@@ -126,21 +136,22 @@ void Interpreter::visit(std::shared_ptr<FunctionCall> node) {
     }
 }
 
-void Interpreter::visit(std::shared_ptr<FormalParameter> node) {
+void Interpreter::visit(const std::shared_ptr<FormalParameter>& node) {
     //
 }
 
-void Interpreter::visit(std::shared_ptr<FunctionDeclaration> node) {
+void Interpreter::visit(const std::shared_ptr<FunctionDeclaration>& node) {
     //    std::cout << "Declaring Function " << node->identifier << std::endl;
     auto fun_decl = std::make_shared<Function>(node, environment_);
     auto type = std::make_shared<Type>(fun_decl);
     obj_t o = std::make_shared<Object>(type);
+
     environment_->Declare(node->identifier, o);
 }
 
 void Interpreter::ExecuteBlock(
-    statements_t statements,
-    std::shared_ptr<environment::Environment> environment) {
+    const statements_t& statements,
+    const std::shared_ptr<environment::Environment>& environment) {
     Executor executor{*this};
     executor.execute(statements, environment);
 }
@@ -148,7 +159,6 @@ void Interpreter::ExecuteBlock(
 obj_t Interpreter::invoke(
     statements_t statements,
     const std::shared_ptr<environment::Environment>& env) {
-
     Executor executor{*this};
     executor.execute(statements, env);
 
@@ -161,27 +171,54 @@ obj_t Interpreter::invoke(
 void Interpreter::interpret(const string_t& code) {
     lex::Lexer lexer;
     parser::Parser parser;
-    analysis::SemanticAnalyzer semantic_analyzer;
+    auto semantic_analyzer =
+        std::make_shared<analysis::SemanticAnalyzer>(*this);
 
     try {
         auto lexemes = lexer.lex(code);
         auto program = parser.parseProgram(lexemes);
-        program->accept(shared_from_this());
+        semantic_analyzer->Resolve(program->statements);
+        interpret(program->statements);
     } catch (std::exception& e) {
         std::cout << e.what() << std::endl;
     }
 }
-void Interpreter::visit(std::shared_ptr<Print> node) {
+void Interpreter::visit(const std::shared_ptr<Print>& node) {
     for (const auto& stmt : node->expressions) {
         stmt->accept(shared_from_this());
         auto val = stack_.top();
         std::cout << val->GetType()->Stringify() << std::endl;
-        ;
         stack_.pop();
     }
 }
-void Interpreter::visit(std::shared_ptr<ExpressionStatement> node) {
+void Interpreter::visit(const std::shared_ptr<ExpressionStatement>& node) {
     node->expression->accept(shared_from_this());
+}
+
+environment::obj_t Interpreter::LookupVariable(const string_t& name,
+                                               const expression_t& expr) {
+    if (auto distance_iter = locals_.find(expr);
+        distance_iter != locals_.end()) {
+        return environment_->Get(name, distance_iter->second);
+    } else {
+        return globals_->Get(name);
+    }
+}
+void Interpreter::ResolveLocal(const node_t& node, size_t distance) {
+//  std::cout << "ResolveLocal " << node << " " << distance << std::endl;
+  locals_[node] = distance;
+}
+
+void Interpreter::interpret(const statements_t& statements) {
+    for (const auto& statement : statements) {
+        interpret(statement);
+    }
+}
+
+void Interpreter::interpret(const expressions_t& expressions) {
+    for (const auto& expression : expressions) {
+        interpret(expressions);
+    }
 }
 
 }  // namespace tb_lang::interpreter

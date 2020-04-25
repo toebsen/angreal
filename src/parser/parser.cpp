@@ -36,7 +36,7 @@ std::shared_ptr<AST::Expression> Parser::parseExpression(
 }
 
 void Parser::consume() {
-    std::cout << "consuming: " << *next_token << std::endl;
+//    std::cout << "consuming: " << *next_token << std::endl;
     current_token = next_token;
     next_token = current_token + 1;
 
@@ -288,8 +288,7 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
     AST::statements_t statements;
     expectToken(Token::Type::LeftCurlyBracket);
     consume();
-    if(current_token->type() == Token::Type::RightCurlyBracket)
-    {
+    if (current_token->type() == Token::Type::RightCurlyBracket) {
         // don't parse empty block
         consume();
         return std::make_shared<AST::Block>(statements);
@@ -300,7 +299,8 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
         if (stmt) {
             statements.push_back(stmt);
         }
-    } while (current_token->type() != Token::Type::RightCurlyBracket && current_token->type() != Token::Type::EndOfProgram);
+    } while (current_token->type() != Token::Type::RightCurlyBracket &&
+             current_token->type() != Token::Type::EndOfProgram);
     expectToken(Token::Type::RightCurlyBracket);
     consume();
     return std::make_shared<AST::Block>(statements);
@@ -338,6 +338,8 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
         return parsePrintStatement();
     } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
         return parseBlock();
+    } else if (current_token->type() == Token::Type::EndOfProgram) {
+        return nullptr;
     } else {
         auto expr = parseExpression();
         if (expr) {
