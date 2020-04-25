@@ -179,8 +179,11 @@ void Interpreter::interpret(const string_t& code) {
         auto program = parser.parseProgram(lexemes);
         semantic_analyzer->Resolve(program->statements);
         interpret(program->statements);
-    } catch (std::exception& e) {
+    } catch (const RuntimeError& e) {
+        throw;
+    } catch (const std::exception& e) {
         std::cout << e.what() << std::endl;
+        throw RuntimeError(e.what());
     }
 }
 void Interpreter::visit(const std::shared_ptr<Print>& node) {
