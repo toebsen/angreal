@@ -31,6 +31,14 @@ type_t BinaryOp::Call() {
             return Equals();
         case BinaryOperation::OpType::NotEquals:
             return NotEquals();
+        case BinaryOperation::OpType::Greater:
+            return Greater();
+        case BinaryOperation::OpType::GreaterEquals:
+            return GreaterEqual();
+        case BinaryOperation::OpType::Less:
+            return Less();
+        case BinaryOperation::OpType::LessEquals:
+            return LessEqual();
     }
 
     return type_t();
@@ -122,5 +130,46 @@ type_t BinaryOp::NotEquals() {
     }
     return type_t();
 }
+
+type_t BinaryOp::Greater() {
+    auto op = [](auto a, auto b) { return a > b; };
+    if (lhs_->IsInteger() && rhs_->IsInteger()) {
+        return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
+    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+        return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
+    }
+    return type_t();
+}
+
+type_t BinaryOp::GreaterEqual() {
+    auto op = [](auto a, auto b) { return a >= b; };
+    if (lhs_->IsInteger() && rhs_->IsInteger()) {
+        return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
+    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+        return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
+    }
+    return type_t();
+}
+
+type_t BinaryOp::Less() {
+    auto op = [](auto a, auto b) { return a < b; };
+    if (lhs_->IsInteger() && rhs_->IsInteger()) {
+        return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
+    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+        return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
+    }
+    return type_t();
+}
+
+type_t BinaryOp::LessEqual() {
+    auto op = [](auto a, auto b) { return a <= b; };
+    if (lhs_->IsInteger() && rhs_->IsInteger()) {
+        return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
+    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+        return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
+    }
+    return type_t();
+}
+
 
 }  // namespace tb_lang::interpreter::environment

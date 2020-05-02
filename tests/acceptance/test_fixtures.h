@@ -28,8 +28,8 @@ class BaseTest : public ::testing::Test {
             std::string out = testing::internal::GetCapturedStdout();
             ASSERT_EQ(expected + "\n", out);
         } catch (const std::exception& e) {
-            testing::internal::GetCapturedStdout();
-            FAIL() << "Exception not expected:" << e.what();
+            std::string out = testing::internal::GetCapturedStdout();
+            FAIL() << "Exception not expected:" << e.what() << " with: " << out;
         }
     }
 

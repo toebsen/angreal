@@ -48,7 +48,9 @@ void SemanticAnalyzer::visit(const std::shared_ptr<ExpressionStatement>& node) {
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Declaration>& node) {
     resolver_.Declare(node->identifier);
-    if (node->expression) Resolve(node->expression);
+    if (node->expression) {
+        Resolve(node->expression);
+    }
     resolver_.Define(node->identifier);
 }
 
@@ -95,8 +97,15 @@ void SemanticAnalyzer::visit(const std::shared_ptr<FunctionDeclaration>& node) {
     resolver_.Define(node->identifier);
     resolver_.ResolveFunction(node);
 }
+
 void SemanticAnalyzer::ResolveLocal(const node_t& node, size_t distance) {
     interpreter_.ResolveLocal(node, distance);
+}
+
+void SemanticAnalyzer::visit(const std::shared_ptr<IfStatement>& node) {
+    Resolve(node->condition);
+    Resolve(node->block);
+    Resolve(node->else_block);
 }
 
 }  // namespace analysis

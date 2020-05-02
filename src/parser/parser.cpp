@@ -299,8 +299,9 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
         if (stmt) {
             statements.push_back(stmt);
         }
-    } while (current_token->type() != Token::Type::RightCurlyBracket &&
-             current_token->type() != Token::Type::EndOfProgram);
+    } while (!(current_token->type() == Token::Type::RightCurlyBracket ||
+             current_token->type() == Token::Type::EndOfProgram));
+
     expectToken(Token::Type::RightCurlyBracket);
     consume();
     return std::make_shared<AST::Block>(statements);
@@ -339,6 +340,8 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
         return parseBlock();
     } else if (current_token->type() == Token::Type::ReturnStatement) {
         return parseReturnDeclaration();
+    } else if (current_token->type() == Token::Type::IfStatement) {
+        return parseIfStatement();
     } else if (current_token->type() == Token::Type::EndOfProgram) {
         return nullptr;
     } else if (current_token->type() == Token::Type::Comment) {
@@ -353,6 +356,20 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
         }
     }
     return nullptr;
+}
+std::shared_ptr<AST::IfStatement> Parser::parseIfStatement() {
+    consume();
+    expression_t condition = parseExpression();
+    block_t block = parseBlock();
+
+    block_t else_block;
+    if (current_token->type() == Token::Type::Identifier &&
+        current_token->value() == "else") {
+        consume();
+        else_block = parseBlock();
+    }
+
+    return std::make_shared<AST::IfStatement>(condition, block, else_block);
 }
 
 }  // namespace tb_lang::parser

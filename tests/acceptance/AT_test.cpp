@@ -87,3 +87,15 @@ TEST_F(BaseTest, ReturnTesting) {
     )";
     SafeRun(code, "5");
 }
+
+TEST_F(BaseTest, Conditonals) {
+    std::string code = R"(
+    var x: int = 5;
+    if(x > 5){
+        print("true");
+    } else {
+        print("false");
+    }
+    )";
+    SafeRun(code, "false");
+}

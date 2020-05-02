@@ -202,6 +202,21 @@ void Interpreter::visit(const std::shared_ptr<ExpressionStatement>& node) {
     node->expression->accept(shared_from_this());
 }
 
+void Interpreter::visit(const std::shared_ptr<IfStatement>& node) {
+    node->condition->accept(shared_from_this());
+    auto condition = stack_.top();
+    stack_.pop();
+
+    if(condition->GetType()->IsTruthy())
+    {
+        node->block->accept(shared_from_this());
+    }
+    else
+    {
+        node->else_block->accept(shared_from_this());
+    }
+}
+
 environment::obj_t Interpreter::LookupVariable(const string_t& name,
                                                const expression_t& expr) {
     if (auto distance_iter = locals_.find(expr);
@@ -227,5 +242,6 @@ void Interpreter::interpret(const expressions_t& expressions) {
         interpret(expressions);
     }
 }
+
 
 }  // namespace tb_lang::interpreter

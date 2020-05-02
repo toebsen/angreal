@@ -36,6 +36,14 @@ class BinaryOp : private NonCopyable {
 
     type_t NotEquals();
 
+    type_t Greater();
+
+    type_t GreaterEqual();
+
+    type_t Less();
+
+    type_t LessEqual();
+
     AST::BinaryOperation::OpType op_type_;
     type_t lhs_;
     type_t rhs_;

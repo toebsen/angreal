@@ -43,6 +43,14 @@ class Type {
     virtual bool AsBoolean() { return std::get<bool>(value_); };
     virtual float AsFloat() { return std::get<float>(value_); };
     virtual int AsInteger() { return std::get<int>(value_); };
+
+    virtual bool IsTruthy() {
+        //TODO: add missing
+        if(IsBoolean()) return AsBoolean();
+
+        return false;
+    };
+
     virtual string_t AsString() { return std::get<string_t>(value_); };
     virtual CallablePtr AsCallable() { return std::get<CallablePtr>(value_); };
 

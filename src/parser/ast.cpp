@@ -78,4 +78,8 @@ void FunctionDeclaration::accept(const visitor_t& visitor) {
 void FormalParameter::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
+void IfStatement::accept(const visitor_t& visitor) {
+    visitor->visit(shared_from_this());
+}
 }  // namespace tb_lang::parser::AST

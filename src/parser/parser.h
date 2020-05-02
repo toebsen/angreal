@@ -50,12 +50,10 @@ class Parser {
 
     std::shared_ptr<AST::Statement> parsePrintStatement();
 
-    std::shared_ptr<AST::Expression> parseTypeLiteral(
-        TypeSystem::Type expected);
-
     TypeSystem::Type parseType();
 
     std::shared_ptr<AST::Statement> parseStatement();
+    std::shared_ptr<AST::IfStatement> parseIfStatement();
 
     void consume();
 
