@@ -8,11 +8,13 @@
 
 TEST_F(BaseTest, HelloWorld) {
     std::string code = R"(
+    # this is a comment
     def Hello(name : string) : string {
+        # this is a function
         return "Hello " + name
     }
-    var x: string = Hello("World");
-    print(x);
+    # this is a nested function call
+    print(Hello("World"));
     )";
     SafeRun(code, "Hello World");
 }
@@ -65,4 +67,23 @@ TEST_F(BaseTest, SameNameWithInLocalScope) {
     }
     )";
     ExpectRuntimeException(code, "variable `b` already declared in this scope");
+}
+
+TEST_F(BaseTest, ReturnTesting) {
+    std::string code = R"(
+    def somefun() : int {
+        def inner() : int {
+            var a : int = 5;
+            return a;
+        }
+
+      var x: int = inner();
+      return x;
+      return 42;
+    }
+
+    var result: int = somefun();
+    print(result);
+    )";
+    SafeRun(code, "5");
 }

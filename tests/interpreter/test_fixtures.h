@@ -9,6 +9,7 @@
 
 #include "context.h"
 #include "parser/ast.h"
+#include "analysis/semantic/semantic_analyzer.h"
 
 using namespace tb_lang;
 using namespace tb_lang::parser;
@@ -151,6 +152,33 @@ class FunctionTest : public DeclarationTest
         auto declaration = std::make_shared<FunctionDeclaration>(TypeSystem::Type::Int, name, parameters, statements);
 
         // Todo: run semantic analyzer
+        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(*context_.interpreter.get());
+        analyzer->Resolve(declaration);
+        context_.interpreter->visit(declaration);
+    }
+
+    void DeclareArityOneIntFunctionWithTwoReturns(const std::string& name, int init_value)
+    {
+        auto ident = std::make_shared<AST::IdentifierLiteral>("test");
+        context_.interpreter->ResolveLocal(ident, 0);
+
+        statements_t statements{
+            std::make_shared<AST::Declaration>(TypeSystem::Type::Int, "test",
+                                               std::make_shared<BinaryOperation>(
+                                                   "+",
+                                                   std::make_shared<IntLiteral>(init_value),
+                                                   std::make_shared<IdentifierLiteral>("arg1")
+                                               )
+            ),
+            std::make_shared<AST::Return>(std::make_shared<IntLiteral>(init_value)),
+            std::make_shared<AST::Return>(ident)};
+
+        formal_parameters parameters = {std::make_shared<FormalParameter>(TypeSystem::Type::Int, "arg1")};
+        auto declaration = std::make_shared<FunctionDeclaration>(TypeSystem::Type::Int, name, parameters, statements);
+
+        // Todo: run semantic analyzer
+        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(*context_.interpreter.get());
+        analyzer->Resolve(declaration);
         context_.interpreter->visit(declaration);
     }
 };

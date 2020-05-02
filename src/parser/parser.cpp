@@ -307,7 +307,6 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
 }
 
 std::shared_ptr<AST::Statement> Parser::parseReturnDeclaration() {
-    std::string identifier;
     AST::expression_t expression;
     consume();
     expression = parseExpression();
@@ -338,7 +337,12 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
         return parsePrintStatement();
     } else if (current_token->type() == Token::Type::LeftCurlyBracket) {
         return parseBlock();
+    } else if (current_token->type() == Token::Type::ReturnStatement) {
+        return parseReturnDeclaration();
     } else if (current_token->type() == Token::Type::EndOfProgram) {
+        return nullptr;
+    } else if (current_token->type() == Token::Type::Comment) {
+        consume();
         return nullptr;
     } else {
         auto expr = parseExpression();

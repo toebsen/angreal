@@ -26,6 +26,11 @@ class Executor : public NonCopyable{
         interpreter_.environment_ = environment;
         for (const auto& stmt : statements) {
             stmt->accept(interpreter_.shared_from_this());
+
+            if(std::dynamic_pointer_cast<Return>(stmt))
+            {
+                break;
+            }
         }
     }
 

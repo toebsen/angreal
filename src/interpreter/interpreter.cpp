@@ -187,11 +187,15 @@ void Interpreter::interpret(const string_t& code) {
     }
 }
 void Interpreter::visit(const std::shared_ptr<Print>& node) {
-    for (const auto& stmt : node->expressions) {
-        stmt->accept(shared_from_this());
-        auto val = stack_.top();
-        std::cout << val->GetType()->Stringify() << std::endl;
+    std::vector<obj_t> args;
+    for (const auto& item : node->expressions) {
+        item->accept(shared_from_this());
+        args.push_back(stack_.top());
         stack_.pop();
+    }
+
+    for (const auto& arg : args) {
+        std::cout << arg->GetType()->Stringify() << std::endl;
     }
 }
 void Interpreter::visit(const std::shared_ptr<ExpressionStatement>& node) {

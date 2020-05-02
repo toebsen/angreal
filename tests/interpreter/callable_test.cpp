@@ -41,3 +41,11 @@ TEST_F(FunctionTest, IntFunctionWithOneArity_WrongArgumentType) {
     auto call = std::make_shared<FunctionCall>("myInt", args);
     EXPECT_THROW(context_.interpreter->visit(call), std::runtime_error);
 }
+
+TEST_F(FunctionTest, IntFunctionWithOneArityEarlyReturn) {
+    DeclareArityOneIntFunctionWithTwoReturns("myInt", 42);
+    expression_t param = std::make_shared<IntLiteral>(5);
+    auto call = std::make_shared<FunctionCall>("myInt", expressions_t{param});
+    context_.interpreter->visit(call);
+    ASSERT_EQ(GetResultType()->AsInteger(), 42);
+}
