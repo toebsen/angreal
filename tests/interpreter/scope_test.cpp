@@ -9,12 +9,12 @@
 TEST_F(DeclarationTest, InnerScopeRedeclaration) {
     statements_t outer_scope;
     outer_scope.push_back(std::make_shared<AST::Declaration>(
-        TypeSystem::Type::String, "a",
+        "a",
         std::make_shared<StringLiteral>("outer")));
 
     statements_t inner_scope;
     inner_scope.push_back(std::make_shared<AST::Declaration>(
-        TypeSystem::Type::String, "a",
+        "a",
         std::make_shared<StringLiteral>("inner")));
 
     outer_scope.push_back(std::make_shared<Block>(inner_scope));
@@ -28,7 +28,7 @@ TEST_F(DeclarationTest, InnerScopeRedeclaration) {
 TEST_F(DeclarationTest, InnerScopeAssignmentToOuterScope) {
     statements_t outer_scope;
     outer_scope.push_back(std::make_shared<AST::Declaration>(
-        TypeSystem::Type::String, "a",
+        "a",
         std::make_shared<StringLiteral>("outer")));
 
     statements_t inner_scope;

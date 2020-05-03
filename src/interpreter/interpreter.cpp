@@ -108,6 +108,17 @@ void Interpreter::visit(const std::shared_ptr<BinaryOperation>& node) {
 
     BinaryOp op(node->type, a->GetType(), b->GetType());
     obj_t o = std::make_shared<Object>(op.Call());
+
+    if(!o->GetType())
+    {
+        auto type = magic_enum::enum_name(node->type);
+        std::stringstream ss;
+        ss << "Could not ";
+        ss << a->GetType()->Stringify() << " ";
+        ss << type << " ";
+        ss << b->GetType()->Stringify() << " ";
+        throw RuntimeError(ss.str());
+    }
     stack_.push(o);
 }
 
@@ -126,9 +137,6 @@ void Interpreter::visit(const std::shared_ptr<FunctionCall>& node) {
 
         auto ret_obj = fun->Call(this, args);
         if (ret_obj) {
-            if (!ret_obj->GetType()->HasSameType(*fun->ReturnType())) {
-                throw RuntimeError(node->identifier + "returns wrong Type");
-            }
             if (!ret_obj->GetType()->IsNull()) {
                 stack_.push(ret_obj);
             }
@@ -213,7 +221,10 @@ void Interpreter::visit(const std::shared_ptr<IfStatement>& node) {
     }
     else
     {
-        node->else_block->accept(shared_from_this());
+        if(node->else_block)
+        {
+            node->else_block->accept(shared_from_this());
+        }
     }
 }
 

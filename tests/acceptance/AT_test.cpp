@@ -9,7 +9,7 @@
 TEST_F(BaseTest, HelloWorld) {
     std::string code = R"(
     # this is a comment
-    def Hello(name : string) : string {
+    def Hello(name) {
         # this is a function
         return "Hello " + name
     }
@@ -22,15 +22,15 @@ TEST_F(BaseTest, HelloWorld) {
 
 TEST_F(BaseTest, ScopingWithFunction) {
     std::string code = R"(
-    var x: string = "global";
+    var x = "global";
     {
-        def printVar() : int {
+        def printVar() {
             print(x);
             return 0;
         }
 
         printVar();
-        var x: string = "local";
+        var x = "local";
         printVar();
     }
     )";
@@ -39,15 +39,15 @@ TEST_F(BaseTest, ScopingWithFunction) {
 
 TEST_F(BaseTest, ScopingWithFunction2) {
     std::string code = R"(
-    var x: string = "global";
+    var x = "global";
     {
-        def printVar(x: string) : int {
+        def printVar(x) {
             print(x);
             return 0;
         }
 
         printVar(x);
-        var x: string = "local";
+        var x = "local";
         printVar(x);
     }
     )";
@@ -58,12 +58,12 @@ TEST_F(BaseTest, ScopingWithFunction2) {
 TEST_F(BaseTest, SameNameWithInLocalScope) {
     std::string code = R"(
     # redefinition is allowed on a global scope
-    var a : string = "first";
-    var a : string = "second";
-    def bad() : int {
+    var a = "first";
+    var a = "second";
+    def bad() {
       # but not in a local scope
-      var b : string = "first";
-      var b : string = "second";
+      var b = "first";
+      var b = "second";
     }
     )";
     ExpectRuntimeException(code, "variable `b` already declared in this scope");
@@ -71,18 +71,18 @@ TEST_F(BaseTest, SameNameWithInLocalScope) {
 
 TEST_F(BaseTest, ReturnTesting) {
     std::string code = R"(
-    def somefun() : int {
-        def inner() : int {
-            var a : int = 5;
+    def somefun()  {
+        def inner()  {
+            var a = 5;
             return a;
         }
 
-      var x: int = inner();
+      var x = inner();
       return x;
       return 42;
     }
 
-    var result: int = somefun();
+    var result = somefun();
     print(result);
     )";
     SafeRun(code, "5");
@@ -90,7 +90,7 @@ TEST_F(BaseTest, ReturnTesting) {
 
 TEST_F(BaseTest, Conditonals) {
     std::string code = R"(
-    var x: int = 5;
+    var x = 5;
     if(x > 5){
         print("true");
     } else {

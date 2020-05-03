@@ -126,9 +126,6 @@ TEST_F(LexerTest, BuiltInIdentifier) {
                  Token::Type::StringIdentifier});
 }
 
-TEST_F(LexerTest, StringNoEscapes) {
-    lexSequence({"\"abC 123\""}, Token::Type::String);
-}
 
 TEST_F(LexerTest, Punctuation) {
     std::vector<std::string> vals{"{", "}", "(", ")", ",", ":", ";"};
@@ -164,13 +161,11 @@ TEST_F(LexerTest, Relational) {
 }
 
 TEST_F(LexerTest, AcceptenceTest1) {
-    std::string test = "var x: int = 1 + 2;";
+    std::string test = "var x = 1 + 2;";
 
     std::vector<Token> expected = {
         {"var", Token::Type::VarStatement},
         {"x", Token::Type::Identifier},
-        {":", Token::Type::Colon},
-        {"int", Token::Type::IntIdentifier},
         {"=", Token::Type::Equal},
         {"1", Token::Type::Integer},
         {"+", Token::Type::AdditiveOp},
@@ -184,7 +179,7 @@ TEST_F(LexerTest, AcceptenceTest1) {
 
 TEST_F(LexerTest, AcceptenceTest2) {
     const char *prog = R"(# Calculate Fibonacci sequence
-    def fib(n : int) : int {
+    def fib(n) {
             if(n == 0){
                 return 0;
             }
@@ -205,11 +200,7 @@ TEST_F(LexerTest, AcceptenceTest2) {
         {"fib", Token::Type::Identifier},
         {"(", Token::Type::LeftBracket},
         {"n", Token::Type::Identifier},
-        {":", Token::Type::Colon},
-        {"int", Token::Type::IntIdentifier},
         {")", Token::Type::RightBracket},
-        {":", Token::Type::Colon},
-        {"int", Token::Type::IntIdentifier},
         {"{", Token::Type::LeftCurlyBracket},
         {R"(\n)", Token::Type::NewLine},
         {"if", Token::Type::IfStatement},

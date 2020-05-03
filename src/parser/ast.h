@@ -55,15 +55,14 @@ class ExpressionStatement
 class Declaration : public Statement,
                     public std::enable_shared_from_this<Declaration> {
    public:
-    Declaration(const TypeSystem::Type& type, const std::string& identifier,
+    Declaration(const std::string& identifier,
                 const expression_t& expression)
-        : type(type), identifier(identifier), expression(expression){};
+        : identifier(identifier), expression(expression){};
 
     void accept(const visitor_t& visitor) override;
 
     virtual ~Declaration() = default;
 
-    const TypeSystem::Type type;
     expression_t expression;
     const std::string identifier;
 };
@@ -277,16 +276,15 @@ class FunctionCall : public Expression,
 class FormalParameter : public Expression,
                         public std::enable_shared_from_this<FormalParameter> {
    public:
-    FormalParameter(TypeSystem::Type type, const std::string& identifier)
-        : type(type), identifier(identifier) {}
+    FormalParameter(const std::string& identifier)
+        : identifier(identifier) {}
 
     bool operator==(const FormalParameter& other) const {
-        return type == other.type && identifier == other.identifier;
+        return identifier == other.identifier;
     }
 
     void accept(const visitor_t& visitor) override;
 
-    TypeSystem::Type type;
     std::string identifier;
 };
 
@@ -296,19 +294,16 @@ class FunctionDeclaration
     : public Statement,
       public std::enable_shared_from_this<FunctionDeclaration> {
    public:
-    FunctionDeclaration(const TypeSystem::Type& type,
-                        const std::string& identifier,
+    FunctionDeclaration(const std::string& identifier,
                         const formal_parameters& parameters,
                         const statements_t& statements)
-        : type(type),
-          identifier(identifier),
+        : identifier(identifier),
           parameters(parameters),
           statements(statements){};
 
     void accept(const visitor_t& visitor) override;
 
     std::string identifier;
-    const TypeSystem::Type type;
     formal_parameters parameters;
     statements_t statements;
 };

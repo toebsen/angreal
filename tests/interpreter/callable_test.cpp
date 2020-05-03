@@ -21,12 +21,6 @@ TEST_F(FunctionTest, StringFunctionWithZeroArity_WrongArgs) {
     EXPECT_THROW(context_.interpreter->visit(call), std::runtime_error);
 }
 
-TEST_F(FunctionTest, StringFunctionWithZeroArity_WrongReturnType) {
-    DeclareArityZeroFunction("helloWorld", TypeSystem::Type::Int);
-    auto call = std::make_shared<FunctionCall>("helloWorld", expressions_t());
-    EXPECT_THROW(context_.interpreter->visit(call);, std::runtime_error);
-}
-
 TEST_F(FunctionTest, IntFunctionWithOneArity) {
     DeclareArityOneIntFunction("myInt", 42);
     expression_t param = std::make_shared<IntLiteral>(5);

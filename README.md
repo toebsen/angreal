@@ -30,7 +30,7 @@ statement ::= variable_decl';' |
                 function_decl | 
                 block 
 
-variable_decl ::= 'var' identifier ':' type '=' expression
+variable_decl ::= 'var' identifier '=' expression
 assignment ::= 'set' identifier '=' expression
 
 print_statement ::= 'print' '(' expression ')'
@@ -39,8 +39,8 @@ while_statement ::= 'while' '('expression')'block
 return_statement ::= 'return expression';'
 
 function_decl ::= 'def' identifier '('[formal_params]')' : type block
-formal_params ::=  formal_param (',' formal_param)*
-formal_param ::= type ':' identifier 
+formal_params ::=  identifier (',' identifier)*
+
 
 function_call ::= identifier'(' actual_params ')'
 actual_params ::= expression (',' expression)*

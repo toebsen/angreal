@@ -28,13 +28,14 @@ using environment_t = std::shared_ptr<Environment>;
 class Callable : private NonCopyable {
    public:
     virtual bool CheckArity(const std::vector<obj_t>& args) const = 0;
+
     virtual size_t Arity() const = 0;
 
     virtual obj_t Call(const interpreter_t& interp,
                        const std::vector<obj_t>& args) = 0;
+
     virtual string_t Stringify(void) const = 0;
 
-    virtual type_t ReturnType() const = 0;
 };
 
 
@@ -53,7 +54,6 @@ class Function final : public Callable,
     obj_t Call(const interpreter_t& interp,
                        const std::vector<obj_t>& args) override ;
 
-    type_t ReturnType() const override;
 
     string_t Stringify(void) const override ;
 

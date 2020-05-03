@@ -51,15 +51,6 @@ obj_t Function::Call(const interpreter_t& interp,
 
     for (size_t kI = 0; kI < args.size(); ++kI) {
         auto param_decl = function_decl_->parameters[kI];
-        auto param_type = FromType(param_decl->type);
-        if (!args[kI]->GetType()->HasSameType(*param_type)) {
-            std::stringstream ss;
-            ss << "Called function <" << function_decl_->identifier
-               << "> with wrongly typed arg";
-            ss << "Expected <" << param_decl->identifier << std::endl;
-            throw RuntimeError(ss.str());
-        }
-
         local_env->Declare(function_decl_->parameters[kI]->identifier,
                            args[kI]);
     }
@@ -67,8 +58,6 @@ obj_t Function::Call(const interpreter_t& interp,
     auto ret_obj = interp->invoke(function_decl_->statements, local_env);
     return ret_obj;
 }
-
-type_t Function::ReturnType() const { return FromType(function_decl_->type); }
 
 string_t Function::Stringify(void) const { return tb_lang::string_t(); }
 

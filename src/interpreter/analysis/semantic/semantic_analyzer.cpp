@@ -105,7 +105,8 @@ void SemanticAnalyzer::ResolveLocal(const node_t& node, size_t distance) {
 void SemanticAnalyzer::visit(const std::shared_ptr<IfStatement>& node) {
     Resolve(node->condition);
     Resolve(node->block);
-    Resolve(node->else_block);
+    if(node->else_block) {  Resolve(node->else_block);
+}
 }
 
 }  // namespace analysis

@@ -326,36 +326,29 @@ TEST_F(ExpressionTest, NestedExpressions) {
 //}
 
 TEST_F(FunctionDefTest, FunctionDeclaration) {
-    parseFunctionDef("def foo(): int {}", "foo", TypeSystem::Type::Int, {});
+    parseFunctionDef("def foo() {}", "foo", TypeSystem::Type::Int, {});
 }
 
 TEST_F(FunctionDefTest, FunctionDeclarationWithArgs) {
-    parseFunctionDef(
-        "def foo(x: int): int {}", "foo", TypeSystem::Type::Int,
-        {
-            std::make_shared<AST::FormalParameter>(TypeSystem::Type::Int, "x"),
-        });
+    parseFunctionDef("def foo(x) {}", "foo", TypeSystem::Type::Int,
+                     {
+                         std::make_shared<AST::FormalParameter>("x"),
+                     });
 
-    parseFunctionDef(
-        "def foo(x: bool, y: string): float {}", "foo", TypeSystem::Type::Float,
-        {
-            std::make_shared<AST::FormalParameter>(TypeSystem::Type::Bool, "x"),
-            std::make_shared<AST::FormalParameter>(TypeSystem::Type::String,
-                                                   "y"),
-        });
+    parseFunctionDef("def foo(x, y) {}", "foo", TypeSystem::Type::Float,
+                     {
+                         std::make_shared<AST::FormalParameter>("x"),
+                         std::make_shared<AST::FormalParameter>("y"),
+                     });
 
-    parseFunctionDef(
-        "def foo(x: int, y: float, _abc: string, sure: bool): bool {}", "foo",
-        TypeSystem::Type::Bool,
-        {
-            std::make_shared<AST::FormalParameter>(TypeSystem::Type::Int, "x"),
-            std::make_shared<AST::FormalParameter>(TypeSystem::Type::Float,
-                                                   "y"),
-            std::make_shared<AST::FormalParameter>(TypeSystem::Type::String,
-                                                   "_abc"),
-            std::make_shared<AST::FormalParameter>(TypeSystem::Type::Bool,
-                                                   "sure"),
-        });
+    parseFunctionDef("def foo(x, y, _abc, sure) {}", "foo",
+                     TypeSystem::Type::Bool,
+                     {
+                         std::make_shared<AST::FormalParameter>("x"),
+                         std::make_shared<AST::FormalParameter>("y"),
+                         std::make_shared<AST::FormalParameter>("_abc"),
+                         std::make_shared<AST::FormalParameter>("sure"),
+                     });
 }
 
 TEST_F(BlockTest, SimpleBlock) {
@@ -363,32 +356,32 @@ TEST_F(BlockTest, SimpleBlock) {
     auto block = std::make_shared<AST::Block>(statements);
     parseBlock("{}", block);
 
-    statements.push_back(std::make_shared<AST::Declaration>(TypeSystem::Type::Int, "x", std::make_shared<IntLiteral>(42)));
-    parseBlock("{\nvar x: int = 42;\n}", std::make_shared<AST::Block>(statements));
+    statements.push_back(std::make_shared<AST::Declaration>(
+        "x", std::make_shared<IntLiteral>(42)));
+    parseBlock("{\nvar x = 42;\n}", std::make_shared<AST::Block>(statements));
 }
 
 TEST_F(VariableDeclarationTest, SimpleDeclaration) {
     parseDeclarationDetails<AST::BoolLiteral>(
-        "var x: bool = true;", std::make_shared<AST::BoolLiteral>(true));
+        "var x = true;", std::make_shared<AST::BoolLiteral>(true));
     parseDeclarationDetails<AST::BoolLiteral>(
-        "var x: bool = false;", std::make_shared<AST::BoolLiteral>(false));
+        "var x = false;", std::make_shared<AST::BoolLiteral>(false));
     parseDeclarationDetails<AST::IntLiteral>(
-        "var x: int = 42;", std::make_shared<AST::IntLiteral>(42));
+        "var x = 42;", std::make_shared<AST::IntLiteral>(42));
     parseDeclarationDetails<AST::FloatLiteral>(
-        "var x: float = 1.23;", std::make_shared<AST::FloatLiteral>(1.23f));
+        "var x = 1.23;", std::make_shared<AST::FloatLiteral>(1.23f));
     parseDeclarationDetails<AST::StringLiteral>(
-        "var x: string = \"abc\";",
-        std::make_shared<AST::StringLiteral>("abc"));
+        "var x = \"abc\";", std::make_shared<AST::StringLiteral>("abc"));
     parseDeclarationDetails<AST::IdentifierLiteral>(
-        "var x: string = y;", std::make_shared<AST::IdentifierLiteral>("y"));
+        "var x = y;", std::make_shared<AST::IdentifierLiteral>("y"));
 }
 
 TEST_F(VariableDeclarationTest, BoolDeclarationErrors) {
     std::vector<std::string> erroneous_program = {
-        "var x bool = true;",
-        "var x: bool1 = true;",
-        "var 123: bool = true;",
-        "var x: bool true;",
+        "var x : true;",
+        "var x:  = true;",
+        "var 123 bool  = true;",
+        "var x: bool = true;",
     };
     for (auto t : erroneous_program) {
         EXPECT_THROW(lexAndParseProgram(t), std::runtime_error);

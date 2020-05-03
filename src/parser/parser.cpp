@@ -6,7 +6,6 @@
 
 #include <set>
 
-#include <boost/lexical_cast.hpp>
 #include <magic_enum.hpp>
 
 #include "type_system.h"
@@ -36,7 +35,7 @@ std::shared_ptr<AST::Expression> Parser::parseExpression(
 }
 
 void Parser::consume() {
-//    std::cout << "consuming: " << *next_token << std::endl;
+    //    std::cout << "consuming: " << *next_token << std::endl;
     current_token = next_token;
     next_token = current_token + 1;
 
@@ -187,15 +186,12 @@ std::shared_ptr<AST::Declaration> Parser::parseVariableDeclaration() {
     expectToken(Token::Type::Identifier);
     identifier = current_token->value();
     consume();
-    expectToken(Token::Type::Colon);
-    consume();
-    type = parseType();
     expectToken(Token::Type::Equal);
     consume();
     expression = parseExpression();
     expectToken(Token::Type::SemiColon);
     consume();
-    return std::make_shared<AST::Declaration>(type, identifier, expression);
+    return std::make_shared<AST::Declaration>(identifier, expression);
 }
 
 TypeSystem::Type Parser::parseType() {
@@ -247,17 +243,8 @@ std::shared_ptr<AST::FormalParameter> Parser::parseFormalParameter() {
     expectToken(Token::Type::Identifier);
     std::string identifier = current_token->value();
     consume();
-    expectToken(Token::Type::Colon);
-    consume();
-    expectTokensOneOf({Token::Type::IntIdentifier, Token::Type::BoolIdentifier,
-                       Token::Type::FloatIdentifier,
-                       Token::Type::StringIdentifier});
 
-    TypeSystem::Type param_type =
-        TypeSystem::mapTokenToDeclarationType(current_token->type());
-    consume();
-
-    return std::make_shared<AST::FormalParameter>(param_type, identifier);
+    return std::make_shared<AST::FormalParameter>(identifier);
 }
 
 std::shared_ptr<AST::FunctionDeclaration> Parser::parseFunctionDeclaration() {
@@ -270,18 +257,10 @@ std::shared_ptr<AST::FunctionDeclaration> Parser::parseFunctionDeclaration() {
     consume();
     auto parameters = parseFormalParameters();
 
-    expectToken(Token::Type::Colon);
-    consume();
-    expectTokensOneOf({Token::Type::IntIdentifier, Token::Type::BoolIdentifier,
-                       Token::Type::FloatIdentifier,
-                       Token::Type::StringIdentifier});
-    return_type = TypeSystem::mapTokenToDeclarationType(current_token->type());
-    consume();
-
     auto block = parseBlock();
 
-    return std::make_shared<AST::FunctionDeclaration>(
-        return_type, identifier, parameters, block->statements);
+    return std::make_shared<AST::FunctionDeclaration>(identifier, parameters,
+                                                      block->statements);
 }
 
 std::shared_ptr<AST::Block> Parser::parseBlock() {
@@ -300,7 +279,7 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
             statements.push_back(stmt);
         }
     } while (!(current_token->type() == Token::Type::RightCurlyBracket ||
-             current_token->type() == Token::Type::EndOfProgram));
+               current_token->type() == Token::Type::EndOfProgram));
 
     expectToken(Token::Type::RightCurlyBracket);
     consume();
