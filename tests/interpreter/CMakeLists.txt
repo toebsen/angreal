@@ -11,4 +11,3 @@ target_link_libraries(${TEST_NAME} tb_lexer tb_parser tb_interpreter gtest gtest
 target_include_directories(${TEST_NAME} PRIVATE ${TB_LANG_SRC}/lexer ${TB_LANG_SRC}/parser ${TB_LANG_SRC}/interpreter ${TB_LANG_SRC}/common)
 add_test(${TEST_NAME} ${TEST_NAME})
 
-add_subdirectory(semantic_analyzer)

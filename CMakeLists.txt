@@ -22,5 +22,5 @@ include_directories("${THIRD_PARTY_DIR}/magic_enum")
 add_subdirectory(src)
 set(TBLANG_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
-add_subdirectory(tests)
 enable_testing()
+add_subdirectory(tests)
