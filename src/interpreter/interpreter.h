@@ -26,8 +26,8 @@ class Interpreter : public Visitor {
     void interpret(const expression_t& expression);
     void interpret(const expressions_t& expressions);
 
-    environment::obj_t invoke(
-        statements_t statements,
+    void invoke(
+        const statements_t& statements,
         const std::shared_ptr<environment::Environment>& env);
 
     std::stack<environment::obj_t>& Stack() { return stack_; };

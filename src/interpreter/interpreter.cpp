@@ -51,7 +51,15 @@ void Interpreter::visit(const std::shared_ptr<Assignment>& node) {
 }
 
 void Interpreter::visit(const std::shared_ptr<Return>& node) {
-    node->expression->accept(shared_from_this());
+
+    if(node->expression)
+    {
+        node->expression->accept(shared_from_this());
+        auto obj = stack_.top();
+        stack_.pop();
+        throw obj;
+    }
+    throw Object();
 }
 
 void Interpreter::visit(const std::shared_ptr<IdentifierLiteral>& node) {
@@ -164,16 +172,11 @@ void Interpreter::ExecuteBlock(
     executor.execute(statements, environment);
 }
 
-obj_t Interpreter::invoke(
-    statements_t statements,
+void Interpreter::invoke(
+    const statements_t& statements,
     const std::shared_ptr<environment::Environment>& env) {
     Executor executor{*this};
     executor.execute(statements, env);
-
-    auto return_value = stack_.top();
-    stack_.pop();
-
-    return return_value;
 }
 
 void Interpreter::interpret(const string_t& code) {

@@ -88,14 +88,15 @@ TEST_F(BaseTest, ReturnTesting) {
     SafeRun(code, "5");
 }
 
-TEST_F(BaseTest, Conditonals) {
+
+TEST_F(BaseTest, Fibonacci) {
     std::string code = R"(
-    var x = 5;
-    if(x > 5){
-        print("true");
-    } else {
-        print("false");
+    def fib(n)
+    {
+        if(n <= 1){ return 1;}
+        return fib(n-2) + fib(n-1);
     }
+    print(fib(5));
     )";
-    SafeRun(code, "false");
+    SafeRun(code, "8");
 }

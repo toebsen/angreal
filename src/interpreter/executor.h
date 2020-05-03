@@ -13,24 +13,18 @@ namespace environment {
 class Environment;
 }
 
-class Executor : public NonCopyable{
+class Executor : public NonCopyable {
    public:
     Executor(Interpreter& interpreter) : interpreter_{interpreter} {}
 
     ~Executor() { interpreter_.environment_ = original_environment_; }
 
-    void execute(statements_t statements,
+    void execute(const statements_t& statements,
                  const std::shared_ptr<environment::Environment>& environment) {
         original_environment_ = interpreter_.environment_;
-
         interpreter_.environment_ = environment;
         for (const auto& stmt : statements) {
             stmt->accept(interpreter_.shared_from_this());
-
-            if(std::dynamic_pointer_cast<Return>(stmt))
-            {
-                break;
-            }
         }
     }
 

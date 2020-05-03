@@ -1,8 +1,7 @@
 
 set(LEX_SOURCE
         lexer.cpp
-        tb_dfa.cpp
-        ../interpreter/interpreter.cpp ../interpreter/interpreter.h)
+        tb_dfa.cpp)
 
 set(LEX_HEADERS_DIR
         ${CMAKE_CURRENT_SOURCE_DIR};

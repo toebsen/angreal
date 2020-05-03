@@ -2,11 +2,13 @@
 // Created by toebs on 11.04.2020.
 //
 
-#include "callable.h"
 
-#include "../interpreter.h"
+#include "callable.h"
 #include "environment.h"
+
 #include "object.h"
+#include "../interpreter.h"
+
 
 namespace tb_lang {
 namespace interpreter {
@@ -55,8 +57,16 @@ obj_t Function::Call(const interpreter_t& interp,
                            args[kI]);
     }
 
-    auto ret_obj = interp->invoke(function_decl_->statements, local_env);
-    return ret_obj;
+    try
+    {
+       interp->invoke(function_decl_->statements, local_env);
+    }
+    catch (obj_t & ret)
+    {
+        return ret;
+    }
+
+    return obj_t();
 }
 
 string_t Function::Stringify(void) const { return tb_lang::string_t(); }
