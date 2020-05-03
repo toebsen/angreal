@@ -17,6 +17,12 @@ namespace analysis {
 
 class SemanticAnalyzer;
 class Resolver {
+
+   enum class FunctionType {
+        None,
+        Function
+    };
+
    public:
     Resolver(SemanticAnalyzer& semantic_analyzer)
         : semantic_analyzer_(semantic_analyzer) {}
@@ -35,9 +41,12 @@ class Resolver {
 
     void CheckAlreadyDefined(const string_t& name);
 
+    bool IsFunction(){return function_type_ == FunctionType::Function;}
+
    private:
     std::vector<std::unordered_map<string_t, bool>> scopes_;
     SemanticAnalyzer& semantic_analyzer_;
+    FunctionType function_type_;
 };
 }  // namespace analysis
 }  // namespace interpreter

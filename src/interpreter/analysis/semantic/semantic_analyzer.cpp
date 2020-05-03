@@ -60,6 +60,11 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Assignment>& node) {
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Return>& node) {
+    if( !resolver_.IsFunction())
+    {
+        throw  RuntimeError("Can not return from top level code!");
+    }
+
     Resolve(node->expression);
 }
 

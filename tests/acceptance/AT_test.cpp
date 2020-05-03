@@ -88,6 +88,13 @@ TEST_F(BaseTest, ReturnTesting) {
     SafeRun(code, "5");
 }
 
+TEST_F(BaseTest, TopLevelReturn) {
+    std::string code = R"(
+    var result = "123";
+    return result;
+    )";
+    ExpectRuntimeException(code, "Can not return from top level code!");
+}
 
 TEST_F(BaseTest, Fibonacci) {
     std::string code = R"(

@@ -60,6 +60,8 @@ void Resolver::CheckAlreadyDefined(const string_t& name) {
 
 void Resolver::ResolveFunction(
     const std::shared_ptr<FunctionDeclaration>& function_decl) {
+    FunctionType enclosing_function = function_type_;
+    function_type_ = FunctionType::Function;
     EnterScope();
     for (auto param : function_decl->parameters) {
         Declare(param->identifier);
@@ -67,6 +69,7 @@ void Resolver::ResolveFunction(
     }
     semantic_analyzer_.Resolve(function_decl->statements);
     LeaveScope();
+    function_type_ = enclosing_function;
 }
 
 }  // namespace analysis
