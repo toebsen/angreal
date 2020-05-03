@@ -59,10 +59,9 @@ class Type {
         std::stringstream ss;
         if(IsBoolean()) ss << std::boolalpha << AsBoolean();
         if(IsFloat()) ss << AsFloat();
-        if(IsInteger()) ss <<  AsInteger();
+        if(IsInteger()) ss << AsInteger();
         if(IsNull()) ss <<  "None";
-        if(IsString()) ss <<  AsString();
-
+        if(IsString()) ss << "\"" <<AsString() << "\"";
         return ss.str();
     }
 

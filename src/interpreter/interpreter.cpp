@@ -51,9 +51,7 @@ void Interpreter::visit(const std::shared_ptr<Assignment>& node) {
 }
 
 void Interpreter::visit(const std::shared_ptr<Return>& node) {
-
-    if(node->expression)
-    {
+    if (node->expression) {
         node->expression->accept(shared_from_this());
         auto obj = stack_.top();
         stack_.pop();
@@ -117,14 +115,12 @@ void Interpreter::visit(const std::shared_ptr<BinaryOperation>& node) {
     BinaryOp op(node->type, a->GetType(), b->GetType());
     obj_t o = std::make_shared<Object>(op.Call());
 
-    if(!o->GetType())
-    {
-        auto type = magic_enum::enum_name(node->type);
+    if (!o->GetType()) {
         std::stringstream ss;
-        ss << "Could not ";
+        ss << "Not able to execute: ";
         ss << a->GetType()->Stringify() << " ";
-        ss << type << " ";
-        ss << b->GetType()->Stringify() << " ";
+        ss << "<" << magic_enum::enum_name(node->type) << "> ";
+        ss << b->GetType()->Stringify();
         throw RuntimeError(ss.str());
     }
     stack_.push(o);
@@ -172,9 +168,8 @@ void Interpreter::ExecuteBlock(
     executor.execute(statements, environment);
 }
 
-void Interpreter::invoke(
-    const statements_t& statements,
-    const std::shared_ptr<environment::Environment>& env) {
+void Interpreter::invoke(const statements_t& statements,
+                         const std::shared_ptr<environment::Environment>& env) {
     Executor executor{*this};
     executor.execute(statements, env);
 }
@@ -218,14 +213,10 @@ void Interpreter::visit(const std::shared_ptr<IfStatement>& node) {
     auto condition = stack_.top();
     stack_.pop();
 
-    if(condition->GetType()->IsTruthy())
-    {
+    if (condition->GetType()->IsTruthy()) {
         node->block->accept(shared_from_this());
-    }
-    else
-    {
-        if(node->else_block)
-        {
+    } else {
+        if (node->else_block) {
             node->else_block->accept(shared_from_this());
         }
     }
@@ -241,8 +232,8 @@ environment::obj_t Interpreter::LookupVariable(const string_t& name,
     }
 }
 void Interpreter::ResolveLocal(const node_t& node, size_t distance) {
-//  std::cout << "ResolveLocal " << node << " " << distance << std::endl;
-  locals_[node] = distance;
+    //  std::cout << "ResolveLocal " << node << " " << distance << std::endl;
+    locals_[node] = distance;
 }
 
 void Interpreter::interpret(const statements_t& statements) {
@@ -256,6 +247,5 @@ void Interpreter::interpret(const expressions_t& expressions) {
         interpret(expressions);
     }
 }
-
 
 }  // namespace tb_lang::interpreter

@@ -2,7 +2,10 @@
 SET(TEST_NAME test_at)
 
 SET(TEST_FILES
-    AT_test.cpp)
+        function_test.cpp
+        example_test.cpp
+        scoping_test.cpp
+        errors_test.cpp)
 
 add_executable(${TEST_NAME} ${TEST_FILES})
 target_link_libraries(${TEST_NAME} tb_lexer tb_parser tb_interpreter gtest gtest_main)
