@@ -9,16 +9,14 @@
 #include "resolver.h"
 #include "visitor.h"
 
-namespace tb_lang {
-
-namespace interpreter {
+namespace tb_lang::interpreter {
 class Interpreter;
 
 namespace analysis {
 
 class SemanticAnalyzer : public Visitor {
    public:
-    SemanticAnalyzer(Interpreter& interpreter);
+    explicit SemanticAnalyzer(Interpreter& interpreter);
 
    public:
     void Resolve(const expression_t& expr);
@@ -52,7 +50,6 @@ class SemanticAnalyzer : public Visitor {
     Interpreter& interpreter_;
 };
 }  // namespace analysis
-}  // namespace interpreter
 }  // namespace tb_lang
 
 #endif  // TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_

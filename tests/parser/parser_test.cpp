@@ -170,7 +170,7 @@ class ExpressionTest : public ParserTest {
 class FunctionDefTest : public ParserTest {
    protected:
     void parseFunctionDef(const std::string& program, std::string identifier,
-                          TypeSystem::Type type) {
+                          TypeHelper::Type type) {
         auto prog = lexAndParseProgram(program);
 
         ASSERT_FALSE(prog->statements.empty());
@@ -183,7 +183,7 @@ class FunctionDefTest : public ParserTest {
     }
 
     void parseFunctionDef(const std::string& program, std::string identifier,
-                          TypeSystem::Type type,
+                          TypeHelper::Type type,
                           AST::formal_parameters parameters) {
         auto prog = lexAndParseProgram(program);
 
@@ -326,23 +326,23 @@ TEST_F(ExpressionTest, NestedExpressions) {
 //}
 
 TEST_F(FunctionDefTest, FunctionDeclaration) {
-    parseFunctionDef("def foo() {}", "foo", TypeSystem::Type::Int, {});
+    parseFunctionDef("def foo() {}", "foo", TypeHelper::Type::Int, {});
 }
 
 TEST_F(FunctionDefTest, FunctionDeclarationWithArgs) {
-    parseFunctionDef("def foo(x) {}", "foo", TypeSystem::Type::Int,
+    parseFunctionDef("def foo(x) {}", "foo", TypeHelper::Type::Int,
                      {
                          std::make_shared<AST::FormalParameter>("x"),
                      });
 
-    parseFunctionDef("def foo(x, y) {}", "foo", TypeSystem::Type::Float,
+    parseFunctionDef("def foo(x, y) {}", "foo", TypeHelper::Type::Float,
                      {
                          std::make_shared<AST::FormalParameter>("x"),
                          std::make_shared<AST::FormalParameter>("y"),
                      });
 
     parseFunctionDef("def foo(x, y, _abc, sure) {}", "foo",
-                     TypeSystem::Type::Bool,
+                     TypeHelper::Type::Bool,
                      {
                          std::make_shared<AST::FormalParameter>("x"),
                          std::make_shared<AST::FormalParameter>("y"),

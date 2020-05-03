@@ -14,7 +14,7 @@
 
 namespace tb_lang::interpreter::environment {
 
-using CallablePtr = std::shared_ptr<Callable>;
+using CallablePtr = std::shared_ptr<ICallable>;
 
 class Type {
     using value_t =

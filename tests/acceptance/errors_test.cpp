@@ -29,6 +29,15 @@ TEST_F(BaseTest, BinOpNotCompatibleType)
     ExpectRuntimeException(code, "Not able to execute: \"123\" <Add> 123");
 }
 
+TEST_F(BaseTest, UnOpNotCompatibleType)
+{
+    std::string code = R"(
+        var x = 123;
+        print(!x);
+    )";
+    ExpectRuntimeException(code, "Not able to execute: <Not> 123 ");
+}
+
 TEST_F(BaseTest, SameNameWithInLocalScope) {
     std::string code = R"(
     # redefinition is allowed on a global scope

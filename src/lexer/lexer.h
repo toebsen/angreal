@@ -19,11 +19,9 @@ namespace tb_lang::lex {
 
 class Lexer {
    public:
-    virtual ~Lexer() = default;
-
     std::vector<Token> lex(const std::string &program);
 
-   protected:
+   private:
     TB_DFA dfa_;
 };
 }  // namespace tb_lang::lex

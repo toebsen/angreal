@@ -16,9 +16,7 @@ class Executor;
 
 class Interpreter : public Visitor {
    public:
-    Interpreter(std::shared_ptr<environment::Environment> global)
-        : globals_(global),
-          environment_(globals_) {}
+    explicit Interpreter(const std::shared_ptr<environment::Environment>& global);
 
     void interpret(const string_t& code);
     void interpret(const statement_t& statement);
@@ -26,15 +24,15 @@ class Interpreter : public Visitor {
     void interpret(const expression_t& expression);
     void interpret(const expressions_t& expressions);
 
-    void invoke(
-        const statements_t& statements,
-        const std::shared_ptr<environment::Environment>& env);
+    void invoke(const statements_t& statements,
+                const std::shared_ptr<environment::Environment>& env);
 
-    std::stack<environment::obj_t>& Stack() { return stack_; };
+    std::stack<environment::obj_t>& Stack();
 
     void ResolveLocal(const node_t& node, size_t distance);
 
-    TESTABLE : void visit(const std::shared_ptr<Program>& node) override;
+    TESTABLE :
+    void visit(const std::shared_ptr<Program>& node) override;
     void visit(const std::shared_ptr<Block>& node) override;
     void visit(const std::shared_ptr<ExpressionStatement>& node) override;
     void visit(const std::shared_ptr<Declaration>& node) override;
@@ -56,8 +54,9 @@ class Interpreter : public Visitor {
    private:
     friend class Executor;
 
-    void ExecuteBlock(const statements_t& statements,
-                      const std::shared_ptr<environment::Environment>& environment);
+    void ExecuteBlock(
+        const statements_t& statements,
+        const std::shared_ptr<environment::Environment>& environment);
 
     environment::obj_t LookupVariable(const string_t& name,
                                       const expression_t& expr);

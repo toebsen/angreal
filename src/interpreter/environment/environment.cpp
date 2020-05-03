@@ -61,7 +61,7 @@ void Environment::Declare(const std::string& name, const obj_t& obj) {
             // Todo: Redeclaration - intentional? -> Warning?
         }
     } else {
-        throw RuntimeError("Cannot declare an empty with name <" + name + ">!");
+        throw RuntimeError("Cannot declare an empty object with name <" + name + ">!");
     }
 }
 

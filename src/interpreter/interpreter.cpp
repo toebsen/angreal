@@ -16,6 +16,9 @@ namespace tb_lang::interpreter {
 
 using namespace environment;
 
+Interpreter::Interpreter(const std::shared_ptr<environment::Environment>& global)
+    : globals_(global), environment_(global) {}
+
 void Interpreter::visit(const std::shared_ptr<Program>& node) {
     for (const auto& stmt : node->statements) {
         stmt->accept(shared_from_this());
@@ -50,6 +53,8 @@ void Interpreter::visit(const std::shared_ptr<Assignment>& node) {
     stack_.pop();
 }
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "hicpp-exception-baseclass"
 void Interpreter::visit(const std::shared_ptr<Return>& node) {
     if (node->expression) {
         node->expression->accept(shared_from_this());
@@ -59,6 +64,7 @@ void Interpreter::visit(const std::shared_ptr<Return>& node) {
     }
     throw Object();
 }
+#pragma clang diagnostic pop
 
 void Interpreter::visit(const std::shared_ptr<IdentifierLiteral>& node) {
     auto o = LookupVariable(node->name, node);
@@ -100,6 +106,13 @@ void Interpreter::visit(const std::shared_ptr<UnaryOperation>& node) {
 
     UnaryOP op(node->type, a->GetType());
     obj_t o = std::make_shared<Object>(op.Call());
+    if (!o->GetType()) {
+        std::stringstream ss;
+        ss << "Not able to execute: ";
+        ss << "<" << magic_enum::enum_name(node->type) << "> ";
+        ss << a->GetType()->Stringify() << " ";
+        throw RuntimeError(ss.str());
+    }
     stack_.push(o);
 }
 
@@ -247,5 +260,7 @@ void Interpreter::interpret(const expressions_t& expressions) {
         interpret(expressions);
     }
 }
+
+std::stack<environment::obj_t>& Interpreter::Stack() { return stack_; }
 
 }  // namespace tb_lang::interpreter

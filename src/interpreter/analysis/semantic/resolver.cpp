@@ -7,10 +7,11 @@
 #include "ast.h"
 #include "semantic_analyzer.h"
 
-namespace tb_lang {
+namespace tb_lang::interpreter::analysis {
 
-namespace interpreter {
-namespace analysis {
+Resolver::Resolver(SemanticAnalyzer& semantic_analyzer)
+    : semantic_analyzer_(semantic_analyzer),
+      function_type_{FunctionType::None} {}
 
 void Resolver::Declare(const string_t& name) {
     if (!scopes_.empty()) {
@@ -18,9 +19,9 @@ void Resolver::Declare(const string_t& name) {
         if (scope.find(name) != scope.end()) {
             throw RuntimeError("variable `" + name +
                                "` already declared in this scope");
-        } else {
-            scope[name] = false;
         }
+
+        scope[name] = false;
     }
 }
 
@@ -31,16 +32,12 @@ void Resolver::Define(const string_t& name) {
     }
 }
 
-void Resolver::EnterScope(void) {
-    scopes_.push_back({});
-}
+void Resolver::EnterScope() { scopes_.emplace_back(); }
 
-void Resolver::LeaveScope(void) {
-    scopes_.pop_back();
-}
+void Resolver::LeaveScope() { scopes_.pop_back(); }
 
 void Resolver::ResolveLocal(const string_t& name, const node_t& expr) {
-    for (auto s=scopes_.rbegin(); s!=scopes_.rend(); ++s) {
+    for (auto s = scopes_.rbegin(); s != scopes_.rend(); ++s) {
         if (s->find(name) != s->end()) {
             auto distance = std::distance(scopes_.rbegin(), s);
             semantic_analyzer_.ResolveLocal(expr, distance);
@@ -63,7 +60,7 @@ void Resolver::ResolveFunction(
     FunctionType enclosing_function = function_type_;
     function_type_ = FunctionType::Function;
     EnterScope();
-    for (auto param : function_decl->parameters) {
+    for (const auto& param : function_decl->parameters) {
         Declare(param->identifier);
         Define(param->identifier);
     }
@@ -72,6 +69,6 @@ void Resolver::ResolveFunction(
     function_type_ = enclosing_function;
 }
 
-}  // namespace analysis
-}  // namespace interpreter
-}  // namespace tb_lang
+bool Resolver::IsFunction() { return function_type_ == FunctionType::Function; }
+
+}  // namespace tb_lang::interpreter::analysis

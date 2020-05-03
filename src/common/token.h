@@ -8,6 +8,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <utility>
 
 #include <magic_enum.hpp>
 
@@ -69,10 +70,8 @@ class Token {
           const Position& pos)
         : value_(value), type_(infer(value, finalState)), position_(pos) {}
 
-    Token(const std::string& value, const Type& type)
-        : value_(value), type_(type) {}
-
-    virtual ~Token() = default;
+    Token(std::string value, const Type& type)
+        : value_(std::move(value)), type_(type) {}
 
     [[nodiscard]] inline Type type() const { return type_; };
 
@@ -104,22 +103,54 @@ class Token {
             case tb_lang::State::EndComment:
                 return Type::Comment;
             case tb_lang::State::Identifier:
-                if (value == "true" || value == "false") return Type::Boolean;
-                if (value == "if") return Type::IfStatement;
-                if (value == "def") return Type::DefStatement;
-                if (value == "var") return Type::VarStatement;
-                if (value == "set") return Type::SetStatement;
-                if (value == "return") return Type::ReturnStatement;
-                if (value == "while") return Type::WhileStatement;
-                if (value == "for") return Type::ForStatement;
-                if (value == "and") return Type::AndStatement;
-                if (value == "or") return Type::OrStatement;
-                if (value == "not") return Type::NotStatement;
-                if (value == "int") return Type::IntIdentifier;
-                if (value == "bool") return Type::BoolIdentifier;
-                if (value == "float") return Type::FloatIdentifier;
-                if (value == "string") return Type::StringIdentifier;
-                if (value == "print") return Type::PrintStatement;
+                if (value == "true" || value == "false") {
+                    return Type::Boolean;
+                }
+                if (value == "if") {
+                    return Type::IfStatement;
+                }
+                if (value == "def") {
+                    return Type::DefStatement;
+                }
+                if (value == "var") {
+                    return Type::VarStatement;
+                }
+                if (value == "set") {
+                    return Type::SetStatement;
+                }
+                if (value == "return") {
+                    return Type::ReturnStatement;
+                }
+                if (value == "while") {
+                    return Type::WhileStatement;
+                }
+                if (value == "for") {
+                    return Type::ForStatement;
+                }
+                if (value == "and") {
+                    return Type::AndStatement;
+                }
+                if (value == "or") {
+                    return Type::OrStatement;
+                }
+                if (value == "not") {
+                    return Type::NotStatement;
+                }
+                if (value == "int") {
+                    return Type::IntIdentifier;
+                }
+                if (value == "bool") {
+                    return Type::BoolIdentifier;
+                }
+                if (value == "float") {
+                    return Type::FloatIdentifier;
+                }
+                if (value == "string") {
+                    return Type::StringIdentifier;
+                }
+                if (value == "print") {
+                    return Type::PrintStatement;
+                }
                 return Type::Identifier;
             case tb_lang::State::EndString:
                 return Type::String;
@@ -128,13 +159,27 @@ class Token {
             case tb_lang::State::Exclamation:
                 return Type::Exclamation;
             case tb_lang::State::Punctuation:
-                if (value == "{") return Type::LeftCurlyBracket;
-                if (value == "}") return Type::RightCurlyBracket;
-                if (value == "(") return Type::LeftBracket;
-                if (value == ")") return Type::RightBracket;
-                if (value == ",") return Type::Comma;
-                if (value == ":") return Type::Colon;
-                if (value == ";") return Type::SemiColon;
+                if (value == "{") {
+                    return Type::LeftCurlyBracket;
+                }
+                if (value == "}") {
+                    return Type::RightCurlyBracket;
+                }
+                if (value == "(") {
+                    return Type::LeftBracket;
+                }
+                if (value == ")") {
+                    return Type::RightBracket;
+                }
+                if (value == ",") {
+                    return Type::Comma;
+                }
+                if (value == ":") {
+                    return Type::Colon;
+                }
+                if (value == ";") {
+                    return Type::SemiColon;
+                }
             case tb_lang::State::SingleRelational:
             case tb_lang::State::CombinedRelational:
                 return Type::RelationalOp;
@@ -151,7 +196,7 @@ class Token {
                 return Type::Error;
         }
         return Type::Error;
-    }
+    };
 
    private:
     Position position_{-1};

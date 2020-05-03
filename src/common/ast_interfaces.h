@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "cppcoreguidelines-special-member-functions"
 //
 // Created by bichlmaier on 10.02.2020.
 //
@@ -17,7 +19,7 @@ using visitor_t = std::shared_ptr<Visitor>;
 
    class Node : private NonCopyable {
    public:
-    virtual ~Node() = default;
+    ~Node() override = default;
 
     virtual void accept(const visitor_t& visitor) = 0;
 };
@@ -26,14 +28,14 @@ class Statement : public Node {
    public:
     virtual void accept(const visitor_t& visitor) = 0;
 
-    virtual ~Statement() = default;
+    ~Statement() override = default;
 };
 
 class Expression : public Node {
    public:
     virtual void accept(const visitor_t& visitor) = 0;
 
-    virtual ~Expression() = default;
+    ~Expression() override = default;
 };
 
 using node_t = std::shared_ptr<Node>;
@@ -47,3 +49,5 @@ using statements_t = std::vector<statement_t>;
 
 }  // namespace tb_lang::parser::AST
 #endif  // TBLANG_AST_INTERFACES_H
+
+#pragma clang diagnostic pop

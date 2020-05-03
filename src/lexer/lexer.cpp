@@ -6,13 +6,11 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "../common/token.h"
 #include "state.h"
-#include "token.h"
 
 namespace tb_lang::lex {
 
-std::vector<Token> Lexer::lex(const std::string &program) {
+std::vector<Token> Lexer::lex(const std::string& program) {
     std::string _program = program;
 
     std::vector<Token> tokens;
@@ -30,8 +28,7 @@ std::vector<Token> Lexer::lex(const std::string &program) {
         if (dfa_.isAccepted() && !dfa_.acceptable(c_next)) {
             if (dfa_.state() != State::WhiteSpace) {
                 boost::replace_all(lexeme, "\n", R"(\n)");
-                if(dfa_.state() == State::EndString)
-                {
+                if (dfa_.state() == State::EndString) {
                     boost::replace_all(lexeme, "\"", "");
                 }
                 tokens.emplace_back(Token{lexeme, dfa_.state(), pos});

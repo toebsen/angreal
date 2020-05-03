@@ -8,8 +8,7 @@
 
 #include "../parser/ast.h"
 
-namespace tb_lang {
-namespace interpreter {
+namespace tb_lang::interpreter {
 
 class Interpreter;
 using interpreter_t = Interpreter*;
@@ -25,26 +24,25 @@ using type_t = std::shared_ptr<Type>;
 class Environment;
 using environment_t = std::shared_ptr<Environment>;
 
-class Callable : private NonCopyable {
+class ICallable : private NonCopyable {
    public:
-    virtual bool CheckArity(const std::vector<obj_t>& args) const = 0;
+    [[nodiscard]] virtual bool CheckArity(const std::vector<obj_t>& args) const = 0;
 
-    virtual size_t Arity() const = 0;
+    [[nodiscard]] virtual size_t Arity() const = 0;
 
     virtual obj_t Call(const interpreter_t& interp,
                        const std::vector<obj_t>& args) = 0;
 
-    virtual string_t Stringify(void) const = 0;
+    [[nodiscard]] virtual string_t Stringify() const = 0;
 
 };
 
-
-class Function final : public Callable,
+class Function final : public ICallable,
                        public std::enable_shared_from_this<Function>
 {
    public:
-    Function(const std::shared_ptr<FunctionDeclaration>& function_decl,
-        const environment_t& env
+    Function(std::shared_ptr<FunctionDeclaration>  function_decl,
+        environment_t  env
         );
 
     bool CheckArity(const std::vector<obj_t>& args) const override;
@@ -55,7 +53,7 @@ class Function final : public Callable,
                        const std::vector<obj_t>& args) override ;
 
 
-    string_t Stringify(void) const override ;
+    string_t Stringify() const override ;
 
    private:
 
@@ -65,6 +63,5 @@ class Function final : public Callable,
 };
 
 }  // namespace environment
-}  // namespace interpreter
 }  // namespace tb_lang
 #endif  // TBLANG_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_

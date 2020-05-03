@@ -14,8 +14,6 @@ class TB_DFA : public DFA<char, State> {
    public:
     TB_DFA();
 
-    ~TB_DFA() = default;
-
    protected:
     void initDFA();
 

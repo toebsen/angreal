@@ -15,18 +15,12 @@ class Environment;
 
 class Executor : public NonCopyable {
    public:
-    Executor(Interpreter& interpreter) : interpreter_{interpreter} {}
+    explicit Executor(Interpreter& interpreter);
 
-    ~Executor() { interpreter_.environment_ = original_environment_; }
+    ~Executor() override;
 
     void execute(const statements_t& statements,
-                 const std::shared_ptr<environment::Environment>& environment) {
-        original_environment_ = interpreter_.environment_;
-        interpreter_.environment_ = environment;
-        for (const auto& stmt : statements) {
-            stmt->accept(interpreter_.shared_from_this());
-        }
-    }
+                 const std::shared_ptr<environment::Environment>& environment);
 
    private:
     Interpreter& interpreter_;

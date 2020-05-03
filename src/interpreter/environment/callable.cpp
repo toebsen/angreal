@@ -2,47 +2,45 @@
 // Created by toebs on 11.04.2020.
 //
 
-
 #include "callable.h"
-#include "environment.h"
 
-#include "object.h"
+#include <utility>
+
 #include "../interpreter.h"
 
+namespace tb_lang::interpreter::environment {
 
-namespace tb_lang {
-namespace interpreter {
-namespace environment {
-
-type_t FromType(parser::TypeSystem::Type type) {
+type_t FromType(parser::TypeHelper::Type type) {
     switch (type) {
-        case parser::TypeSystem::Type::Bool:
+        case parser::TypeHelper::Type::Bool:
             return std::make_shared<BoolType>(false);
-        case parser::TypeSystem::Type::Int:
+        case parser::TypeHelper::Type::Int:
             return std::make_shared<IntType>(0);
-        case parser::TypeSystem::Type::Float:
+        case parser::TypeHelper::Type::Float:
             return std::make_shared<FloatType>(0);
-        case parser::TypeSystem::Type::String:
+        case parser::TypeHelper::Type::String:
             return std::make_shared<StringType>("");
+        case parser::TypeHelper::Type::Unknown:
+            break;
     }
     return type_t(nullptr);
 }
 
-Function::Function(const std::shared_ptr<FunctionDeclaration>& function_decl,
-                   const environment_t& env)
-    : function_decl_(function_decl), env_(env) {}
+Function::Function(std::shared_ptr<FunctionDeclaration> function_decl,
+                   environment_t env)
+    : function_decl_(std::move(function_decl)), env_(std::move(env)) {}
 
 bool Function::CheckArity(const std::vector<obj_t>& args) const {
     return args.size() == function_decl_->parameters.size();
 }
 
-size_t Function::Arity(void) const { return function_decl_->parameters.size(); }
+size_t Function::Arity() const { return function_decl_->parameters.size(); }
 
 obj_t Function::Call(const interpreter_t& interp,
                      const std::vector<obj_t>& args) {
     auto local_env = std::make_shared<Environment>(env_);
 
-    if (CheckArity(args) == false) {
+    if (!CheckArity(args)) {
         std::stringstream ss;
         ss << "Called function <" << function_decl_->identifier
            << "> with wrong args";
@@ -57,20 +55,17 @@ obj_t Function::Call(const interpreter_t& interp,
                            args[kI]);
     }
 
-    try
-    {
-       interp->invoke(function_decl_->statements, local_env);
-    }
-    catch (obj_t & ret)
-    {
+    try {
+        interp->invoke(function_decl_->statements, local_env);
+    } catch (obj_t& ret) {
         return ret;
     }
 
     return obj_t();
 }
 
-string_t Function::Stringify(void) const { return tb_lang::string_t(); }
+string_t Function::Stringify() const {
+    return "function(" + function_decl_->identifier + ")";
+}
 
-}  // namespace environment
-}  // namespace interpreter
-}  // namespace tb_lang
+}  // namespace tb_lang::interpreter::environment

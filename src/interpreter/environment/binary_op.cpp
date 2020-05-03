@@ -4,12 +4,14 @@
 
 #include "binary_op.h"
 
+#include <utility>
+
 #include "literal_types.h"
 
 namespace tb_lang::interpreter::environment {
 
 BinaryOp::BinaryOp(AST::BinaryOperation::OpType op_type, type_t lhs, type_t rhs)
-    : op_type_(op_type), lhs_(lhs), rhs_(rhs) {}
+    : op_type_(op_type), lhs_(std::move(lhs)), rhs_(std::move(rhs)) {}
 
 type_t BinaryOp::Call() {
     switch (op_type_) {
@@ -48,9 +50,9 @@ type_t BinaryOp::Add() {
     auto op = [](auto a, auto b) { return a + b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new IntType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    } if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new FloatType(op(lhs_->AsFloat(), rhs_->AsFloat())));
-    } else if (lhs_->IsString() && rhs_->IsString()) {
+    } if (lhs_->IsString() && rhs_->IsString()) {
         return type_t(new StringType(op(lhs_->AsString(), rhs_->AsString())));
     }
     return type_t();
@@ -60,7 +62,8 @@ type_t BinaryOp::Sub() {
     auto op = [](auto a, auto b) { return a - b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new IntType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new FloatType(op(lhs_->AsFloat(), rhs_->AsFloat())));
     }
 
@@ -71,7 +74,8 @@ type_t BinaryOp::Mul() {
     auto op = [](auto a, auto b) { return a * b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new IntType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new FloatType(op(lhs_->AsFloat(), rhs_->AsFloat())));
     }
     return type_t();
@@ -81,7 +85,8 @@ type_t BinaryOp::Divide() {
     auto op = [](auto a, auto b) { return a / b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new IntType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new FloatType(op(lhs_->AsFloat(), rhs_->AsFloat())));
     }
     return type_t();
@@ -107,11 +112,14 @@ type_t BinaryOp::Equals() {
     auto op = [](auto a, auto b) { return a == b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
-    } else if (lhs_->IsString() && rhs_->IsString()) {
+    }
+    if (lhs_->IsString() && rhs_->IsString()) {
         return type_t(new BoolType(op(lhs_->AsString(), rhs_->AsString())));
-    } else if (lhs_->IsBoolean() && rhs_->IsBoolean()) {
+    }
+    if (lhs_->IsBoolean() && rhs_->IsBoolean()) {
         return type_t(new BoolType(op(lhs_->AsBoolean(), rhs_->AsBoolean())));
     }
     return type_t();
@@ -121,11 +129,14 @@ type_t BinaryOp::NotEquals() {
     auto op = [](auto a, auto b) { return a != b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
-    } else if (lhs_->IsString() && rhs_->IsString()) {
+    }
+    if (lhs_->IsString() && rhs_->IsString()) {
         return type_t(new BoolType(op(lhs_->AsString(), rhs_->AsString())));
-    } else if (lhs_->IsBoolean() && rhs_->IsBoolean()) {
+    }
+    if (lhs_->IsBoolean() && rhs_->IsBoolean()) {
         return type_t(new BoolType(op(lhs_->AsBoolean(), rhs_->AsBoolean())));
     }
     return type_t();
@@ -135,7 +146,8 @@ type_t BinaryOp::Greater() {
     auto op = [](auto a, auto b) { return a > b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
     }
     return type_t();
@@ -145,7 +157,8 @@ type_t BinaryOp::GreaterEqual() {
     auto op = [](auto a, auto b) { return a >= b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
     }
     return type_t();
@@ -155,7 +168,8 @@ type_t BinaryOp::Less() {
     auto op = [](auto a, auto b) { return a < b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
     }
     return type_t();
@@ -165,7 +179,8 @@ type_t BinaryOp::LessEqual() {
     auto op = [](auto a, auto b) { return a <= b; };
     if (lhs_->IsInteger() && rhs_->IsInteger()) {
         return type_t(new BoolType(op(lhs_->AsInteger(), rhs_->AsInteger())));
-    } else if (lhs_->IsFloat() && rhs_->IsFloat()) {
+    }
+    if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new BoolType(op(lhs_->AsFloat(), rhs_->AsFloat())));
     }
     return type_t();
