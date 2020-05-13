@@ -113,6 +113,10 @@ void SemanticAnalyzer::visit(const std::shared_ptr<IfStatement>& node) {
     if(node->else_block) {  Resolve(node->else_block);
 }
 }
+void SemanticAnalyzer::visit(const std::shared_ptr<WhileStatement>& node) {
+    Resolve(node->condition);
+    Resolve(node->block);
+}
 
 }  // namespace analysis
 }  // namespace interpreter

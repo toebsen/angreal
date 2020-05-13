@@ -31,6 +31,7 @@ class FunctionCall;
 class FormalParameter;
 class FunctionDeclaration;
 class IfStatement;
+class WhileStatement;
 class Print;
 }  // namespace parser::AST
 
@@ -57,6 +58,7 @@ class Visitor : public std::enable_shared_from_this<Visitor>,
     virtual void visit(const std::shared_ptr<FormalParameter>& node) = 0;
     virtual void visit(const std::shared_ptr<FunctionDeclaration>& node) = 0;
     virtual void visit(const std::shared_ptr<IfStatement>& node) = 0;
+    virtual void visit(const std::shared_ptr<WhileStatement>& node) = 0;
 };
 }  // namespace tb_lang
 

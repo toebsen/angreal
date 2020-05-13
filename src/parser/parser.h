@@ -52,6 +52,8 @@ class Parser {
 
     std::shared_ptr<AST::IfStatement> parseIfStatement();
 
+    std::shared_ptr<AST::WhileStatement> parseWhileStatement();
+
    private:
     void consume();
 

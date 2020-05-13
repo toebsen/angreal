@@ -296,6 +296,9 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
     if (current_token->type() == Token::Type::IfStatement) {
         return parseIfStatement();
     }
+    if (current_token->type() == Token::Type::WhileStatement) {
+        return parseWhileStatement();
+    }
     if (current_token->type() == Token::Type::EndOfProgram) {
         return nullptr;
     }
@@ -323,6 +326,14 @@ std::shared_ptr<AST::IfStatement> Parser::parseIfStatement() {
     }
 
     return std::make_shared<AST::IfStatement>(condition, block, else_block);
+}
+
+std::shared_ptr<AST::WhileStatement> Parser::parseWhileStatement() {
+    consume();
+    expression_t condition = parseExpression();
+    block_t block = parseBlock();
+
+    return std::make_shared<AST::WhileStatement>(condition, block);
 }
 
 }  // namespace tb_lang::parser

@@ -85,7 +85,6 @@ class Assignment : public Statement,
 class Return : public Statement, public std::enable_shared_from_this<Return> {
    public:
     explicit Return(expression_t expression);
-    ;
 
     void accept(const visitor_t& visitor) override;
 
@@ -159,10 +158,8 @@ class IntLiteral : public ValueLiteral<int>,
     explicit IntLiteral(const std::string& value);
 
     explicit IntLiteral(int value);
-    ;
 
     static TypeHelper::Type type();
-    ;
 
     void accept(const visitor_t& visitor) override;
 };
@@ -173,10 +170,8 @@ class FloatLiteral : public ValueLiteral<float>,
     explicit FloatLiteral(const std::string& value);
 
     explicit FloatLiteral(float value);
-    ;
 
     static TypeHelper::Type type();
-    ;
 
     void accept(const visitor_t& visitor) override;
 };
@@ -187,7 +182,6 @@ class StringLiteral : public ValueLiteral<std::string>,
     explicit StringLiteral(const std::string& value);
 
     static TypeHelper::Type type();
-    ;
 
     void accept(const visitor_t& visitor) override;
 };
@@ -205,10 +199,8 @@ class UnaryOperation : public Expression,
     static OpType inferType(const std::string& value);
 
     UnaryOperation(const std::string& opType, const expression_t& expression);
-    ;
 
     UnaryOperation(OpType opType, const expression_t& expression);
-    ;
 
     void accept(const visitor_t& visitor) override;
 
@@ -253,7 +245,6 @@ class FunctionCall : public Expression,
                      public std::enable_shared_from_this<FunctionCall> {
    public:
     FunctionCall(const std::string& identifier, const expressions_t& args);
-    ;
 
     void accept(const visitor_t& visitor) override;
 
@@ -283,7 +274,6 @@ class FunctionDeclaration
    public:
     FunctionDeclaration(std::string identifier, formal_parameters parameters,
                         statements_t statements);
-    ;
 
     void accept(const visitor_t& visitor) override;
 
@@ -297,7 +287,6 @@ class IfStatement : public Statement,
    public:
     IfStatement(expression_t condition, const block_t& block,
                 block_t else_block);
-    ;
 
     void accept(const visitor_t& visitor) override;
 
@@ -305,6 +294,20 @@ class IfStatement : public Statement,
     block_t block;
     block_t else_block;
 };
+
+
+class WhileStatement : public Statement,
+                    public std::enable_shared_from_this<WhileStatement> {
+   public:
+    WhileStatement(expression_t condition, const block_t& block);
+
+    void accept(const visitor_t& visitor) override;
+
+    expression_t condition;
+    block_t block;
+};
+
+
 }  // namespace tb_lang::parser::AST
 
 #endif  // TBLANG_AST_H

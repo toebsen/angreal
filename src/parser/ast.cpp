@@ -130,17 +130,17 @@ BinaryOperation::OpType BinaryOperation::inferType(const std::string& value) {
 BinaryOperation::BinaryOperation(const std::string& opType,
                                  const expression_t& lhs,
                                  const expression_t& rhs)
-    : BinaryOperation(inferType(opType), lhs, rhs){}
+    : BinaryOperation(inferType(opType), lhs, rhs) {}
 BinaryOperation::BinaryOperation(BinaryOperation::OpType opType,
                                  expression_t lhs, expression_t rhs)
-    : type(opType), lhs(lhs), rhs(rhs){}
+    : type(opType), lhs(lhs), rhs(rhs) {}
 
 void FunctionCall::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 FunctionCall::FunctionCall(const std::string& identifier,
                            const expressions_t& args)
-    : identifier(identifier), args(args){}
+    : identifier(identifier), args(args) {}
 
 void FunctionDeclaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
@@ -150,7 +150,7 @@ FunctionDeclaration::FunctionDeclaration(std::string identifier,
                                          statements_t statements)
     : identifier(std::move(identifier)),
       parameters(std::move(parameters)),
-      statements(std::move(statements)){}
+      statements(std::move(statements)) {}
 
 void FormalParameter::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
@@ -163,5 +163,15 @@ void IfStatement::accept(const visitor_t& visitor) {
 }
 IfStatement::IfStatement(expression_t condition, const block_t& block,
                          block_t else_block)
-    : condition(std::move(condition)), block(block), else_block(std::move(else_block)){}
+    : condition(std::move(condition)),
+      block(block),
+      else_block(std::move(else_block)) {}
+
+void WhileStatement::accept(const visitor_t& visitor) {
+    visitor->visit(shared_from_this());
+}
+
+WhileStatement::WhileStatement(expression_t condition, const block_t& block)
+    : condition(std::move(condition)), block(block) {}
+
 }  // namespace tb_lang::parser::AST
