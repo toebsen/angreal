@@ -37,9 +37,13 @@ TEST_F(BaseTest, NestedScopes) {
                     var x = 4;
                     print(x)
                 }
+                print(x)
             }
+            print(x)
         }
+        print(x)
     }
+    print(x)
     )";
-    SafeRun(code, "4");
+    SafeRun(code, "4\n3\n2\n1\n0");
 }

@@ -7,7 +7,17 @@
 
 #include "test_fixtures.h"
 
-TEST_F(BaseTest, ReturnTesting) {
+TEST_F(BaseTest, InlineReturn) {
+    std::string code = R"(
+    def foo(b)  {
+        return 5 + b;
+    }
+    print(foo(5))
+    )";
+    SafeRun(code, "10");
+}
+
+TEST_F(BaseTest, ReturnOrder) {
     std::string code = R"(
     def foo()  {
         def inner()  {
@@ -25,6 +35,25 @@ TEST_F(BaseTest, ReturnTesting) {
     )";
     SafeRun(code, "5");
 }
+
+
+
+TEST_F(BaseTest, Currying) {
+    std::string code = R"(
+    def f(a)
+    {
+        def g(b, c)
+        {
+            print(a, b, c);
+        }
+        return g;
+    }
+    var fone = f(1);
+    fone(2,3);
+    )";
+    SafeRun(code, "1\n2\n3");
+}
+
 
 TEST_F(BaseTest, TopLevelReturn) {
     std::string code = R"(
