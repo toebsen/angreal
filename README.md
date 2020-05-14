@@ -1,6 +1,7 @@
 # Readme
 
 ## Angreal
+
 Small interpreted *python*-like toy language named **Angreal**.
 
 ```python
@@ -15,16 +16,29 @@ print(Hello("World"));
 
 > Created for learning purposes only.
 
+## Name
+
+The name is taken from the high fantasy series *Wheel Of Time* novels by Robert Jordan.
+
+> Angreal (ahn-gree-AHL) are objects which allow those who can channel to draw more of the One Power 
+> than they normally could without harming themselves in the process.
+>
+> [Wheel Of Time wiki](https://wot.fandom.com/wiki/Angreal)
+
+
 ### Current Features:
+
 - dynamic typing 
 - automatic memory management using reference counting
 - functions are first class objects 
 
 ### Planned Features:
+
 - object orientation
 - move from **tree walk** to a **VM** interpreter
 
 ### Inspired by:
+
 - the awesome [craftinginterpreters](https://www.craftinginterpreters.com/contents.html) :heart:
 - and the great report of [minilang-interpreter](https://drmenguin.com/minilang-interpreter/)
 
@@ -46,6 +60,7 @@ $ pacman -S mingw-w64-x86_64-ninja
 ```
 
 ## Project Layout
+
 ```
 +---.cmake 
 +---src 
@@ -66,6 +81,7 @@ $ pacman -S mingw-w64-x86_64-ninja
 ```
 
 ## Syntax
+
 Regular BNF syntax of *Angreal*:
 - [syntax](http://matt.might.net/articles/grammars-bnf-ebnf/)
 
