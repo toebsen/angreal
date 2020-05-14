@@ -9,8 +9,8 @@
 
 #include "token.h"
 
-using namespace tb_lang;
-using namespace tb_lang::lex;
+using namespace angreal;
+using namespace angreal::lex;
 
 class LexerTest : public ::testing::Test {
    protected:

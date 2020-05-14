@@ -2,8 +2,8 @@
 // Created by toebs on 11.04.2020.
 //
 
-#ifndef TBLANG_TESTS_ACCEPTANCE_TEST_FIXTURES_H_
-#define TBLANG_TESTS_ACCEPTANCE_TEST_FIXTURES_H_
+#ifndef ANGREAL_TESTS_ACCEPTANCE_TEST_FIXTURES_H_
+#define ANGREAL_TESTS_ACCEPTANCE_TEST_FIXTURES_H_
 
 #include <gtest/gtest.h>
 
@@ -12,11 +12,11 @@
 #include "parser/ast.h"
 #include "parser/parser.h"
 
-using namespace tb_lang;
-using namespace tb_lang::lex;
-using namespace tb_lang::parser;
-using namespace tb_lang::interpreter;
-using namespace tb_lang::interpreter::environment;
+using namespace angreal;
+using namespace angreal::lex;
+using namespace angreal::parser;
+using namespace angreal::interpreter;
+using namespace angreal::interpreter::environment;
 
 class BaseTest : public ::testing::Test {
    public:
@@ -55,4 +55,4 @@ class BaseTest : public ::testing::Test {
     Context context_;
 };
 
-#endif  // TBLANG_TESTS_ACCEPTANCE_TEST_FIXTURES_H_
+#endif  // ANGREAL_TESTS_ACCEPTANCE_TEST_FIXTURES_H_

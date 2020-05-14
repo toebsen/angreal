@@ -7,7 +7,7 @@
 #include "ast.h"
 #include "semantic_analyzer.h"
 
-namespace tb_lang::interpreter::analysis {
+namespace angreal::interpreter::analysis {
 
 Resolver::Resolver(SemanticAnalyzer& semantic_analyzer)
     : semantic_analyzer_(semantic_analyzer),
@@ -71,4 +71,4 @@ void Resolver::ResolveFunction(
 
 bool Resolver::IsFunction() { return function_type_ == FunctionType::Function; }
 
-}  // namespace tb_lang::interpreter::analysis
+}  // namespace angreal::interpreter::analysis

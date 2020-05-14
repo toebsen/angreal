@@ -6,10 +6,10 @@
 
 #include "literal_types.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
-UnaryOP::UnaryOP(tb_lang::UnaryOperation::OpType op_type,
-                 tb_lang::interpreter::environment::type_t type)
+UnaryOP::UnaryOP(angreal::UnaryOperation::OpType op_type,
+                 angreal::interpreter::environment::type_t type)
     : op_type_(op_type), type_(std::move(type)) {}
 
 type_t UnaryOP::Call() {
@@ -56,4 +56,4 @@ type_t UnaryOP::NegateBool() {
     return type_t();
 }
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment

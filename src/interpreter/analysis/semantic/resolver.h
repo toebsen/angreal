@@ -2,8 +2,8 @@
 // Created by toebs on 18.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_RESOLVER_H_
-#define TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_RESOLVER_H_
+#ifndef ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_RESOLVER_H_
+#define ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_RESOLVER_H_
 
 #include <unordered_map>
 #include <vector>
@@ -11,7 +11,7 @@
 #include "ast_interfaces.h"
 #include "common.h"
 
-namespace tb_lang::interpreter::analysis {
+namespace angreal::interpreter::analysis {
 
 class SemanticAnalyzer;
 class Resolver {
@@ -39,5 +39,5 @@ class Resolver {
     SemanticAnalyzer& semantic_analyzer_;
     FunctionType function_type_;
 };
-}  // namespace tb_lang::interpreter::analysis
-#endif  // TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_RESOLVER_H_
+}  // namespace angreal::interpreter::analysis
+#endif  // ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_RESOLVER_H_

@@ -2,8 +2,8 @@
 // Created by toebs on 14.05.2020.
 //
 
-#ifndef TBLANG_TESTS_PARSER_TEST_FIXTURES_H_
-#define TBLANG_TESTS_PARSER_TEST_FIXTURES_H_
+#ifndef ANGREAL_TESTS_PARSER_TEST_FIXTURES_H_
+#define ANGREAL_TESTS_PARSER_TEST_FIXTURES_H_
 
 #include "parser/parser.h"
 
@@ -15,9 +15,9 @@
 #include "parser/ast.h"
 #include "token.h"
 
-using namespace tb_lang;
-using namespace tb_lang::lex;
-using namespace tb_lang::parser;
+using namespace angreal;
+using namespace angreal::lex;
+using namespace angreal::parser;
 
 typedef std::vector<Token> tokens_t;
 
@@ -221,4 +221,4 @@ class BlockTest : public ParserTest {
 };
 
 
-#endif  // TBLANG_TESTS_PARSER_TEST_FIXTURES_H_
+#endif  // ANGREAL_TESTS_PARSER_TEST_FIXTURES_H_

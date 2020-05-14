@@ -12,6 +12,6 @@ set(PARSER_HEADERS_DIR
         PARENT_SCOPE
         )
 
-add_library(tb_parser STATIC ${Parser_SOURCE})
+add_library(angreal_parser STATIC ${Parser_SOURCE})
 
-target_include_directories(tb_parser PRIVATE ${LEX_HEADERS_DIR} ${PARSER_HEADERS_DIR})
+target_include_directories(angreal_parser PRIVATE ${LEX_HEADERS_DIR} ${PARSER_HEADERS_DIR})

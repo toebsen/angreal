@@ -6,7 +6,7 @@
 
 #include "ast.h"
 
-namespace tb_lang::parser {
+namespace angreal::parser {
 
 TypeHelper::Type TypeHelper::mapTokenToLiteralType(Token::Type expected) {
     switch (expected) {
@@ -40,4 +40,4 @@ std::shared_ptr<AST::Expression> TypeHelper::mapTypeToLiteral(
     return nullptr;
 }
 
-}  // namespace tb_lang::parser
+}  // namespace angreal::parser

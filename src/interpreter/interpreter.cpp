@@ -11,7 +11,7 @@
 #include "environment/unary_op.h"
 #include "executor.h"
 
-namespace tb_lang::interpreter {
+namespace angreal::interpreter {
 
 using namespace environment;
 
@@ -276,4 +276,4 @@ void Interpreter::interpret(const expressions_t& expressions) {
 
 std::stack<environment::obj_t>& Interpreter::Stack() { return stack_; }
 
-}  // namespace tb_lang::interpreter
+}  // namespace angreal::interpreter

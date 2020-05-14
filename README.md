@@ -1,19 +1,72 @@
-
 # Readme
 
-## Setup
-```console
-$ pacman -Syuu
-$ pacman -S mingw-w64-x86_64-toolchain 
-$ pacman -Sy mingw-w64-i686-boost mingw-w64-x86_64-boost
+## Angreal
+Small interpreted *python*-like toy language named **Angreal**.
+
+```python
+# this is a comment
+def Hello(name) {
+    # this is a function
+    return "Hello " + name
+}
+
+print(Hello("World"));
 ```
 
-## TBLang
-Small interpreted pet language named *TBLang*!
+> Created for learning purposes only.
 
-Inspired by https://drmenguin.com/minilang-interpreter/
+### Current Features:
+- dynamic typing 
+- automatic memory management using reference counting
+- functions are first class objects 
 
-Regular BNF syntax of *TBLang*:
+### Planned Features:
+- object orientation
+- move from **tree walk** to a **VM** interpreter
+
+### Inspired by:
+- the awesome [craftinginterpreters](https://www.craftinginterpreters.com/contents.html) :heart:
+- and the great report of [minilang-interpreter](https://drmenguin.com/minilang-interpreter/)
+
+## Setup
+
+Currently developed on windows with msys2 using:
+- cmake
+- ninja
+- clang-tidy
+- boost
+- [magic_enum](https://github.com/Neargye/magic_enum) 
+
+### MSys2
+```bash
+$ pacman -Syuu
+$ pacman -Sy mingw-w64-x86_64-toolchain 
+$ pacman -Sy mingw-w64-i686-boost mingw-w64-x86_64-boost
+$ pacman -S mingw-w64-x86_64-ninja
+```
+
+## Project Layout
+```
++---.cmake 
++---src 
+|   +---common
+|   +---interpreter
+|   |   +---analysis
+|   |   |   \---semantic
+|   |   \---environment
+|   +---lexer
+|   \---parser
++---tests
+|   +---acceptance
+|   +---interpreter
+|   +---lexer
+|   \---parser
+\---third_party
+    \---magic_enum
+```
+
+## Syntax
+Regular BNF syntax of *Angreal*:
 - [syntax](http://matt.might.net/articles/grammars-bnf-ebnf/)
 
 ```

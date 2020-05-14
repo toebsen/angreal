@@ -2,8 +2,8 @@
 // Created by toebs on 04.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_VM_H_
-#define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_VM_H_
+#ifndef ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_VM_H_
+#define ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_VM_H_
 
 #include <any>
 #include <iostream>
@@ -13,7 +13,7 @@
 #include "literal_types.h"
 #include "object.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 class Environment final : public NonCopyable,
                           public std::enable_shared_from_this<Environment> {
@@ -44,10 +44,10 @@ class Environment final : public NonCopyable,
     environment_t enclosing_;
 
     std::map<ObjectID, obj_t> objects_;
-    std::map<ObjectID, tb_lang::string_t> id_to_name_;
-    std::map<tb_lang::string_t, ObjectID> name_to_id_;
+    std::map<ObjectID, angreal::string_t> id_to_name_;
+    std::map<angreal::string_t, ObjectID> name_to_id_;
 };
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment
 
-#endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_VM_H_
+#endif  // ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_VM_H_

@@ -5,8 +5,8 @@
 // Created by bichlmaier on 07.02.2020.
 //
 
-#ifndef TBLANG_AST_H
-#define TBLANG_AST_H
+#ifndef ANGREAL_AST_H
+#define ANGREAL_AST_H
 
 #include <memory>
 #include <utility>
@@ -17,7 +17,7 @@
 
 #include "type_helper.h"
 
-namespace tb_lang::parser::AST {
+namespace angreal::parser::AST {
 
 class Program : public Node, public std::enable_shared_from_this<Program> {
    public:
@@ -303,8 +303,8 @@ class WhileStatement : public Statement,
     block_t block;
 };
 
-}  // namespace tb_lang::parser::AST
+}  // namespace angreal::parser::AST
 
-#endif  // TBLANG_AST_H
+#endif  // ANGREAL_AST_H
 
 #pragma clang diagnostic pop

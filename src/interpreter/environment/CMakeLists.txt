@@ -20,6 +20,6 @@ set(ENVIRONMENT_HEADERS_DIR
         object.h
         )
 
-add_library(tb_env STATIC ${ENVIRONMENT_SOURCE})
-target_include_directories(tb_env PRIVATE ${PARSER_HEADERS_DIR})
-target_link_libraries(tb_env bcrypt)
+add_library(angreal_env STATIC ${ENVIRONMENT_SOURCE})
+target_include_directories(angreal_env PRIVATE ${PARSER_HEADERS_DIR})
+target_link_libraries(angreal_env bcrypt)

@@ -4,15 +4,15 @@
 // Created by toebs on 05.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_CONTEXT_H_
-#define TBLANG_SRC_INTERPRETER_CONTEXT_H_
+#ifndef ANGREAL_SRC_INTERPRETER_CONTEXT_H_
+#define ANGREAL_SRC_INTERPRETER_CONTEXT_H_
 
 #include "environment/environment.h"
 #include "interpreter.h"
 
-using tb_lang::interpreter::environment::Environment;
+using angreal::interpreter::environment::Environment;
 
-namespace tb_lang::interpreter {
+namespace angreal::interpreter {
 
 class Context {
    public:
@@ -23,8 +23,8 @@ class Context {
     std::shared_ptr<Environment> global;
     std::shared_ptr<Interpreter> interpreter;
 };
-}  // namespace tb_lang::interpreter
+}  // namespace angreal::interpreter
 
-#endif  // TBLANG_SRC_INTERPRETER_CONTEXT_H_
+#endif  // ANGREAL_SRC_INTERPRETER_CONTEXT_H_
 
 #pragma clang diagnostic pop

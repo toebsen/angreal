@@ -3,7 +3,7 @@
 //
 #include "literal_types.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 BoolType::BoolType(bool value) : Type(value) {}
 
@@ -11,6 +11,6 @@ IntType::IntType(int value) : Type(value) {}
 
 FloatType::FloatType(float value) : Type(value) {}
 
-StringType::StringType(tb_lang::string_t value) : Type(value) {}
+StringType::StringType(angreal::string_t value) : Type(value) {}
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment

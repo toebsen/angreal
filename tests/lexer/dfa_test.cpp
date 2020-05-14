@@ -6,7 +6,8 @@
 
 #include <gtest/gtest.h>
 
-using namespace tb_lang::lex;
+using namespace angreal::lex;
+
 enum class State {
     Invalid = -1,
     S0,

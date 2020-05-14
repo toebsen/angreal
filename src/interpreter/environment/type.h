@@ -2,8 +2,8 @@
 // Created by toebs on 04.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_
-#define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_
+#ifndef ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_
+#define ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_
 
 #include <memory>
 #include <variant>
@@ -12,7 +12,7 @@
 #include "common.h"
 #include "object.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 class Type {
     using value_t =
@@ -78,8 +78,8 @@ class Type {
 
    private:
     value_t value_;
-};  // namespace tb_lang::interpreter::environment
+};  // namespace angreal::interpreter::environment
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment
 
-#endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_
+#endif  // ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_

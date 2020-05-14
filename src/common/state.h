@@ -2,12 +2,12 @@
 // Created by bichlmaier on 05.02.2020.
 //
 
-#ifndef TBLANG_STATE_H
-#define TBLANG_STATE_H
+#ifndef ANGREAL_STATE_H
+#define ANGREAL_STATE_H
 
 #include <map>
 
-namespace tb_lang {
+namespace angreal {
 enum class State {
     Invalid = -1,
     Initial = 0,
@@ -53,6 +53,6 @@ const std::map<State, bool> FinalStates = {
     {State::WhiteSpace, true},
     {State::EndOfProgram, true},
 };
-}  // namespace tb_lang
+}  // namespace angreal
 
-#endif  // TBLANG_STATE_H
+#endif  // ANGREAL_STATE_H
