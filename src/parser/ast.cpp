@@ -102,8 +102,8 @@ UnaryOperation::OpType UnaryOperation::inferType(const std::string& value) {
     return OpType::Unknown;
 }
 UnaryOperation::UnaryOperation(UnaryOperation::OpType opType,
-                               const expression_t& expression)
-    : type(opType), expression(expression) {}
+                               expression_t expression)
+    : type(opType), expression(std::move(expression)) {}
 UnaryOperation::UnaryOperation(const std::string& opType,
                                const expression_t& expression)
     : UnaryOperation(inferType(opType), expression) {}
@@ -112,18 +112,42 @@ void BinaryOperation::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 BinaryOperation::OpType BinaryOperation::inferType(const std::string& value) {
-    if (value == "+") return OpType::Add;
-    if (value == "-") return OpType::Sub;
-    if (value == "*") return OpType::Mul;
-    if (value == "/") return OpType::Divide;
-    if (value == "or") return OpType::Or;
-    if (value == "and") return OpType::And;
-    if (value == "==") return OpType::Equals;
-    if (value == "!=") return OpType::NotEquals;
-    if (value == ">") return OpType::Greater;
-    if (value == ">=") return OpType::GreaterEquals;
-    if (value == "<") return OpType::Less;
-    if (value == "<=") return OpType::LessEquals;
+    if (value == "+") {
+        return OpType::Add;
+    }
+    if (value == "-") {
+        return OpType::Sub;
+    }
+    if (value == "*") {
+        return OpType::Mul;
+    }
+    if (value == "/") {
+        return OpType::Divide;
+    }
+    if (value == "or") {
+        return OpType::Or;
+    }
+    if (value == "and") {
+        return OpType::And;
+    }
+    if (value == "==") {
+        return OpType::Equals;
+    }
+    if (value == "!=") {
+        return OpType::NotEquals;
+    }
+    if (value == ">") {
+        return OpType::Greater;
+    }
+    if (value == ">=") {
+        return OpType::GreaterEquals;
+    }
+    if (value == "<") {
+        return OpType::Less;
+    }
+    if (value == "<=") {
+        return OpType::LessEquals;
+    }
 
     return OpType::Unknown;
 }
@@ -133,14 +157,13 @@ BinaryOperation::BinaryOperation(const std::string& opType,
     : BinaryOperation(inferType(opType), lhs, rhs) {}
 BinaryOperation::BinaryOperation(BinaryOperation::OpType opType,
                                  expression_t lhs, expression_t rhs)
-    : type(opType), lhs(lhs), rhs(rhs) {}
+    : type(opType), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
 
 void FunctionCall::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
-FunctionCall::FunctionCall(const std::string& identifier,
-                           const expressions_t& args)
-    : identifier(identifier), args(args) {}
+FunctionCall::FunctionCall(std::string identifier, expressions_t args)
+    : identifier(std::move(identifier)), args(std::move(args)) {}
 
 void FunctionDeclaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
@@ -161,17 +184,17 @@ FormalParameter::FormalParameter(std::string identifier)
 void IfStatement::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
-IfStatement::IfStatement(expression_t condition, const block_t& block,
+IfStatement::IfStatement(expression_t condition, block_t block,
                          block_t else_block)
     : condition(std::move(condition)),
-      block(block),
+      block(std::move(block)),
       else_block(std::move(else_block)) {}
 
 void WhileStatement::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-WhileStatement::WhileStatement(expression_t condition, const block_t& block)
-    : condition(std::move(condition)), block(block) {}
+WhileStatement::WhileStatement(expression_t condition, block_t block)
+    : condition(std::move(condition)), block(std::move(block)) {}
 
 }  // namespace tb_lang::parser::AST

@@ -8,7 +8,6 @@ tb_lang::interpreter::Executor::Executor(
     tb_lang::interpreter::Interpreter& interpreter)
     : interpreter_{interpreter} {}
 
-
 tb_lang::interpreter::Executor::~Executor() {
     interpreter_.environment_ = original_environment_;
 }

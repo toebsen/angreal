@@ -1,5 +1,5 @@
 ---
-Checks:          '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-modernize-use-trailing-return-type,-llvm-*'
+Checks:          '*google-*,cppcoreguidelines-*,readability-*,performance-*,modernize-*,-modernize-use-trailing-return-type,bugprone-'
 WarningsAsErrors: '1'
 HeaderFilterRegex: ''
-FormatStyle:     none
+FormatStyle:     'google'

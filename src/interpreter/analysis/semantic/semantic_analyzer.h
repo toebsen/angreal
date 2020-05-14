@@ -18,11 +18,11 @@ class SemanticAnalyzer : public Visitor {
    public:
     explicit SemanticAnalyzer(Interpreter& interpreter);
 
-   public:
     void Resolve(const expression_t& expr);
     void Resolve(const expressions_t& expressions);
     void Resolve(const statement_t& statement);
     void Resolve(const statements_t& statements);
+    void Resolve(const block_t& statements);
 
     void visit(const std::shared_ptr<Program>& node) override;
     void visit(const std::shared_ptr<Block>& node) override;
@@ -44,13 +44,13 @@ class SemanticAnalyzer : public Visitor {
     void visit(const std::shared_ptr<IfStatement>& node) override;
     void visit(const std::shared_ptr<WhileStatement>& node) override;
 
-    void ResolveLocal(const node_t& node, size_t distance);
+    void ResolveLocal(const node_t& node, long long int distance);
 
    private:
     Resolver resolver_;
     Interpreter& interpreter_;
 };
 }  // namespace analysis
-}  // namespace tb_lang
+}  // namespace tb_lang::interpreter
 
 #endif  // TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_

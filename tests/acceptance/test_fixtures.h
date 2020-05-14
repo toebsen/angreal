@@ -20,7 +20,6 @@ using namespace tb_lang::interpreter::environment;
 
 class BaseTest : public ::testing::Test {
    public:
-
     void SafeRun(const std::string& code, const std::string& expected) {
         try {
             testing::internal::CaptureStdout();

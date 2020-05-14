@@ -5,12 +5,11 @@
 #ifndef TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_
 #define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_
 
+#include "../parser/ast.h"
 #include "common.h"
 #include "type.h"
-#include "../parser/ast.h"
 
 namespace tb_lang::interpreter::environment {
-
 
 class IntType : public Type {
    public:

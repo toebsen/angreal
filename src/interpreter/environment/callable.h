@@ -5,7 +5,6 @@
 #ifndef TBLANG_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
 #define TBLANG_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
 
-
 #include "../parser/ast.h"
 
 namespace tb_lang::interpreter {
@@ -15,18 +14,10 @@ using interpreter_t = Interpreter*;
 
 namespace environment {
 
-class Object;
-using obj_t = std::shared_ptr<Object>;
-
-class Type;
-using type_t = std::shared_ptr<Type>;
-
-class Environment;
-using environment_t = std::shared_ptr<Environment>;
-
 class ICallable : private NonCopyable {
    public:
-    [[nodiscard]] virtual bool CheckArity(const std::vector<obj_t>& args) const = 0;
+    [[nodiscard]] virtual bool CheckArity(
+        const std::vector<obj_t>& args) const = 0;
 
     [[nodiscard]] virtual size_t Arity() const = 0;
 
@@ -34,34 +25,28 @@ class ICallable : private NonCopyable {
                        const std::vector<obj_t>& args) = 0;
 
     [[nodiscard]] virtual string_t Stringify() const = 0;
-
 };
 
 class Function final : public ICallable,
-                       public std::enable_shared_from_this<Function>
-{
+                       public std::enable_shared_from_this<Function> {
    public:
-    Function(std::shared_ptr<FunctionDeclaration>  function_decl,
-        environment_t  env
-        );
+    Function(std::shared_ptr<FunctionDeclaration> function_decl,
+             environment_t env);
 
     bool CheckArity(const std::vector<obj_t>& args) const override;
 
     size_t Arity() const override;
 
     obj_t Call(const interpreter_t& interp,
-                       const std::vector<obj_t>& args) override ;
+               const std::vector<obj_t>& args) override;
 
-
-    string_t Stringify() const override ;
+    string_t Stringify() const override;
 
    private:
-
     std::shared_ptr<FunctionDeclaration> function_decl_;
     environment_t env_;
-
 };
 
 }  // namespace environment
-}  // namespace tb_lang
+}  // namespace tb_lang::interpreter
 #endif  // TBLANG_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_

@@ -4,10 +4,6 @@
 
 #include "parser.h"
 
-#include <magic_enum.hpp>
-
-#include "type_helper.h"
-
 namespace tb_lang::parser {
 std::shared_ptr<AST::Program> Parser::parseProgram(
     const std::vector<Token>& tokens) {

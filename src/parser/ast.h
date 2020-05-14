@@ -41,8 +41,6 @@ class Block : public Statement, public std::enable_shared_from_this<Block> {
     statements_t statements;
 };
 
-using block_t = std::shared_ptr<Block>;
-
 class ExpressionStatement
     : public Statement,
       public std::enable_shared_from_this<ExpressionStatement> {
@@ -200,7 +198,7 @@ class UnaryOperation : public Expression,
 
     UnaryOperation(const std::string& opType, const expression_t& expression);
 
-    UnaryOperation(OpType opType, const expression_t& expression);
+    UnaryOperation(OpType opType, expression_t expression);
 
     void accept(const visitor_t& visitor) override;
 
@@ -244,7 +242,7 @@ class BinaryOperation : public Expression,
 class FunctionCall : public Expression,
                      public std::enable_shared_from_this<FunctionCall> {
    public:
-    FunctionCall(const std::string& identifier, const expressions_t& args);
+    FunctionCall(std::string identifier, expressions_t args);
 
     void accept(const visitor_t& visitor) override;
 
@@ -285,8 +283,7 @@ class FunctionDeclaration
 class IfStatement : public Statement,
                     public std::enable_shared_from_this<IfStatement> {
    public:
-    IfStatement(expression_t condition, const block_t& block,
-                block_t else_block);
+    IfStatement(expression_t condition, block_t block, block_t else_block);
 
     void accept(const visitor_t& visitor) override;
 
@@ -295,18 +292,16 @@ class IfStatement : public Statement,
     block_t else_block;
 };
 
-
 class WhileStatement : public Statement,
-                    public std::enable_shared_from_this<WhileStatement> {
+                       public std::enable_shared_from_this<WhileStatement> {
    public:
-    WhileStatement(expression_t condition, const block_t& block);
+    WhileStatement(expression_t condition, block_t block);
 
     void accept(const visitor_t& visitor) override;
 
     expression_t condition;
     block_t block;
 };
-
 
 }  // namespace tb_lang::parser::AST
 

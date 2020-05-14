@@ -17,7 +17,7 @@ void TB_DFA::initDFA() {
 }
 
 void TB_DFA::addStates() {
-    for (const auto &[k, v] : FinalStates) {
+    for (const auto& [k, v] : FinalStates) {
         addState(k, v);
     }
 }

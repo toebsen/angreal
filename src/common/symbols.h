@@ -12,9 +12,10 @@ struct Symbols {
         std::set<char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
                                   'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
                                   's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
-        std::transform(letters.begin(), letters.end(),
-                       std::inserter(letters, letters.end()),
-                       [](char c) -> char { return std::toupper(c); });
+        std::transform(
+            letters.begin(), letters.end(),
+            std::inserter(letters, letters.end()),
+            [](char c) -> char { return static_cast<char>(std::toupper(c)); });
 
         return letters;
     }

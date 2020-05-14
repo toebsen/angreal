@@ -36,8 +36,6 @@ TEST_F(BaseTest, ReturnOrder) {
     SafeRun(code, "5");
 }
 
-
-
 TEST_F(BaseTest, Currying) {
     std::string code = R"(
     def f(a)
@@ -53,7 +51,6 @@ TEST_F(BaseTest, Currying) {
     )";
     SafeRun(code, "1\n2\n3");
 }
-
 
 TEST_F(BaseTest, TopLevelReturn) {
     std::string code = R"(

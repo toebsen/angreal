@@ -196,8 +196,8 @@ class Token {
 
    private:
     Position position_{-1};
-    Type type_{Type::Error};
-    std::string value_{""};
+    Type type_;
+    std::string value_;
 };
 
 }  // namespace tb_lang

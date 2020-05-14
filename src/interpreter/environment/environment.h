@@ -15,8 +15,6 @@
 
 namespace tb_lang::interpreter::environment {
 
-using obj_t = std::shared_ptr<Object>;
-
 class Environment final : public NonCopyable,
                           public std::enable_shared_from_this<Environment> {
    public:
@@ -49,8 +47,6 @@ class Environment final : public NonCopyable,
     std::map<ObjectID, tb_lang::string_t> id_to_name_;
     std::map<tb_lang::string_t, ObjectID> name_to_id_;
 };
-
-using environment_t = std::shared_ptr<Environment>;
 
 }  // namespace tb_lang::interpreter::environment
 

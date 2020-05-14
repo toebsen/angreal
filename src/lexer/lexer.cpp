@@ -6,8 +6,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include "state.h"
-
 namespace tb_lang::lex {
 
 std::vector<Token> Lexer::lex(const std::string& program) {
@@ -42,7 +40,7 @@ std::vector<Token> Lexer::lex(const std::string& program) {
             ++pos.line;
         }
     }
-    tokens.emplace_back(Token{"<EOP>", State::EndOfProgram, pos});
+    tokens.emplace_back("<EOP>", State::EndOfProgram, pos);
 
     return tokens;
 }

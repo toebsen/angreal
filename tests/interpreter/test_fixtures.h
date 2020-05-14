@@ -7,9 +7,9 @@
 
 #include <gtest/gtest.h>
 
+#include "analysis/semantic/semantic_analyzer.h"
 #include "context.h"
 #include "parser/ast.h"
-#include "analysis/semantic/semantic_analyzer.h"
 
 using namespace tb_lang;
 using namespace tb_lang::parser;
@@ -35,36 +35,35 @@ class DeclarationTest : public BaseTest {
     }
 
     void DeclareString(const std::string& name, const std::string& value) {
-        auto decl = std::make_shared<AST::Declaration>(name,
-                              std::make_shared<StringLiteral>(value));
+        auto decl = std::make_shared<AST::Declaration>(
+            name, std::make_shared<StringLiteral>(value));
         context_.interpreter->visit(decl);
     }
 
     void DeclareInt(const std::string& name, int value) {
-        auto decl = std::make_shared<AST::Declaration>(name,
-                              std::make_shared<IntLiteral>(value));
+        auto decl = std::make_shared<AST::Declaration>(
+            name, std::make_shared<IntLiteral>(value));
         context_.interpreter->visit(decl);
     }
 
     void DeclareBool(const std::string& name, bool value) {
-        auto decl = std::make_shared<AST::Declaration>(name,
-                              std::make_shared<BoolLiteral>(value));
+        auto decl = std::make_shared<AST::Declaration>(
+            name, std::make_shared<BoolLiteral>(value));
         context_.interpreter->visit(decl);
     }
 
     void DeclareFloat(const std::string& name, float value) {
-        auto decl = std::make_shared<AST::Declaration>(name,
-                              std::make_shared<FloatLiteral>(value));
+        auto decl = std::make_shared<AST::Declaration>(
+            name, std::make_shared<FloatLiteral>(value));
         context_.interpreter->visit(decl);
     }
 };
 
-class UnaryOpTest : public DeclarationTest
-{
+class UnaryOpTest : public DeclarationTest {
    protected:
-    void DeclareUnaryOp(const std::string& op, const std::string& lit)
-    {
-        auto unary_op = std::make_shared<UnaryOperation>(op, std::make_shared<IdentifierLiteral>(lit));
+    void DeclareUnaryOp(const std::string& op, const std::string& lit) {
+        auto unary_op = std::make_shared<UnaryOperation>(
+            op, std::make_shared<IdentifierLiteral>(lit));
         context_.interpreter->visit(unary_op);
     }
 };
@@ -73,9 +72,9 @@ class BinaryOpTest : public DeclarationTest {
    protected:
     void DeclareBinaryOp(const std::string op, const std::string lhs,
                          const std::string rhs) {
-        auto bin_op =
-            std::make_shared<BinaryOperation>(op, std::make_shared<IdentifierLiteral>(lhs),
-                            std::make_shared<IdentifierLiteral>(rhs));
+        auto bin_op = std::make_shared<BinaryOperation>(
+            op, std::make_shared<IdentifierLiteral>(lhs),
+            std::make_shared<IdentifierLiteral>(rhs));
 
         context_.interpreter->visit(bin_op);
     }
@@ -113,71 +112,69 @@ class StringBinaryOpTest : public BinaryOpTest {
     }
 };
 
-class FunctionTest : public DeclarationTest
-{
+class FunctionTest : public DeclarationTest {
    protected:
-    void DeclareArityZeroFunction(const std::string& name)
-    {
-        auto inner_decl =  std::make_shared<AST::Declaration>("text",
-                                                              std::make_shared<StringLiteral>("World"));
+    void DeclareArityZeroFunction(const std::string& name) {
+        auto inner_decl = std::make_shared<AST::Declaration>(
+            "text", std::make_shared<StringLiteral>("World"));
 
         auto ident = std::make_shared<AST::IdentifierLiteral>("text");
         context_.interpreter->ResolveLocal(ident, 0);
-        statements_t statements{
-            inner_decl,
-            std::make_shared<AST::Return>(ident)};
+        statements_t statements{inner_decl,
+                                std::make_shared<AST::Return>(ident)};
 
         formal_parameters parameters = {};
-        auto declaration = std::make_shared<FunctionDeclaration>(name, parameters, statements);
+        auto declaration =
+            std::make_shared<FunctionDeclaration>(name, parameters, statements);
         context_.interpreter->visit(declaration);
     }
 
-    void DeclareArityOneIntFunction(const std::string& name, int init_value)
-    {
+    void DeclareArityOneIntFunction(const std::string& name, int init_value) {
         auto ident = std::make_shared<AST::IdentifierLiteral>("test");
         context_.interpreter->ResolveLocal(ident, 0);
 
         statements_t statements{
-            std::make_shared<AST::Declaration>("test",
-                                               std::make_shared<BinaryOperation>(
-                                                   "+",
-                                                   std::make_shared<IntLiteral>(init_value),
-                                                   std::make_shared<IdentifierLiteral>("arg1")
-                                                   )
-                                               ),
+            std::make_shared<AST::Declaration>(
+                "test", std::make_shared<BinaryOperation>(
+                            "+", std::make_shared<IntLiteral>(init_value),
+                            std::make_shared<IdentifierLiteral>("arg1"))),
 
             std::make_shared<AST::Return>(ident)};
 
-        formal_parameters parameters = {std::make_shared<FormalParameter>("arg1")};
-        auto declaration = std::make_shared<FunctionDeclaration>(name, parameters, statements);
+        formal_parameters parameters = {
+            std::make_shared<FormalParameter>("arg1")};
+        auto declaration =
+            std::make_shared<FunctionDeclaration>(name, parameters, statements);
 
         // Todo: run semantic analyzer
-        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(*context_.interpreter.get());
+        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
+            *context_.interpreter.get());
         analyzer->Resolve(declaration);
         context_.interpreter->visit(declaration);
     }
 
-    void DeclareArityOneIntFunctionWithTwoReturns(const std::string& name, int init_value)
-    {
+    void DeclareArityOneIntFunctionWithTwoReturns(const std::string& name,
+                                                  int init_value) {
         auto ident = std::make_shared<AST::IdentifierLiteral>("test");
         context_.interpreter->ResolveLocal(ident, 0);
 
         statements_t statements{
-            std::make_shared<AST::Declaration>("test",
-                                               std::make_shared<BinaryOperation>(
-                                                   "+",
-                                                   std::make_shared<IntLiteral>(init_value),
-                                                   std::make_shared<IdentifierLiteral>("arg1")
-                                               )
-            ),
-            std::make_shared<AST::Return>(std::make_shared<IntLiteral>(init_value)),
+            std::make_shared<AST::Declaration>(
+                "test", std::make_shared<BinaryOperation>(
+                            "+", std::make_shared<IntLiteral>(init_value),
+                            std::make_shared<IdentifierLiteral>("arg1"))),
+            std::make_shared<AST::Return>(
+                std::make_shared<IntLiteral>(init_value)),
             std::make_shared<AST::Return>(ident)};
 
-        formal_parameters parameters = {std::make_shared<FormalParameter>("arg1")};
-        auto declaration = std::make_shared<FunctionDeclaration>(name, parameters, statements);
+        formal_parameters parameters = {
+            std::make_shared<FormalParameter>("arg1")};
+        auto declaration =
+            std::make_shared<FunctionDeclaration>(name, parameters, statements);
 
         // Todo: run semantic analyzer
-        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(*context_.interpreter.get());
+        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
+            *context_.interpreter.get());
         analyzer->Resolve(declaration);
         context_.interpreter->visit(declaration);
     }

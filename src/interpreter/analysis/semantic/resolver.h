@@ -15,11 +15,7 @@ namespace tb_lang::interpreter::analysis {
 
 class SemanticAnalyzer;
 class Resolver {
-
-   enum class FunctionType {
-        None,
-        Function
-    };
+    enum class FunctionType { None, Function };
 
    public:
     explicit Resolver(SemanticAnalyzer& semantic_analyzer);
@@ -43,5 +39,5 @@ class Resolver {
     SemanticAnalyzer& semantic_analyzer_;
     FunctionType function_type_;
 };
-}  // namespace tb_lang
+}  // namespace tb_lang::interpreter::analysis
 #endif  // TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_RESOLVER_H_

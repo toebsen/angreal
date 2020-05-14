@@ -42,7 +42,7 @@ class DFA {
         }
     }
 
-    void addState(const State s, bool is_final) {
+    void addState(const State& s, bool is_final) {
         if (states_.contains(s)) {
             throw StateAlreadyKnownException(s);
         }
@@ -53,7 +53,7 @@ class DFA {
         }
     }
 
-    void addTransition(const State src, const Input input, const State dest) {
+    void addTransition(const State& src, const Input input, const State& dest) {
         if (!states_.contains(src)) {
             throw UnknownStateException(src);
         }
@@ -64,16 +64,16 @@ class DFA {
         transitions_.insert({{src, input}, dest});
     }
 
-    void add_transition(const State src,
+    void add_transition(const State& src,
                         const std::initializer_list<Input> inputs,
-                        const State dest) {
+                        const State& dest) {
         for (auto i : inputs) {
             addTransition(src, i, dest);
         }
     }
 
-    void add_transition(const State src, const std::set<Input> inputs,
-                        const State dest) {
+    void add_transition(const State& src, const std::set<Input> inputs,
+                        const State& dest) {
         for (auto i : inputs) {
             addTransition(src, i, dest);
         }

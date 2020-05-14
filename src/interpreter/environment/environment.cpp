@@ -4,8 +4,6 @@
 
 #include "environment.h"
 
-#include "literal_types.h"
-
 namespace tb_lang::interpreter::environment {
 
 Environment::Environment(const environment_t& enclosing)
@@ -61,7 +59,8 @@ void Environment::Declare(const std::string& name, const obj_t& obj) {
             // Todo: Redeclaration - intentional? -> Warning?
         }
     } else {
-        throw RuntimeError("Cannot declare an empty object with name <" + name + ">!");
+        throw RuntimeError("Cannot declare an empty object with name <" + name +
+                           ">!");
     }
 }
 

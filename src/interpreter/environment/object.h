@@ -17,10 +17,7 @@ namespace tb_lang::interpreter::environment {
 
 using ObjectID = boost::uuids::uuid;
 
-class Type;
-using type_t = std::shared_ptr<Type>;
-
-class Object final: public NonCopyable{
+class Object final : public NonCopyable {
    public:
     explicit Object();
     explicit Object(type_t type);
@@ -38,8 +35,6 @@ class Object final: public NonCopyable{
     ObjectID id_;
     type_t type_;
 };
-
-using obj_t = std::shared_ptr<Object>;
 
 }  // namespace tb_lang::interpreter::environment
 #endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_

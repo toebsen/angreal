@@ -7,12 +7,12 @@
 #ifndef TBLANG_SRC_INTERPRETER_CONTEXT_H_
 #define TBLANG_SRC_INTERPRETER_CONTEXT_H_
 
-#include "interpreter.h"
 #include "environment/environment.h"
+#include "interpreter.h"
+
+using tb_lang::interpreter::environment::Environment;
 
 namespace tb_lang::interpreter {
-
-using namespace environment;
 
 class Context {
    public:

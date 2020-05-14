@@ -16,8 +16,8 @@ class LexerTest : public ::testing::Test {
    protected:
     typedef std::vector<Token::Type> tokens_t;
 
-    void lexSequence(const std::vector<std::string> &vals,
-                     const tokens_t &expected) {
+    void lexSequence(const std::vector<std::string>& vals,
+                     const tokens_t& expected) {
         for (size_t i = 0; i < vals.size(); ++i) {
             auto v = vals[i];
             auto tok = expected[i];
@@ -29,14 +29,14 @@ class LexerTest : public ::testing::Test {
         }
     }
 
-    void lexSequence(const std::vector<std::string> &vals,
-                     const Token::Type &expected) {
+    void lexSequence(const std::vector<std::string>& vals,
+                     const Token::Type& expected) {
         const tokens_t tokens(vals.size(), expected);
         lexSequence(vals, tokens);
     }
 
-    void lexProgram(const std::string &program,
-                    const std::vector<Token> &expected) {
+    void lexProgram(const std::string& program,
+                    const std::vector<Token>& expected) {
         auto prog_tokens = lexer.lex(program);
         ASSERT_EQ(prog_tokens.size(), expected.size());
         for (size_t i = 0; i < prog_tokens.size(); ++i) {
@@ -114,18 +114,16 @@ TEST_F(LexerTest, BooleanIdentifier) {
 }
 
 TEST_F(LexerTest, BuiltInIdentifier) {
-    lexSequence({"if", "def", "var", "return", "while", "for", "print",
-                 "and", "or", "not", "int", "float", "bool", "string"},
+    lexSequence({"if", "def", "var", "return", "while", "for", "print", "and",
+                 "or", "not", "int", "float", "bool", "string"},
                 {Token::Type::IfStatement, Token::Type::DefStatement,
-                 Token::Type::VarStatement,
-                 Token::Type::ReturnStatement, Token::Type::WhileStatement,
-                 Token::Type::ForStatement, Token::Type::PrintStatement,
-                 Token::Type::AndStatement, Token::Type::OrStatement,
-                 Token::Type::NotStatement, Token::Type::IntIdentifier,
-                 Token::Type::FloatIdentifier, Token::Type::BoolIdentifier,
-                 Token::Type::StringIdentifier});
+                 Token::Type::VarStatement, Token::Type::ReturnStatement,
+                 Token::Type::WhileStatement, Token::Type::ForStatement,
+                 Token::Type::PrintStatement, Token::Type::AndStatement,
+                 Token::Type::OrStatement, Token::Type::NotStatement,
+                 Token::Type::IntIdentifier, Token::Type::FloatIdentifier,
+                 Token::Type::BoolIdentifier, Token::Type::StringIdentifier});
 }
-
 
 TEST_F(LexerTest, Punctuation) {
     std::vector<std::string> vals{"{", "}", "(", ")", ",", ":", ";"};
@@ -178,7 +176,7 @@ TEST_F(LexerTest, AcceptenceTest1) {
 }
 
 TEST_F(LexerTest, AcceptenceTest2) {
-    const char *prog = R"(# Calculate Fibonacci sequence
+    const char* prog = R"(# Calculate Fibonacci sequence
     def fib(n) {
             if(n == 0){
                 return 0;

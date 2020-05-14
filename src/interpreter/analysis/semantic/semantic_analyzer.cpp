@@ -5,11 +5,8 @@
 #include "semantic_analyzer.h"
 
 #include "../../interpreter.h"
-#include "ast.h"
 
-namespace tb_lang {
-namespace interpreter {
-namespace analysis {
+namespace tb_lang::interpreter::analysis {
 
 SemanticAnalyzer::SemanticAnalyzer(Interpreter& interpreter)
     : resolver_(*this), interpreter_(interpreter) {}
@@ -31,6 +28,10 @@ void SemanticAnalyzer::Resolve(const statements_t& statements) {
     for (const auto& statement : statements) {
         Resolve(statement);
     }
+}
+
+void SemanticAnalyzer::Resolve(const block_t& block) {
+    Resolve(block->statements);
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Program>& node) {
@@ -60,9 +61,8 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Assignment>& node) {
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Return>& node) {
-    if( !resolver_.IsFunction())
-    {
-        throw  RuntimeError("Can not return from top level code!");
+    if (!resolver_.IsFunction()) {
+        throw RuntimeError("Can not return from top level code!");
     }
 
     Resolve(node->expression);
@@ -103,21 +103,21 @@ void SemanticAnalyzer::visit(const std::shared_ptr<FunctionDeclaration>& node) {
     resolver_.ResolveFunction(node);
 }
 
-void SemanticAnalyzer::ResolveLocal(const node_t& node, size_t distance) {
+void SemanticAnalyzer::ResolveLocal(const node_t& node,
+                                    long long int distance) {
     interpreter_.ResolveLocal(node, distance);
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<IfStatement>& node) {
     Resolve(node->condition);
     Resolve(node->block);
-    if(node->else_block) {  Resolve(node->else_block);
-}
+    if (node->else_block) {
+        Resolve(node->else_block);
+    }
 }
 void SemanticAnalyzer::visit(const std::shared_ptr<WhileStatement>& node) {
     Resolve(node->condition);
     Resolve(node->block);
 }
 
-}  // namespace analysis
-}  // namespace interpreter
-}  // namespace tb_lang
+}  // namespace tb_lang::interpreter::analysis

@@ -19,7 +19,7 @@ namespace tb_lang::lex {
 
 class Lexer {
    public:
-    std::vector<Token> lex(const std::string &program);
+    std::vector<Token> lex(const std::string& program);
 
    private:
     TB_DFA dfa_;

@@ -8,7 +8,6 @@
 #include "../parser/parser.h"
 #include "analysis/semantic/semantic_analyzer.h"
 #include "environment/binary_op.h"
-#include "environment/callable.h"
 #include "environment/unary_op.h"
 #include "executor.h"
 
@@ -16,7 +15,8 @@ namespace tb_lang::interpreter {
 
 using namespace environment;
 
-Interpreter::Interpreter(const std::shared_ptr<environment::Environment>& global)
+Interpreter::Interpreter(
+    const std::shared_ptr<environment::Environment>& global)
     : globals_(global), environment_(global) {}
 
 void Interpreter::visit(const std::shared_ptr<Program>& node) {
@@ -239,8 +239,7 @@ void Interpreter::visit(const std::shared_ptr<WhileStatement>& node) {
     node->condition->accept(shared_from_this());
     auto condition = stack_.top();
     stack_.pop();
-    while (condition->GetType()->IsTruthy())
-    {
+    while (condition->GetType()->IsTruthy()) {
         node->block->accept(shared_from_this());
 
         node->condition->accept(shared_from_this());
@@ -258,7 +257,7 @@ environment::obj_t Interpreter::LookupVariable(const string_t& name,
         return globals_->Get(name);
     }
 }
-void Interpreter::ResolveLocal(const node_t& node, size_t distance) {
+void Interpreter::ResolveLocal(const node_t& node, long long int distance) {
     //  std::cout << "ResolveLocal " << node << " " << distance << std::endl;
     locals_[node] = distance;
 }
@@ -276,6 +275,5 @@ void Interpreter::interpret(const expressions_t& expressions) {
 }
 
 std::stack<environment::obj_t>& Interpreter::Stack() { return stack_; }
-
 
 }  // namespace tb_lang::interpreter

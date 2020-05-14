@@ -15,9 +15,7 @@
 
 namespace tb_lang::parser::AST {
 
-using visitor_t = std::shared_ptr<Visitor>;
-
-   class Node : private NonCopyable {
+class Node : private NonCopyable {
    public:
     ~Node() override = default;
 
@@ -26,26 +24,17 @@ using visitor_t = std::shared_ptr<Visitor>;
 
 class Statement : public Node {
    public:
-    virtual void accept(const visitor_t& visitor) = 0;
+    void accept(const visitor_t& visitor) override = 0;
 
     ~Statement() override = default;
 };
 
 class Expression : public Node {
    public:
-    virtual void accept(const visitor_t& visitor) = 0;
+    void accept(const visitor_t& visitor) override = 0;
 
     ~Expression() override = default;
 };
-
-using node_t = std::shared_ptr<Node>;
-using nodes_t = std::vector<node_t>;
-
-using expression_t = std::shared_ptr<Expression>;
-using expressions_t = std::vector<expression_t>;
-
-using statement_t = std::shared_ptr<Statement>;
-using statements_t = std::vector<statement_t>;
 
 }  // namespace tb_lang::parser::AST
 #endif  // TBLANG_AST_INTERFACES_H

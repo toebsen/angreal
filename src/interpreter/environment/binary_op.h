@@ -9,13 +9,13 @@
 #include "common.h"
 #include "type.h"
 
-namespace tb_lang::interpreter::environment {
+using tb_lang::parser::AST::BinaryOperation;
 
-using namespace tb_lang::parser;
+namespace tb_lang::interpreter::environment {
 
 class BinaryOp : private NonCopyable {
    public:
-    BinaryOp(AST::BinaryOperation::OpType op_type, type_t lhs, type_t rhs);
+    BinaryOp(BinaryOperation::OpType op_type, type_t lhs, type_t rhs);
 
     type_t Call();
 
@@ -44,7 +44,7 @@ class BinaryOp : private NonCopyable {
 
     type_t LessEqual();
 
-    AST::BinaryOperation::OpType op_type_;
+    BinaryOperation::OpType op_type_;
     type_t lhs_;
     type_t rhs_;
 };

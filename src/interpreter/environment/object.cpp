@@ -3,7 +3,6 @@
 //
 #include "object.h"
 
-
 namespace tb_lang::interpreter::environment {
 
 namespace ID {
@@ -19,9 +18,8 @@ ObjectID Object::ID() const { return id_; }
 
 const type_t& Object::GetType() const { return type_; }
 
-bool Object::HasSameType(const Object& rhs) const{
-    if(!GetType() || !rhs.GetType())
-    {
+bool Object::HasSameType(const Object& rhs) const {
+    if (!GetType() || !rhs.GetType()) {
         return false;
     }
     return GetType()->HasSameType(*rhs.GetType());

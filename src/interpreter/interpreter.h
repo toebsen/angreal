@@ -16,7 +16,8 @@ class Executor;
 
 class Interpreter : public Visitor {
    public:
-    explicit Interpreter(const std::shared_ptr<environment::Environment>& global);
+    explicit Interpreter(
+        const std::shared_ptr<environment::Environment>& global);
 
     void interpret(const string_t& code);
     void interpret(const statement_t& statement);
@@ -29,10 +30,9 @@ class Interpreter : public Visitor {
 
     std::stack<environment::obj_t>& Stack();
 
-    void ResolveLocal(const node_t& node, size_t distance);
+    void ResolveLocal(const node_t& node, long long int distance);
 
-    TESTABLE :
-    void visit(const std::shared_ptr<Program>& node) override;
+    TESTABLE : void visit(const std::shared_ptr<Program>& node) override;
     void visit(const std::shared_ptr<Block>& node) override;
     void visit(const std::shared_ptr<ExpressionStatement>& node) override;
     void visit(const std::shared_ptr<Declaration>& node) override;
@@ -65,7 +65,7 @@ class Interpreter : public Visitor {
     std::stack<environment::obj_t> stack_;
     std::shared_ptr<environment::Environment> globals_;
     std::shared_ptr<environment::Environment> environment_;
-    std::unordered_map<node_t, size_t, std::hash<node_t>> locals_;
+    std::unordered_map<node_t, long long int, std::hash<node_t>> locals_;
 };
 
 }  // namespace tb_lang::interpreter

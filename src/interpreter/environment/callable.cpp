@@ -4,27 +4,9 @@
 
 #include "callable.h"
 
-#include <utility>
-
 #include "../interpreter.h"
 
 namespace tb_lang::interpreter::environment {
-
-type_t FromType(parser::TypeHelper::Type type) {
-    switch (type) {
-        case parser::TypeHelper::Type::Bool:
-            return std::make_shared<BoolType>(false);
-        case parser::TypeHelper::Type::Int:
-            return std::make_shared<IntType>(0);
-        case parser::TypeHelper::Type::Float:
-            return std::make_shared<FloatType>(0);
-        case parser::TypeHelper::Type::String:
-            return std::make_shared<StringType>("");
-        case parser::TypeHelper::Type::Unknown:
-            break;
-    }
-    return type_t(nullptr);
-}
 
 Function::Function(std::shared_ptr<FunctionDeclaration> function_decl,
                    environment_t env)

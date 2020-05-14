@@ -9,8 +9,8 @@
 namespace tb_lang::interpreter::environment {
 
 UnaryOP::UnaryOP(tb_lang::UnaryOperation::OpType op_type,
-                 const tb_lang::interpreter::environment::type_t& type)
-    : op_type_(op_type), type_(type) {}
+                 tb_lang::interpreter::environment::type_t type)
+    : op_type_(op_type), type_(std::move(type)) {}
 
 type_t UnaryOP::Call() {
     switch (op_type_) {

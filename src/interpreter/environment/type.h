@@ -14,18 +14,14 @@
 
 namespace tb_lang::interpreter::environment {
 
-using CallablePtr = std::shared_ptr<ICallable>;
-
 class Type {
     using value_t =
-        std::variant<std::nullptr_t, bool, int, float, string_t, CallablePtr>;
+        std::variant<std::nullptr_t, bool, int, float, string_t, callable_t>;
 
    public:
     explicit Type() : value_(nullptr) {}
     explicit Type(value_t value) : value_(std::move(value)) {}
     //    explicit Type(CallablePtr value) : value_(std::move(value)) {}
-
-    virtual ~Type() = default;
 
     virtual bool IsNull() {
         return std::holds_alternative<std::nullptr_t>(value_);
@@ -37,7 +33,7 @@ class Type {
         return std::holds_alternative<string_t>(value_);
     };
     virtual bool IsCallable() {
-        return std::holds_alternative<CallablePtr>(value_);
+        return std::holds_alternative<callable_t>(value_);
     };
 
     virtual bool AsBoolean() { return std::get<bool>(value_); };
@@ -45,35 +41,45 @@ class Type {
     virtual int AsInteger() { return std::get<int>(value_); };
 
     virtual bool IsTruthy() {
-        //TODO: add missing
-        if(IsBoolean()) return AsBoolean();
+        // TODO(toebs): add missing
+        if (IsBoolean()) {
+            return AsBoolean();
+        }
 
         return false;
     };
 
     virtual string_t AsString() { return std::get<string_t>(value_); };
-    virtual CallablePtr AsCallable() { return std::get<CallablePtr>(value_); };
+    virtual callable_t AsCallable() { return std::get<callable_t>(value_); };
 
-    string_t Stringify()
-    {
+    string_t Stringify() {
         std::stringstream ss;
-        if(IsBoolean()) ss << std::boolalpha << AsBoolean();
-        if(IsFloat()) ss << AsFloat();
-        if(IsInteger()) ss << AsInteger();
-        if(IsNull()) ss <<  "None";
-        if(IsString()) ss << "\"" <<AsString() << "\"";
+        if (IsBoolean()) {
+            ss << std::boolalpha << AsBoolean();
+        }
+        if (IsFloat()) {
+            ss << AsFloat();
+        }
+        if (IsInteger()) {
+            ss << AsInteger();
+        }
+        if (IsNull()) {
+            ss << "None";
+        }
+        if (IsString()) {
+            ss << "\"" << AsString() << "\"";
+        }
         return ss.str();
     }
 
-    inline bool HasSameType(const Type& rhs) const {
+    [[nodiscard]] inline bool HasSameType(const Type& rhs) const {
         return value_.index() == rhs.value_.index();
     };
 
-   protected:
+   private:
     value_t value_;
 };  // namespace tb_lang::interpreter::environment
 
-using type_t = std::shared_ptr<Type>;
 }  // namespace tb_lang::interpreter::environment
 
 #endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_TYPE_H_

@@ -21,7 +21,7 @@ class TypeHelper {
     static TypeHelper::Type mapTokenToLiteralType(Token::Type expected);
 
     static std::shared_ptr<AST::Expression> mapTypeToLiteral(
-        TypeHelper::Type expected, const std::string &value);
+        TypeHelper::Type expected, const std::string& value);
 };
 }  // namespace tb_lang::parser
 

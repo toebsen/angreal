@@ -15,7 +15,7 @@ using namespace tb_lang::parser;
 
 class UnaryOP : private NonCopyable {
    public:
-    UnaryOP(AST::UnaryOperation::OpType op_type, const type_t& type);
+    UnaryOP(AST::UnaryOperation::OpType op_type, type_t type);
 
     type_t Call();
 
