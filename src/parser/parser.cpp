@@ -175,7 +175,6 @@ std::shared_ptr<AST::Declaration> Parser::parseVariableDeclaration() {
 std::shared_ptr<AST::Assignment> Parser::parseAssignmentStatement() {
     std::string identifier;
     AST::expression_t expression;
-    consume();
     expectToken(Token::Type::Identifier);
     identifier = current_token->value();
     consume();
@@ -278,7 +277,8 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
     if (current_token->type() == Token::Type::VarStatement) {
         return parseVariableDeclaration();
     }
-    if (current_token->type() == Token::Type::SetStatement) {
+    if (current_token->type() == Token::Type::Identifier &&
+        next_token->type() == Token::Type::Equal) {
         return parseAssignmentStatement();
     }
     if (current_token->type() == Token::Type::DefStatement) {

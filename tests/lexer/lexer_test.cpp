@@ -114,10 +114,10 @@ TEST_F(LexerTest, BooleanIdentifier) {
 }
 
 TEST_F(LexerTest, BuiltInIdentifier) {
-    lexSequence({"if", "def", "var", "set", "return", "while", "for", "print",
+    lexSequence({"if", "def", "var", "return", "while", "for", "print",
                  "and", "or", "not", "int", "float", "bool", "string"},
                 {Token::Type::IfStatement, Token::Type::DefStatement,
-                 Token::Type::VarStatement, Token::Type::SetStatement,
+                 Token::Type::VarStatement,
                  Token::Type::ReturnStatement, Token::Type::WhileStatement,
                  Token::Type::ForStatement, Token::Type::PrintStatement,
                  Token::Type::AndStatement, Token::Type::OrStatement,

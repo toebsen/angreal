@@ -46,7 +46,6 @@ class Token {
         PrintStatement,
         DefStatement,
         VarStatement,
-        SetStatement,
         ReturnStatement,
         WhileStatement,
         ForStatement,
@@ -114,9 +113,6 @@ class Token {
                 }
                 if (value == "var") {
                     return Type::VarStatement;
-                }
-                if (value == "set") {
-                    return Type::SetStatement;
                 }
                 if (value == "return") {
                     return Type::ReturnStatement;

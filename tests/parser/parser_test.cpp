@@ -426,13 +426,13 @@ TEST_F(VariableDeclarationTest, StringDeclarationErrors) {
 
 TEST_F(VariableAssignmentTest, SimpleAssignment) {
     parseAssignmentDetails<AST::IntLiteral>(
-        "set x = 123;", std::make_shared<AST::IntLiteral>(123));
+        "x = 123;", std::make_shared<AST::IntLiteral>(123));
     parseAssignmentDetails<AST::FloatLiteral>(
-        "set x = 123.456;", std::make_shared<AST::FloatLiteral>(123.456f));
+        "x = 123.456;", std::make_shared<AST::FloatLiteral>(123.456f));
     parseAssignmentDetails<AST::BoolLiteral>(
-        "set x = true;", std::make_shared<AST::BoolLiteral>(true));
+        "x = true;", std::make_shared<AST::BoolLiteral>(true));
     parseAssignmentDetails<AST::StringLiteral>(
-        "set x = \"123\";", std::make_shared<AST::StringLiteral>("123"));
+        "x = \"123\";", std::make_shared<AST::StringLiteral>("123"));
     parseAssignmentDetails<AST::IdentifierLiteral>(
-        "set x = y;", std::make_shared<AST::IdentifierLiteral>("y"));
+        "x = y;", std::make_shared<AST::IdentifierLiteral>("y"));
 }

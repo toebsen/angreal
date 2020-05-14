@@ -13,7 +13,7 @@ TEST_F(BaseTest, SimpleWhile) {
     while(x < 1)
     {
         print(x);
-        set x = x + 1;
+        x = x + 1;
     }
     )";
     SafeRun(code, "0");
@@ -27,5 +27,5 @@ TEST_F(BaseTest, SimpleWhile2) {
     }
     print("end");
     )";
-    SafeRun(code, "end");
+    SafeRun(code, R"("end")");
 }
