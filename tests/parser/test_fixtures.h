@@ -5,14 +5,13 @@
 #ifndef ANGREAL_TESTS_PARSER_TEST_FIXTURES_H_
 #define ANGREAL_TESTS_PARSER_TEST_FIXTURES_H_
 
-#include "parser/parser.h"
-
 #include <string>
 
 #include <gtest/gtest.h>
 
 #include "lexer/lexer.h"
 #include "parser/ast.h"
+#include "parser/parser.h"
 #include "token.h"
 
 using namespace angreal;
@@ -219,6 +218,5 @@ class BlockTest : public ParserTest {
         ASSERT_EQ(expected->statements.size(), block->statements.size());
     }
 };
-
 
 #endif  // ANGREAL_TESTS_PARSER_TEST_FIXTURES_H_

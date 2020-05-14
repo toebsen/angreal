@@ -250,7 +250,8 @@ TEST_F(BlockTest, IfBlock) {
 TEST_F(BlockTest, IfElseBlock) {
     auto condition = std::make_shared<AST::BoolLiteral>(false);
 
-    auto prog = lexAndParseProgram(R"(if(false){print(1);}else{print(1);print(2);})");
+    auto prog =
+        lexAndParseProgram(R"(if(false){print(1);}else{print(1);print(2);})");
     ASSERT_FALSE(prog->statements.empty());
 
     auto if_statement =

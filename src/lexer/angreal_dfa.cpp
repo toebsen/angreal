@@ -8,7 +8,9 @@
 
 namespace angreal::lex {
 
-AngrealDFA::AngrealDFA() : DFA<char, State>(State::Initial, false) { initDFA(); }
+AngrealDFA::AngrealDFA() : DFA<char, State>(State::Initial, false) {
+    initDFA();
+}
 
 void AngrealDFA::initDFA() {
     addStates();
