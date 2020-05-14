@@ -2,8 +2,8 @@
 // Created by bichlmaier on 05.02.2020.
 //
 
-#ifndef TBLANG_LEXER_H
-#define TBLANG_LEXER_H
+#ifndef ANGREAL_LEXER_H
+#define ANGREAL_LEXER_H
 
 #include <array>
 #include <functional>
@@ -13,17 +13,17 @@
 
 #include <token.h>
 
-#include "tb_dfa.h"
+#include "angreal_dfa.h"
 
-namespace tb_lang::lex {
+namespace angreal::lex {
 
 class Lexer {
    public:
     std::vector<Token> lex(const std::string& program);
 
    private:
-    TB_DFA dfa_;
+    AngrealDFA dfa_;
 };
-}  // namespace tb_lang::lex
+}  // namespace angreal::lex
 
-#endif  // TBLANG_LEXER_H
+#endif  // ANGREAL_LEXER_H

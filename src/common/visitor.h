@@ -2,15 +2,15 @@
 // Created by bichlmaier on 07.02.2020.
 //
 
-#ifndef TBLANG_VISITOR_H
-#define TBLANG_VISITOR_H
+#ifndef ANGREAL_VISITOR_H
+#define ANGREAL_VISITOR_H
 
 #include <memory>
 #include <string>
 
 #include "common.h"
 
-namespace tb_lang {
+namespace angreal {
 
 namespace parser::AST {
 class Program;
@@ -60,6 +60,6 @@ class Visitor : public std::enable_shared_from_this<Visitor>,
     virtual void visit(const std::shared_ptr<IfStatement>& node) = 0;
     virtual void visit(const std::shared_ptr<WhileStatement>& node) = 0;
 };
-}  // namespace tb_lang
+}  // namespace angreal
 
-#endif  // TBLANG_VISITOR_H
+#endif  // ANGREAL_VISITOR_H

@@ -4,16 +4,16 @@
 
 #include "executor.h"
 
-tb_lang::interpreter::Executor::Executor(
-    tb_lang::interpreter::Interpreter& interpreter)
+angreal::interpreter::Executor::Executor(
+    angreal::interpreter::Interpreter& interpreter)
     : interpreter_{interpreter} {}
 
-tb_lang::interpreter::Executor::~Executor() {
+angreal::interpreter::Executor::~Executor() {
     interpreter_.environment_ = original_environment_;
 }
 
-void tb_lang::interpreter::Executor::execute(
-    const tb_lang::statements_t& statements,
+void angreal::interpreter::Executor::execute(
+    const angreal::statements_t& statements,
     const std::shared_ptr<environment::Environment>& environment) {
     original_environment_ = interpreter_.environment_;
     interpreter_.environment_ = environment;

@@ -4,7 +4,7 @@
 
 #include "parser.h"
 
-namespace tb_lang::parser {
+namespace angreal::parser {
 std::shared_ptr<AST::Program> Parser::parseProgram(
     const std::vector<Token>& tokens) {
     AST::statements_t statements;
@@ -332,4 +332,4 @@ std::shared_ptr<AST::WhileStatement> Parser::parseWhileStatement() {
     return std::make_shared<AST::WhileStatement>(condition, block);
 }
 
-}  // namespace tb_lang::parser
+}  // namespace angreal::parser

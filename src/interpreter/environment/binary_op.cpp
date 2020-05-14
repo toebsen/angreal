@@ -6,7 +6,7 @@
 
 #include "literal_types.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 BinaryOp::BinaryOp(BinaryOperation::OpType op_type, type_t lhs, type_t rhs)
     : op_type_(op_type), lhs_(std::move(lhs)), rhs_(std::move(rhs)) {}
@@ -123,7 +123,7 @@ type_t BinaryOp::Equals() {
         return type_t(new BoolType(op(lhs_->AsBoolean(), rhs_->AsBoolean())));
     }
     return type_t();
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment
 
 type_t BinaryOp::NotEquals() {
     auto op = [](auto a, auto b) { return a != b; };
@@ -186,4 +186,4 @@ type_t BinaryOp::LessEqual() {
     return type_t();
 }
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment

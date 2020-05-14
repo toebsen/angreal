@@ -2,8 +2,8 @@
 // Created by bichlmaier on 05.02.2020.
 //
 
-#ifndef TBLANG_DFA_H
-#define TBLANG_DFA_H
+#ifndef ANGREAL_DFA_H
+#define ANGREAL_DFA_H
 
 #include <map>
 #include <set>
@@ -11,7 +11,7 @@
 
 #include <magic_enum.hpp>
 
-namespace tb_lang::lex {
+namespace angreal::lex {
 
 /**
  * Discrete finite-state Automaton
@@ -137,6 +137,6 @@ class DFA<Input, State>::StateAlreadyKnownException : public std::exception {
    private:
     std::string msg_;
 };
-}  // namespace tb_lang::lex
+}  // namespace angreal::lex
 
-#endif  // TBLANG_DFA_H
+#endif  // ANGREAL_DFA_H

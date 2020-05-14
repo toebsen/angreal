@@ -2,16 +2,16 @@
 // Created by toebs on 05.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_ENVIRONMENT_BINARY_OP_H_
-#define TBLANG_SRC_INTERPRETER_ENVIRONMENT_BINARY_OP_H_
+#ifndef ANGREAL_SRC_INTERPRETER_ENVIRONMENT_BINARY_OP_H_
+#define ANGREAL_SRC_INTERPRETER_ENVIRONMENT_BINARY_OP_H_
 
 #include "../parser/ast.h"
 #include "common.h"
 #include "type.h"
 
-using tb_lang::parser::AST::BinaryOperation;
+using angreal::parser::AST::BinaryOperation;
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 class BinaryOp : private NonCopyable {
    public:
@@ -49,6 +49,6 @@ class BinaryOp : private NonCopyable {
     type_t rhs_;
 };
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment
 
-#endif  // TBLANG_SRC_INTERPRETER_ENVIRONMENT_BINARY_OP_H_
+#endif  // ANGREAL_SRC_INTERPRETER_ENVIRONMENT_BINARY_OP_H_

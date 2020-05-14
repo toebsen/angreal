@@ -2,14 +2,14 @@
 // Created by toebs on 04.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_
-#define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_
+#ifndef ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_
+#define ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_
 
 #include "../parser/ast.h"
 #include "common.h"
 #include "type.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 class IntType : public Type {
    public:
@@ -23,7 +23,7 @@ class FloatType : public Type {
 
 class StringType : public Type {
    public:
-    explicit StringType(tb_lang::string_t value);
+    explicit StringType(angreal::string_t value);
 };
 
 class BoolType : public Type {
@@ -31,5 +31,5 @@ class BoolType : public Type {
     explicit BoolType(bool value);
 };
 
-}  // namespace tb_lang::interpreter::environment
-#endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_
+}  // namespace angreal::interpreter::environment
+#endif  // ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_LITERAL_TYPES_H_

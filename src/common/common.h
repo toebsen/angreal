@@ -2,8 +2,8 @@
 // Created by toebs on 04.04.2020.
 //
 
-#ifndef TBLANG_SRC_COMMON_COMMON_H_
-#define TBLANG_SRC_COMMON_COMMON_H_
+#ifndef ANGREAL_SRC_COMMON_COMMON_H_
+#define ANGREAL_SRC_COMMON_COMMON_H_
 
 #include <memory>
 #include <string>
@@ -11,7 +11,7 @@
 
 #include "exceptions.h"
 
-namespace tb_lang {
+namespace angreal {
 
 #ifdef DEBUG_
 #define TESTABLE public
@@ -67,6 +67,6 @@ class NonCopyable {
     virtual ~NonCopyable() = default;
 };
 
-}  // namespace tb_lang
+}  // namespace angreal
 
-#endif  // TBLANG_SRC_COMMON_COMMON_H_
+#endif  // ANGREAL_SRC_COMMON_COMMON_H_

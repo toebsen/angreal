@@ -4,8 +4,8 @@
 // Created by bichlmaier on 10.02.2020.
 //
 
-#ifndef TBLANG_AST_INTERFACES_H
-#define TBLANG_AST_INTERFACES_H
+#ifndef ANGREAL_AST_INTERFACES_H
+#define ANGREAL_AST_INTERFACES_H
 
 #include <memory>
 #include <vector>
@@ -13,7 +13,7 @@
 #include "common.h"
 #include "visitor.h"
 
-namespace tb_lang::parser::AST {
+namespace angreal::parser::AST {
 
 class Node : private NonCopyable {
    public:
@@ -36,7 +36,7 @@ class Expression : public Node {
     ~Expression() override = default;
 };
 
-}  // namespace tb_lang::parser::AST
-#endif  // TBLANG_AST_INTERFACES_H
+}  // namespace angreal::parser::AST
+#endif  // ANGREAL_AST_INTERFACES_H
 
 #pragma clang diagnostic pop

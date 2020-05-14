@@ -2,8 +2,8 @@
 // Created by bichlmaier on 07.02.2020.
 //
 
-#ifndef TBLANG_PARSER_H
-#define TBLANG_PARSER_H
+#ifndef ANGREAL_PARSER_H
+#define ANGREAL_PARSER_H
 
 #include <functional>
 
@@ -11,7 +11,7 @@
 #include "token.h"
 #include "type_helper.h"
 
-namespace tb_lang::parser {
+namespace angreal::parser {
 
 class Parser {
    public:
@@ -68,6 +68,6 @@ class Parser {
     AST::expressions_t parseActualParams();
 };
 
-}  // namespace tb_lang::parser
+}  // namespace angreal::parser
 
-#endif  // TBLANG_PARSER_H
+#endif  // ANGREAL_PARSER_H

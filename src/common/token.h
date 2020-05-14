@@ -2,8 +2,8 @@
 // Created by bichlmaier on 05.02.2020.
 //
 
-#ifndef TBLANG_TOKEN_H
-#define TBLANG_TOKEN_H
+#ifndef ANGREAL_TOKEN_H
+#define ANGREAL_TOKEN_H
 
 #include <iostream>
 #include <sstream>
@@ -14,7 +14,7 @@
 
 #include "state.h"
 
-namespace tb_lang {
+namespace angreal {
 
 class Token {
    public:
@@ -65,7 +65,7 @@ class Token {
         int line;
     };
 
-    Token(const std::string& value, tb_lang::State finalState,
+    Token(const std::string& value, angreal::State finalState,
           const Position& pos)
         : value_(value), type_(infer(value, finalState)), position_(pos) {}
 
@@ -79,7 +79,7 @@ class Token {
     [[nodiscard]] Position position() const { return position_; };
 
     friend std::ostream& operator<<(std::ostream& os,
-                                    const tb_lang::Token& tok) {
+                                    const angreal::Token& tok) {
         os << "Token(" << magic_enum::enum_name(tok.type()) << ", '"
            << tok.value() << "'";
         os << " Line: " << tok.position().line << ")";
@@ -87,21 +87,21 @@ class Token {
     }
 
     static Token::Type infer(const std::string& value,
-                             const tb_lang::State& finalSate) {
+                             const angreal::State& finalSate) {
         switch (finalSate) {
-            case tb_lang::State::Digit:
+            case angreal::State::Digit:
                 return Type::Integer;
-            case tb_lang::State::DigitPeriod:
+            case angreal::State::DigitPeriod:
                 return Type::Float;
-            case tb_lang::State::AddSub:
+            case angreal::State::AddSub:
                 return Type::AdditiveOp;
-            case tb_lang::State::Asterisk:
+            case angreal::State::Asterisk:
                 return Type::MulOp;
-            case tb_lang::State::Slash:
+            case angreal::State::Slash:
                 return Type::DivOp;
-            case tb_lang::State::EndComment:
+            case angreal::State::EndComment:
                 return Type::Comment;
-            case tb_lang::State::Identifier:
+            case angreal::State::Identifier:
                 if (value == "true" || value == "false") {
                     return Type::Boolean;
                 }
@@ -148,13 +148,13 @@ class Token {
                     return Type::PrintStatement;
                 }
                 return Type::Identifier;
-            case tb_lang::State::EndString:
+            case angreal::State::EndString:
                 return Type::String;
-            case tb_lang::State::Equals:
+            case angreal::State::Equals:
                 return Type::Equal;
-            case tb_lang::State::Exclamation:
+            case angreal::State::Exclamation:
                 return Type::Exclamation;
-            case tb_lang::State::Punctuation:
+            case angreal::State::Punctuation:
                 if (value == "{") {
                     return Type::LeftCurlyBracket;
                 }
@@ -176,12 +176,12 @@ class Token {
                 if (value == ";") {
                     return Type::SemiColon;
                 }
-            case tb_lang::State::SingleRelational:
-            case tb_lang::State::CombinedRelational:
+            case angreal::State::SingleRelational:
+            case angreal::State::CombinedRelational:
                 return Type::RelationalOp;
-            case tb_lang::State::NewLine:
+            case angreal::State::NewLine:
                 return Type::NewLine;
-            case tb_lang::State::EndOfProgram:
+            case angreal::State::EndOfProgram:
                 return Type::EndOfProgram;
             case State::Invalid:
             case State::Initial:
@@ -200,6 +200,6 @@ class Token {
     std::string value_;
 };
 
-}  // namespace tb_lang
+}  // namespace angreal
 
-#endif  // TBLANG_TOKEN_H
+#endif  // ANGREAL_TOKEN_H

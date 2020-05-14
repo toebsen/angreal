@@ -2,14 +2,14 @@
 // Created by toebs on 18.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
-#define TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
+#ifndef ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
+#define ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
 
 #include "ast_interfaces.h"
 #include "resolver.h"
 #include "visitor.h"
 
-namespace tb_lang::interpreter {
+namespace angreal::interpreter {
 class Interpreter;
 
 namespace analysis {
@@ -51,6 +51,6 @@ class SemanticAnalyzer : public Visitor {
     Interpreter& interpreter_;
 };
 }  // namespace analysis
-}  // namespace tb_lang::interpreter
+}  // namespace angreal::interpreter
 
-#endif  // TBLANG_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
+#endif  // ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_

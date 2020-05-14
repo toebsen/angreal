@@ -2,8 +2,8 @@
 // Created by toebs on 04.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
-#define TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
+#ifndef ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
+#define ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
 
 #include <cstddef>
 
@@ -13,7 +13,7 @@
 #include "common.h"
 #include "type.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 using ObjectID = boost::uuids::uuid;
 
@@ -36,5 +36,5 @@ class Object final : public NonCopyable {
     type_t type_;
 };
 
-}  // namespace tb_lang::interpreter::environment
-#endif  // TBLANG_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_
+}  // namespace angreal::interpreter::environment
+#endif  // ANGREAL_SRC_INTERPRETER_VIRTUAL_MACHINE_OBJECT_H_

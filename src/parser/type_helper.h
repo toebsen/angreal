@@ -2,8 +2,8 @@
 // Created by bichlmaier on 10.02.2020.
 //
 
-#ifndef TBLANG_TYPE_SYSTEM_H
-#define TBLANG_TYPE_SYSTEM_H
+#ifndef ANGREAL_TYPE_SYSTEM_H
+#define ANGREAL_TYPE_SYSTEM_H
 
 #include <memory>
 #include <vector>
@@ -12,7 +12,7 @@
 #include <token.h>
 #include <visitor.h>
 
-namespace tb_lang::parser {
+namespace angreal::parser {
 
 class TypeHelper {
    public:
@@ -23,6 +23,6 @@ class TypeHelper {
     static std::shared_ptr<AST::Expression> mapTypeToLiteral(
         TypeHelper::Type expected, const std::string& value);
 };
-}  // namespace tb_lang::parser
+}  // namespace angreal::parser
 
-#endif  // TBLANG_TYPE_SYSTEM_H
+#endif  // ANGREAL_TYPE_SYSTEM_H

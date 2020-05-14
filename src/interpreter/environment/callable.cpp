@@ -6,7 +6,7 @@
 
 #include "../interpreter.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 Function::Function(std::shared_ptr<FunctionDeclaration> function_decl,
                    environment_t env)
@@ -50,4 +50,4 @@ string_t Function::Stringify() const {
     return "function(" + function_decl_->identifier + ")";
 }
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment

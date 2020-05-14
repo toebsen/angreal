@@ -2,15 +2,15 @@
 // Created by toebs on 29.03.2020.
 //
 
-#ifndef TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
-#define TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
+#ifndef ANGREAL_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
+#define ANGREAL_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
 
 #include <stack>
 
 #include "environment/environment.h"
 #include "visitor.h"
 
-namespace tb_lang::interpreter {
+namespace angreal::interpreter {
 
 class Executor;
 
@@ -68,6 +68,6 @@ class Interpreter : public Visitor {
     std::unordered_map<node_t, long long int, std::hash<node_t>> locals_;
 };
 
-}  // namespace tb_lang::interpreter
+}  // namespace angreal::interpreter
 
-#endif  // TBLANG_SRC_VIRTUAL_MACHINE_INTERPRETER_H_
+#endif  // ANGREAL_SRC_VIRTUAL_MACHINE_INTERPRETER_H_

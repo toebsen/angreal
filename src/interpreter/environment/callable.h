@@ -2,12 +2,12 @@
 // Created by toebs on 11.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
-#define TBLANG_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
+#ifndef ANGREAL_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
+#define ANGREAL_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
 
 #include "../parser/ast.h"
 
-namespace tb_lang::interpreter {
+namespace angreal::interpreter {
 
 class Interpreter;
 using interpreter_t = Interpreter*;
@@ -48,5 +48,5 @@ class Function final : public ICallable,
 };
 
 }  // namespace environment
-}  // namespace tb_lang::interpreter
-#endif  // TBLANG_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
+}  // namespace angreal::interpreter
+#endif  // ANGREAL_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_

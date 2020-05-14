@@ -3,7 +3,7 @@
 //
 #include "object.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 namespace ID {
 static ObjectID Create() { return boost::uuids::random_generator()(); }
@@ -25,4 +25,4 @@ bool Object::HasSameType(const Object& rhs) const {
     return GetType()->HasSameType(*rhs.GetType());
 }
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment

@@ -6,7 +6,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-namespace tb_lang::lex {
+namespace angreal::lex {
 
 std::vector<Token> Lexer::lex(const std::string& program) {
     std::string _program = program;
@@ -45,4 +45,4 @@ std::vector<Token> Lexer::lex(const std::string& program) {
     return tokens;
 }
 
-}  // namespace tb_lang::lex
+}  // namespace angreal::lex

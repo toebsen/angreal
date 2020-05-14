@@ -2,16 +2,16 @@
 // Created by toebs on 05.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_ENVIRONMENT_UNARY_OP_H_
-#define TBLANG_SRC_INTERPRETER_ENVIRONMENT_UNARY_OP_H_
+#ifndef ANGREAL_SRC_INTERPRETER_ENVIRONMENT_UNARY_OP_H_
+#define ANGREAL_SRC_INTERPRETER_ENVIRONMENT_UNARY_OP_H_
 
 #include "../parser/ast.h"
 #include "common.h"
 #include "type.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
-using namespace tb_lang::parser;
+using namespace angreal::parser;
 
 class UnaryOP : private NonCopyable {
    public:
@@ -28,5 +28,5 @@ class UnaryOP : private NonCopyable {
     type_t type_;
 };
 
-}  // namespace tb_lang::interpreter::environment
-#endif  // TBLANG_SRC_INTERPRETER_ENVIRONMENT_UNARY_OP_H_
+}  // namespace angreal::interpreter::environment
+#endif  // ANGREAL_SRC_INTERPRETER_ENVIRONMENT_UNARY_OP_H_

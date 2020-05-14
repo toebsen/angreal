@@ -4,7 +4,7 @@
 
 #include "environment.h"
 
-namespace tb_lang::interpreter::environment {
+namespace angreal::interpreter::environment {
 
 Environment::Environment(const environment_t& enclosing)
     : enclosing_(enclosing) {}
@@ -107,4 +107,4 @@ environment_t Environment::Ancestor(size_t distance) {
     return envp;
 }
 
-}  // namespace tb_lang::interpreter::environment
+}  // namespace angreal::interpreter::environment

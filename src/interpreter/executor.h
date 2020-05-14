@@ -2,12 +2,12 @@
 // Created by toebs on 14.04.2020.
 //
 
-#ifndef TBLANG_SRC_INTERPRETER_EXECUTOR_H_
-#define TBLANG_SRC_INTERPRETER_EXECUTOR_H_
+#ifndef ANGREAL_SRC_INTERPRETER_EXECUTOR_H_
+#define ANGREAL_SRC_INTERPRETER_EXECUTOR_H_
 
 #include "interpreter.h"
 
-namespace tb_lang::interpreter {
+namespace angreal::interpreter {
 
 namespace environment {
 class Environment;
@@ -26,6 +26,6 @@ class Executor : public NonCopyable {
     Interpreter& interpreter_;
     std::shared_ptr<environment::Environment> original_environment_;
 };
-}  // namespace tb_lang::interpreter
+}  // namespace angreal::interpreter
 
-#endif  // TBLANG_SRC_INTERPRETER_EXECUTOR_H_
+#endif  // ANGREAL_SRC_INTERPRETER_EXECUTOR_H_

@@ -9,6 +9,6 @@ SET(TEST_FILES
         while_test.cpp)
 
 add_executable(${TEST_NAME} ${TEST_FILES})
-target_link_libraries(${TEST_NAME} tb_lexer tb_parser tb_interpreter gtest gtest_main)
-target_include_directories(${TEST_NAME} PRIVATE ${TB_LANG_SRC}/lexer ${TB_LANG_SRC}/parser ${TB_LANG_SRC}/interpreter ${TB_LANG_SRC}/common)
+target_link_libraries(${TEST_NAME} angreal_lexer angreal_parser angreal_interpreter gtest gtest_main)
+target_include_directories(${TEST_NAME} PRIVATE ${ANGREAL_SRC}/lexer ${ANGREAL_SRC}/parser ${ANGREAL_SRC}/interpreter ${ANGREAL_SRC}/common)
 add_test(${TEST_NAME} ${TEST_NAME})

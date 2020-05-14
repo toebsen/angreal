@@ -2,10 +2,10 @@
 // Created by bichlmaier on 06.02.2020.
 //
 
-#ifndef TBLANG_SYMBOLS_H
-#define TBLANG_SYMBOLS_H
+#ifndef ANGREAL_SYMBOLS_H
+#define ANGREAL_SYMBOLS_H
 
-namespace tb_lang {
+namespace angreal {
 
 struct Symbols {
     static const std::set<char> Letters() {
@@ -53,5 +53,5 @@ struct Symbols {
     static std::set<char> Exclamation() { return {'!'}; };
 };
 
-}  // namespace tb_lang
-#endif  // TBLANG_SYMBOLS_H
+}  // namespace angreal
+#endif  // ANGREAL_SYMBOLS_H

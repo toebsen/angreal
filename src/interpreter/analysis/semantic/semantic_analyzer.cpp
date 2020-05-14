@@ -6,7 +6,7 @@
 
 #include "../../interpreter.h"
 
-namespace tb_lang::interpreter::analysis {
+namespace angreal::interpreter::analysis {
 
 SemanticAnalyzer::SemanticAnalyzer(Interpreter& interpreter)
     : resolver_(*this), interpreter_(interpreter) {}
@@ -120,4 +120,4 @@ void SemanticAnalyzer::visit(const std::shared_ptr<WhileStatement>& node) {
     Resolve(node->block);
 }
 
-}  // namespace tb_lang::interpreter::analysis
+}  // namespace angreal::interpreter::analysis

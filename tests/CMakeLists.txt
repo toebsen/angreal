@@ -1,5 +1,5 @@
 
-include_directories(${TBLANG_INCLUDE})
+include_directories(${ANGREAL_INCLUDE})
 
 add_subdirectory(lexer)
 add_subdirectory(parser)

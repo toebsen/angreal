@@ -6,7 +6,7 @@
 
 #include <boost/lexical_cast.hpp>
 
-namespace tb_lang::parser::AST {
+namespace angreal::parser::AST {
 
 BoolLiteral::BoolLiteral(const std::string& value)
     : ValueLiteral<bool>(value == "true") {}
@@ -214,4 +214,4 @@ void WhileStatement::accept(const visitor_t& visitor) {
 WhileStatement::WhileStatement(expression_t condition, block_t block)
     : condition(std::move(condition)), block(std::move(block)) {}
 
-}  // namespace tb_lang::parser::AST
+}  // namespace angreal::parser::AST
