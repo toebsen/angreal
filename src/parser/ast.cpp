@@ -39,39 +39,46 @@ StringLiteral::StringLiteral(const std::string& value)
 void StringLiteral::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 TypeHelper::Type StringLiteral::type() { return TypeHelper::Type::String; }
 
 void Program::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 Program::Program(statements_t statements) : statements(std::move(statements)) {}
 
 void Block::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 Block::Block(statements_t statements) : statements(std::move(statements)) {}
 
 void ExpressionStatement::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 ExpressionStatement::ExpressionStatement(expression_t expression)
     : expression(std::move(expression)) {}
 
 void Declaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 Declaration::Declaration(std::string identifier, expression_t expression)
     : identifier(std::move(identifier)), expression(std::move(expression)) {}
 
 void Assignment::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 Assignment::Assignment(std::string identifier, expression_t expression)
     : identifier(std::move(identifier)), expression(std::move(expression)) {}
 
 void Return::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 Return::Return(expression_t expression) : expression(std::move(expression)) {}
 
 void Print::accept(const visitor_t& visitor) {
@@ -88,6 +95,7 @@ bool IdentifierLiteral::operator==(const IdentifierLiteral& rhs) const {
 void UnaryOperation::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 UnaryOperation::OpType UnaryOperation::inferType(const std::string& value) {
     if (value == "+") {
         return OpType::Add;
@@ -101,9 +109,11 @@ UnaryOperation::OpType UnaryOperation::inferType(const std::string& value) {
 
     return OpType::Unknown;
 }
+
 UnaryOperation::UnaryOperation(UnaryOperation::OpType opType,
                                expression_t expression)
     : type(opType), expression(std::move(expression)) {}
+
 UnaryOperation::UnaryOperation(const std::string& opType,
                                const expression_t& expression)
     : UnaryOperation(inferType(opType), expression) {}
@@ -111,6 +121,7 @@ UnaryOperation::UnaryOperation(const std::string& opType,
 void BinaryOperation::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 BinaryOperation::OpType BinaryOperation::inferType(const std::string& value) {
     if (value == "+") {
         return OpType::Add;
@@ -151,10 +162,12 @@ BinaryOperation::OpType BinaryOperation::inferType(const std::string& value) {
 
     return OpType::Unknown;
 }
+
 BinaryOperation::BinaryOperation(const std::string& opType,
                                  const expression_t& lhs,
                                  const expression_t& rhs)
     : BinaryOperation(inferType(opType), lhs, rhs) {}
+
 BinaryOperation::BinaryOperation(BinaryOperation::OpType opType,
                                  expression_t lhs, expression_t rhs)
     : type(opType), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
@@ -162,12 +175,14 @@ BinaryOperation::BinaryOperation(BinaryOperation::OpType opType,
 void FunctionCall::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 FunctionCall::FunctionCall(std::string identifier, expressions_t args)
     : identifier(std::move(identifier)), args(std::move(args)) {}
 
 void FunctionDeclaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 FunctionDeclaration::FunctionDeclaration(std::string identifier,
                                          formal_parameters parameters,
                                          statements_t statements)
@@ -178,12 +193,14 @@ FunctionDeclaration::FunctionDeclaration(std::string identifier,
 void FormalParameter::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 FormalParameter::FormalParameter(std::string identifier)
     : identifier(std::move(identifier)) {}
 
 void IfStatement::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
+
 IfStatement::IfStatement(expression_t condition, block_t block,
                          block_t else_block)
     : condition(std::move(condition)),
