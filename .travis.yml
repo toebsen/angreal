@@ -1,0 +1,30 @@
+language:
+  - cpp
+os: linux
+dist: bionic
+jobs:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-9
+            - gcc-9
+            - libboost-all-dev
+            - lcov
+      env:
+        - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
+      compiler: gcc
+before_install:
+  - eval "${MATRIX_EVAL}"
+script: ./build.sh
+after_success:
+  - cd ${TRAVIS_BUILD_DIR}
+  - lcov --directory . --capture --output-file coverage.info
+  - lcov --remove coverage.info '/usr/*' --output-file coverage.info
+  - lcov --list coverage.info
+  - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+notifications:
+  email: false
