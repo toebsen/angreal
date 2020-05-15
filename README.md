@@ -1,5 +1,5 @@
 
-![Build Status](https://travis-ci.com/toebsen/angreal.svg?branch=master)](https://travis-ci.com/toebsen/angreal)
+[![Build Status](https://travis-ci.com/toebsen/angreal.svg?branch=master)](https://travis-ci.com/toebsen/angreal)
 ![test-clang-format](https://github.com/toebsen/angreal/workflows/test-clang-format/badge.svg?branch=master)
 
 # Readme
