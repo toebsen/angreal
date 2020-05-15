@@ -54,14 +54,81 @@ Currently developed on windows with msys2 using:
 - boost
 - [magic_enum](https://github.com/Neargye/magic_enum) 
 
-### MSys2
+### MSys2 on Windows
 ```bash
 $ pacman -Syuu
 $ pacman -Sy mingw-w64-x86_64-toolchain 
 $ pacman -Sy mingw-w64-i686-boost mingw-w64-x86_64-boost
-$ pacman -S mingw-w64-x86_64-ninja
 ```
 
+For building with Ninja:
+
+```
+$ pacman -Sy mingw-w64-x86_64-ninja
+```
+
+### Ubuntu 18.04
+
+#### Install Cmake (>= 3.11) for older distributions 
+Check cmake version:
+
+``$ cmake --version``
+
+Remove old version (<3.11) of cmake
+
+``$ sudo apt purge --auto-remove cmake``
+
+Obtain a copy of the signing key
+
+``$ wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | sudo apt-key add -``
+
+Add the repository to your sources list
+a. For Ubuntu Bionic Beaver (18.04)
+
+``$ sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'``
+
+b. For Ubuntu Xenial Xerus (16.04)
+
+``$ sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ xenial main'``
+
+Update and install
+```
+$ sudo apt update
+$ sudo apt install cmake
+```
+
+#### Build via g++
+Install gcc-9
+
+```bash
+$ sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+$ sudo apt update
+$ sudo apt install gcc-9 g++-9 libboost-dev
+```
+ 
+To make gcc-9 the default for the future:
+
+```
+$ sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9 --slave /usr/bin/gcov gcov /usr/bin/gcov-9
+```
+
+#### Build via clang
+
+Install clang-10
+
+```bash
+$ wget https://apt.llvm.org/llvm.sh
+$ chmod +x llvm.sh
+$ sudo ./llvm.sh 10
+```
+
+To build:
+
+```bash
+$ mkdir build && cd build
+$ CXX=clang++-10 CC=clang-10 cmake ..
+$ make -j 2
+```
 ## Project Layout
 
 ```

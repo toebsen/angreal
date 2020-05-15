@@ -22,4 +22,9 @@ set(ENVIRONMENT_HEADERS_DIR
 
 add_library(angreal_env STATIC ${ENVIRONMENT_SOURCE})
 target_include_directories(angreal_env PRIVATE ${PARSER_HEADERS_DIR})
-target_link_libraries(angreal_env bcrypt)
+
+IF (WIN32)
+    target_link_libraries(angreal_env bcrypt)
+ELSE()
+    target_link_libraries(angreal_env)
+ENDIF()
