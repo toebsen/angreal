@@ -1,3 +1,6 @@
+
+![test-clang-format](https://github.com/toebsen/angreal/workflows/test-clang-format/badge.svg?branch=master)
+
 # Readme
 
 ## Angreal
