@@ -30,19 +30,21 @@ class Parser {
 
     std::shared_ptr<AST::Block> parseBlock();
 
-    std::shared_ptr<AST::Expression> parseExpression();
+    std::shared_ptr<AST::Expression> parseRelational();
 
     std::shared_ptr<AST::Declaration> parseVariableDeclaration();
 
     std::shared_ptr<AST::Assignment> parseAssignmentStatement();
 
-    std::shared_ptr<AST::Expression> parseSimpleExpression();
+    std::shared_ptr<AST::Expression> parseAdditive();
 
-    std::shared_ptr<AST::Expression> parseTerm();
+    std::shared_ptr<AST::Expression> parseMultiplicative();
 
-    std::shared_ptr<AST::Expression> parseFactor();
+    std::shared_ptr<AST::Expression> parseUnary();
 
-    std::shared_ptr<AST::FunctionCall> parserFunctionCall();
+    std::shared_ptr<AST::Expression> parsePrimary();
+
+    std::shared_ptr<AST::Expression> parserFunctionCall();
 
     std::shared_ptr<AST::Statement> parseReturnDeclaration();
 

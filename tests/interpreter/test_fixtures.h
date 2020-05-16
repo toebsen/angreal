@@ -114,6 +114,9 @@ class StringBinaryOpTest : public BinaryOpTest {
 
 class FunctionTest : public DeclarationTest {
    protected:
+
+    expression_t identifier_;
+
     void DeclareArityZeroFunction(const std::string& name) {
         auto inner_decl = std::make_shared<AST::Declaration>(
             "text", std::make_shared<StringLiteral>("World"));
@@ -124,8 +127,20 @@ class FunctionTest : public DeclarationTest {
                                 std::make_shared<AST::Return>(ident)};
 
         formal_parameters parameters = {};
+        DeclareFunction(name, statements, parameters);
+    }
+    void DeclareFunction(const std::string& name,
+                         const statements_t& statements,
+                         const formal_parameters& parameters) {
         auto declaration =
             std::make_shared<FunctionDeclaration>(name, parameters, statements);
+        identifier_ = std::make_shared<IdentifierLiteral>(name);
+
+        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
+            *context_.interpreter.get());
+
+        analyzer->Resolve(declaration);
+
         context_.interpreter->visit(declaration);
     }
 
@@ -143,14 +158,8 @@ class FunctionTest : public DeclarationTest {
 
         formal_parameters parameters = {
             std::make_shared<FormalParameter>("arg1")};
-        auto declaration =
-            std::make_shared<FunctionDeclaration>(name, parameters, statements);
 
-        // Todo: run semantic analyzer
-        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
-            *context_.interpreter.get());
-        analyzer->Resolve(declaration);
-        context_.interpreter->visit(declaration);
+        DeclareFunction(name, statements, parameters);
     }
 
     void DeclareArityOneIntFunctionWithTwoReturns(const std::string& name,
@@ -169,14 +178,7 @@ class FunctionTest : public DeclarationTest {
 
         formal_parameters parameters = {
             std::make_shared<FormalParameter>("arg1")};
-        auto declaration =
-            std::make_shared<FunctionDeclaration>(name, parameters, statements);
-
-        // Todo: run semantic analyzer
-        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
-            *context_.interpreter.get());
-        analyzer->Resolve(declaration);
-        context_.interpreter->visit(declaration);
+        DeclareFunction(name, statements, parameters);
     }
 };
 #endif  // ANGREAL_TESTS_INTERPRETER_TEST_FIXTURES_H_

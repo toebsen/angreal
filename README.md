@@ -171,35 +171,30 @@ statement ::= variable_decl';' |
                 block 
 
 variable_decl ::= 'var' identifier '=' expression
-assignment ::= 'set' identifier '=' expression
+assignment ::= identifier '=' expression
 
 print_statement ::= 'print' '(' expression ')'
 if_statement ::= 'if' '('expression')'block['else'block]
 while_statement ::= 'while' '('expression')'block
 return_statement ::= 'return expression';'
 
-function_decl ::= 'def' identifier '('[formal_params]')' : type block
+function_decl ::= 'def' identifier '('[formal_params]')' block
 formal_params ::=  identifier (',' identifier)*
 
 
-function_call ::= identifier'(' actual_params ')'
+expression ::= additive (comp-op additive)*
+additive ::= term (additive_op term)*
+multiplicative ::= primary (multiplicative_op primary)*
+function_call ::= expression'(' actual_params ')'
 actual_params ::= expression (',' expression)*
-
-expression ::= simple_expression (comp-op simple_expression)*
-simple_expression ::= term (additive_op term)*
-term ::= factor (multiplicative_op factor)*
-
-factor ::= literal | identifier | function_call | sub_expression | unary-op
+primary ::= literal | identifier | function_call | sub_expression | unary-op
  
 sub_expression ::= '(' expression ')' 
-
 unary-op ::= ('+'|'-'|'!') expression+ 
 comp-op ::= ''| ''| '='| '='| '=='| '!='
-
 additive_op ::= '+' | '-' | 'and' 
 multiplicative_op ::= '*' | '/' | 'or'
 
-type ::= 'int' | 'bool' | 'float' | 'string'
 identifier ::= '_'?|letter*|digit*}
 
 literal ::= bool_literal | int_literal | string_literal | float_literal 

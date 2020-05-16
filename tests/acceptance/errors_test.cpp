@@ -34,6 +34,14 @@ TEST_F(BaseTest, UnOpNotCompatibleType) {
     ExpectRuntimeException(code, "Not able to execute: <Not> 123 ");
 }
 
+TEST_F(BaseTest, FunctioCallWithNonCallable) {
+    std::string code = R"(
+        var x = "123";
+        x();
+    )";
+    ExpectRuntimeException(code, "<\"123\">: is not callable. Only functions and classes can be called!");
+}
+
 TEST_F(BaseTest, SameNameWithInLocalScope) {
     std::string code = R"(
     # redefinition is allowed on a global scope

@@ -176,8 +176,8 @@ void FunctionCall::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-FunctionCall::FunctionCall(std::string identifier, expressions_t args)
-    : identifier(std::move(identifier)), args(std::move(args)) {}
+FunctionCall::FunctionCall(const expression_t& callee, const expressions_t& args)
+    : callee(std::move(callee)), args(std::move(args)) {}
 
 void FunctionDeclaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
@@ -201,11 +201,11 @@ void IfStatement::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-IfStatement::IfStatement(expression_t condition, block_t block,
-                         block_t else_block)
+IfStatement::IfStatement(expression_t condition, block_t if_branch,
+                         block_t else_branch)
     : condition(std::move(condition)),
-      block(std::move(block)),
-      else_block(std::move(else_block)) {}
+      if_branch(std::move(if_branch)),
+      else_branch(std::move(else_branch)) {}
 
 void WhileStatement::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());

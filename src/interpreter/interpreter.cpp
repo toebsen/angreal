@@ -141,22 +141,31 @@ void Interpreter::visit(const std::shared_ptr<BinaryOperation>& node) {
 
 void Interpreter::visit(const std::shared_ptr<FunctionCall>& node) {
     //    std::cout << "Calling Function " << node->identifier << std::endl;
-    auto callable = LookupVariable(node->identifier, node);
-    if (callable->GetType()->IsCallable()) {
-        auto fun = callable->GetType()->AsCallable();
+    node->callee->accept(shared_from_this());
+    auto callee = stack_.top();
+    stack_.pop();
 
-        std::vector<obj_t> args;
-        for (const auto& item : node->args) {
-            item->accept(shared_from_this());
-            args.push_back(stack_.top());
-            stack_.pop();
-        }
+    if(!callee->GetType()->IsCallable())
+    {
+        std::stringstream ss;
+        ss << "<" << callee->GetType()->Stringify() << ">: ";
+        ss << "is not callable. Only functions and classes can be called!";
+        throw RuntimeError(ss.str());
+    }
 
-        auto ret_obj = fun->Call(this, args);
-        if (ret_obj) {
-            if (!ret_obj->GetType()->IsNull()) {
-                stack_.push(ret_obj);
-            }
+    auto fun = callee->GetType()->AsCallable();
+
+    std::vector<obj_t> args;
+    for (const auto& item : node->args) {
+        item->accept(shared_from_this());
+        args.push_back(stack_.top());
+        stack_.pop();
+    }
+
+    auto ret_obj = fun->Call(this, args);
+    if (ret_obj) {
+        if (!ret_obj->GetType()->IsNull()) {
+            stack_.push(ret_obj);
         }
     }
 }
@@ -227,10 +236,10 @@ void Interpreter::visit(const std::shared_ptr<IfStatement>& node) {
     stack_.pop();
 
     if (condition->GetType()->IsTruthy()) {
-        node->block->accept(shared_from_this());
+        node->if_branch->accept(shared_from_this());
     } else {
-        if (node->else_block) {
-            node->else_block->accept(shared_from_this());
+        if (node->else_branch) {
+            node->else_branch->accept(shared_from_this());
         }
     }
 }

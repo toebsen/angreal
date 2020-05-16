@@ -86,7 +86,7 @@ TEST_F(ExpressionTest, BinaryOpRelational) {
 }
 
 TEST_F(ExpressionTest, NestedExpressions) {
-    ASSERT_NO_THROW(lexAndParseExpression("(a-b)*foo() and bar(1,false)"));
+    ASSERT_NO_THROW(lexAndParseExpression("(a-b) * foo() and bar(1,false)"));
 }
 
 // TEST_F(FunctionCallTest, FunctionCallTest) { parseFunction<>("foo()", "foo");
@@ -243,8 +243,8 @@ TEST_F(BlockTest, IfBlock) {
         std::dynamic_pointer_cast<AST::IfStatement>(prog->statements[0]);
 
     ASSERT_EQ_SHARED_PTR(condition, if_statement->condition);
-    ASSERT_EQ(1, if_statement->block->statements.size());
-    ASSERT_EQ(nullptr, if_statement->else_block);
+    ASSERT_EQ(1, if_statement->if_branch->statements.size());
+    ASSERT_EQ(nullptr, if_statement->else_branch);
 }
 
 TEST_F(BlockTest, IfElseBlock) {
@@ -258,8 +258,8 @@ TEST_F(BlockTest, IfElseBlock) {
         std::dynamic_pointer_cast<AST::IfStatement>(prog->statements[0]);
 
     ASSERT_EQ_SHARED_PTR(condition, if_statement->condition);
-    ASSERT_EQ(1, if_statement->block->statements.size());
-    ASSERT_EQ(2, if_statement->else_block->statements.size());
+    ASSERT_EQ(1, if_statement->if_branch->statements.size());
+    ASSERT_EQ(2, if_statement->else_branch->statements.size());
 }
 
 TEST_F(BlockTest, While) {

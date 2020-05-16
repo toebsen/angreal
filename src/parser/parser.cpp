@@ -25,11 +25,11 @@ std::shared_ptr<AST::Expression> Parser::parseExpression(
     const std::vector<Token>& tokens) {
     current_token = tokens.begin();
     next_token = tokens.begin() + 1;
-    return parseExpression();
+    return parseRelational();
 }
 
 void Parser::consume() {
-    //    std::cout << "consuming: " << *next_token << std::endl;
+//    std::cout << "consuming: " << *next_token << std::endl;
     current_token = next_token;
     next_token = current_token + 1;
 
@@ -44,79 +44,104 @@ void Parser::expectToken(Token::Type t) {
         std::stringstream ss;
         ss << "Expected " << Token::type2str(t)
            << ", but got: " << Token::type2str(current_token->type());
-        ss << "('" << current_token->value() << "')"
-           << " in line: " << std::to_string(current_line_number);
         error(ss.str());
     }
 }
 
 void Parser::error(const std::string& message) {
-    std::cout << "ERROR: " << message << std::endl;
-    throw RuntimeError(message);
+    std::stringstream ss;
+    ss << "ERROR: " << message << " for ";
+    ss << "('" << current_token->value() << "')";
+    ss << " in line: " << std::to_string(current_line_number);
+
+    throw RuntimeError(ss.str());
 }
 
-std::shared_ptr<AST::Expression> Parser::parseExpression() {
-    std::shared_ptr<AST::Expression> expr = parseSimpleExpression();
+std::shared_ptr<AST::Expression> Parser::parseRelational() {
+    std::shared_ptr<AST::Expression> expr = parseAdditive();
     if (current_token->type() == Token::Type::RelationalOp) {
         auto opType = current_token->value();
         consume();
-        auto rhs = parseSimpleExpression();
+        auto rhs = parseAdditive();
         return std::make_shared<AST::BinaryOperation>(opType, expr, rhs);
     }
     return expr;
 }
 
-std::shared_ptr<AST::Expression> Parser::parseSimpleExpression() {
-    std::shared_ptr<AST::Expression> expr = parseTerm();
+std::shared_ptr<AST::Expression> Parser::parseAdditive() {
+    std::shared_ptr<AST::Expression> expr = parseMultiplicative();
     if (current_token->type() == Token::Type::AdditiveOp ||
         current_token->type() == Token::Type::AndStatement) {
         auto opType = current_token->value();
         consume();
-        auto rhs = parseTerm();
+        auto rhs = parseMultiplicative();
         return std::make_shared<AST::BinaryOperation>(opType, expr, rhs);
     }
     return expr;
 }
 
-std::shared_ptr<AST::Expression> Parser::parseTerm() {
-    std::shared_ptr<AST::Expression> expr = parseFactor();
+std::shared_ptr<AST::Expression> Parser::parseMultiplicative() {
+    std::shared_ptr<AST::Expression> expr = parseUnary();
     if (current_token->type() == Token::Type::MulOp ||
         current_token->type() == Token::Type::DivOp ||
         current_token->type() == Token::Type::OrStatement) {
         auto opType = current_token->value();
         consume();
-        auto rhs = parseFactor();
+        auto rhs = parsePrimary();
         return std::make_shared<AST::BinaryOperation>(opType, expr, rhs);
     }
     return expr;
 }
 
+std::shared_ptr<AST::Expression> Parser::parseUnary() {
+    if (current_token->type() == Token::Type::AdditiveOp ||
+        current_token->type() == Token::Type::Exclamation) {
+        auto opType = current_token->value();
+        consume();
+        AST::expression_t expression = parseRelational();
+        return std::make_shared<AST::UnaryOperation>(opType, expression);
+    }
+
+    return parserFunctionCall();
+}
+
 AST::expressions_t Parser::parseActualParams() {
     AST::expressions_t params;
-    params.push_back(parseExpression());
+    params.push_back(parseRelational());
 
     while (current_token->type() == Token::Type::Comma) {
         consume();
-        params.push_back(parseExpression());
+        params.push_back(parseRelational());
     }
     return params;
 }
 
-std::shared_ptr<AST::FunctionCall> Parser::parserFunctionCall() {
-    std::string identifier = current_token->value();
-    AST::expressions_t args;
-    consume();  // identifier
-    expectToken(Token::Type::LeftBracket);
-    consume();  //(
-    if (current_token->type() != Token::Type::RightBracket) {
-        args = parseActualParams();
+std::shared_ptr<AST::Expression> Parser::parserFunctionCall() {
+
+    expression_t expression = parsePrimary();
+
+    while (true) {
+        if(current_token->type() == Token::Type::LeftBracket) {
+            consume();  //(
+            AST::expressions_t args;
+            if (current_token->type() != Token::Type::RightBracket) {
+                args = parseActualParams();
+            }
+            expectToken(Token::Type::RightBracket);
+            consume();
+            expression =  std::make_shared<AST::FunctionCall>(expression, args);
+        }
+        else {
+            break;
+        }
     }
-    expectToken(Token::Type::RightBracket);
-    consume();
-    return std::make_shared<AST::FunctionCall>(identifier, args);
+
+    return expression;
 }
 
-std::shared_ptr<AST::Expression> Parser::parseFactor() {
+
+
+std::shared_ptr<AST::Expression> Parser::parsePrimary() {
     if (current_token->type() == Token::Type::Boolean ||
         current_token->type() == Token::Type::Integer ||
         current_token->type() == Token::Type::Float ||
@@ -129,27 +154,19 @@ std::shared_ptr<AST::Expression> Parser::parseFactor() {
     }
 
     if (current_token->type() == Token::Type::Identifier) {
-        if (next_token->type() == Token::Type::LeftBracket) {
-            return parserFunctionCall();
-        }
         auto value = current_token->value();
         consume();
         return std::make_shared<AST::IdentifierLiteral>(value);
     }
-    if (current_token->type() == Token::Type::AdditiveOp ||
-        current_token->type() == Token::Type::Exclamation) {
-        auto opType = current_token->value();
-        consume();
-        AST::expression_t expression = parseExpression();
-        return std::make_shared<AST::UnaryOperation>(opType, expression);
-    }
+
     if (current_token->type() == Token::Type::LeftBracket) {
         consume();
-        auto expression = parseExpression();
+        auto expression = parseRelational();
         expectToken(Token::Type::RightBracket);
         consume();
         return expression;
     }
+
     return nullptr;
 }
 
@@ -162,7 +179,7 @@ std::shared_ptr<AST::Declaration> Parser::parseVariableDeclaration() {
     consume();
     expectToken(Token::Type::Equal);
     consume();
-    expression = parseExpression();
+    expression = parseRelational();
     expectToken(Token::Type::SemiColon);
     consume();
     return std::make_shared<AST::Declaration>(identifier, expression);
@@ -176,7 +193,7 @@ std::shared_ptr<AST::Assignment> Parser::parseAssignmentStatement() {
     consume();
     expectToken(Token::Type::Equal);
     consume();
-    expression = parseExpression();
+    expression = parseRelational();
     expectToken(Token::Type::SemiColon);
     consume();
     return std::make_shared<AST::Assignment>(identifier, expression);
@@ -252,7 +269,7 @@ std::shared_ptr<AST::Block> Parser::parseBlock() {
 std::shared_ptr<AST::Statement> Parser::parseReturnDeclaration() {
     AST::expression_t expression;
     consume();
-    expression = parseExpression();
+    expression = parseRelational();
     return std::make_shared<AST::Return>(expression);
 }
 
@@ -302,7 +319,7 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
         consume();
         return nullptr;
     }
-    auto expr = parseExpression();
+    auto expr = parseRelational();
     if (expr) {
         return std::make_shared<ExpressionStatement>(expr);
     }
@@ -311,25 +328,27 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
 }
 std::shared_ptr<AST::IfStatement> Parser::parseIfStatement() {
     consume();
-    expression_t condition = parseExpression();
-    block_t block = parseBlock();
+    expression_t condition = parseRelational();
+    block_t if_branch = parseBlock();
 
-    block_t else_block;
+    block_t else_branch;
     if (current_token->type() == Token::Type::Identifier &&
         current_token->value() == "else") {
         consume();
-        else_block = parseBlock();
+        else_branch = parseBlock();
     }
 
-    return std::make_shared<AST::IfStatement>(condition, block, else_block);
+    return std::make_shared<AST::IfStatement>(condition, if_branch,
+                                              else_branch);
 }
 
 std::shared_ptr<AST::WhileStatement> Parser::parseWhileStatement() {
     consume();
-    expression_t condition = parseExpression();
+    expression_t condition = parseRelational();
     block_t block = parseBlock();
 
     return std::make_shared<AST::WhileStatement>(condition, block);
 }
+
 
 }  // namespace angreal::parser

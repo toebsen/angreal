@@ -242,11 +242,11 @@ class BinaryOperation : public Expression,
 class FunctionCall : public Expression,
                      public std::enable_shared_from_this<FunctionCall> {
    public:
-    FunctionCall(std::string identifier, expressions_t args);
+    FunctionCall(const expression_t& callee, const expressions_t& args);
 
     void accept(const visitor_t& visitor) override;
 
-    std::string identifier;
+    expression_t callee;
     expressions_t args;
 };
 
@@ -283,13 +283,13 @@ class FunctionDeclaration
 class IfStatement : public Statement,
                     public std::enable_shared_from_this<IfStatement> {
    public:
-    IfStatement(expression_t condition, block_t block, block_t else_block);
+    IfStatement(expression_t condition, block_t if_branch, block_t else_branch);
 
     void accept(const visitor_t& visitor) override;
 
     expression_t condition;
-    block_t block;
-    block_t else_block;
+    block_t if_branch;
+    block_t else_branch;
 };
 
 class WhileStatement : public Statement,

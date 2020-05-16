@@ -91,8 +91,8 @@ void SemanticAnalyzer::visit(const std::shared_ptr<BinaryOperation>& node) {
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<FunctionCall>& node) {
+    Resolve(node->callee);
     Resolve(node->args);
-    resolver_.ResolveLocal(node->identifier, node);
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<FormalParameter>& node) {}
@@ -110,9 +110,9 @@ void SemanticAnalyzer::ResolveLocal(const node_t& node,
 
 void SemanticAnalyzer::visit(const std::shared_ptr<IfStatement>& node) {
     Resolve(node->condition);
-    Resolve(node->block);
-    if (node->else_block) {
-        Resolve(node->else_block);
+    Resolve(node->if_branch);
+    if (node->else_branch) {
+        Resolve(node->else_branch);
     }
 }
 void SemanticAnalyzer::visit(const std::shared_ptr<WhileStatement>& node) {

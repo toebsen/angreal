@@ -52,6 +52,21 @@ TEST_F(BaseTest, Currying) {
     SafeRun(code, "1\n2\n3");
 }
 
+TEST_F(BaseTest, ConcatenatedCalls) {
+    std::string code = R"(
+    def f(a)
+    {
+        def g(b, c)
+        {
+            print(a, b, c);
+        }
+        return g;
+    }
+    f(1)(2,3);
+    )";
+    SafeRun(code, "1\n2\n3");
+}
+
 TEST_F(BaseTest, TopLevelReturn) {
     std::string code = R"(
     var result = "123";
