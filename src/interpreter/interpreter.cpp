@@ -145,8 +145,7 @@ void Interpreter::visit(const std::shared_ptr<FunctionCall>& node) {
     auto callee = stack_.top();
     stack_.pop();
 
-    if(!callee->GetType()->IsCallable())
-    {
+    if (!callee->GetType()->IsCallable()) {
         std::stringstream ss;
         ss << "<" << callee->GetType()->Stringify() << ">: ";
         ss << "is not callable. Only functions and classes can be called!";

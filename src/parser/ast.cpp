@@ -176,7 +176,8 @@ void FunctionCall::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
-FunctionCall::FunctionCall(const expression_t& callee, const expressions_t& args)
+FunctionCall::FunctionCall(const expression_t& callee,
+                           const expressions_t& args)
     : callee(std::move(callee)), args(std::move(args)) {}
 
 void FunctionDeclaration::accept(const visitor_t& visitor) {
