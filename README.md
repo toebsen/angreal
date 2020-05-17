@@ -15,7 +15,7 @@ def Hello(name) {
     return "Hello " + name
 }
 
-print(Hello("World"));
+print(Hello("World"))
 ```
 
 > Created for learning purposes only.
@@ -161,37 +161,43 @@ program ::= {statement}
 
 block ::= '{'{statement}'}'
 
-statement ::= variable_decl';' |                 
-                assignement';' | 
-                print_statement';' | 
+statement ::= variable_decl |                                  
+                assignement | 
+                print_statement | 
                 if_statement | 
                 while_statement | 
-                return_statement ';' | 
+                return_statement | 
                 function_decl | 
+                class_decl |
                 block 
 
-variable_decl ::= 'var' identifier '=' expression
-assignment ::= identifier '=' expression
 
 print_statement ::= 'print' '(' expression ')'
 if_statement ::= 'if' '('expression')'block['else'block]
 while_statement ::= 'while' '('expression')'block
-return_statement ::= 'return expression';'
+return_statement ::= 'return' expression
 
+variable_decl ::= 'var' identifier '=' expression
 function_decl ::= 'def' identifier '('[formal_params]')' block
 formal_params ::=  identifier (',' identifier)*
-
 class_decl ::= 'class' identifier '{' function_decl* '}'
 
+assignment ::= identifier '=' expression
+
 expression ::= additive (comp-op additive)*
+
 additive ::= term (additive_op term)*
+
 multiplicative ::= primary (multiplicative_op primary)*
+
 function_call ::= expression'(' actual_params ')'
 actual_params ::= expression (',' expression)*
+
 primary ::= literal | identifier | function_call | sub_expression | unary-op
  
 sub_expression ::= '(' expression ')' 
-unary-op ::= ('+'|'-'|'!') expression+ 
+
+unary-op ::= ('+'|'-'|'!') expression 
 comp-op ::= ''| ''| '='| '='| '=='| '!='
 additive_op ::= '+' | '-' | 'and' 
 multiplicative_op ::= '*' | '/' | 'or'
@@ -201,7 +207,7 @@ identifier ::= '_'?|letter*|digit*}
 literal ::= bool_literal | int_literal | string_literal | float_literal 
 float_literal ::= [int_literal]fraction_literal
 fraction_literal ::= '.'digit*
-int_literal ::= digit+
+int_literal ::=  ('+'|'-')? digit+
 bool_literal ::= 'true' | 'false'
 string_literal ::= '"'printable+'"'
 

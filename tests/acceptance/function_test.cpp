@@ -10,7 +10,7 @@
 TEST_F(BaseTest, InlineReturn) {
     std::string code = R"(
     def foo(b)  {
-        return 5 + b;
+        return 5 + b
     }
     print(foo(5))
     )";
@@ -21,13 +21,13 @@ TEST_F(BaseTest, ReturnOrder) {
     std::string code = R"(
     def foo()  {
         def inner()  {
-            var a = 5;
-            return a;
+            var a = 5
+            return a
         }
 
-      var x = inner();
-      return x;
-      return 42;
+      var x = inner()
+      return x
+      return 42
     }
 
     var result = foo();
@@ -42,12 +42,12 @@ TEST_F(BaseTest, Currying) {
     {
         def g(b, c)
         {
-            print(a, b, c);
+            print(a, b, c)
         }
         return g;
     }
-    var fone = f(1);
-    fone(2,3);
+    var fone = f(1)
+    fone(2,3)
     )";
     SafeRun(code, "1\n2\n3");
 }
@@ -58,19 +58,19 @@ TEST_F(BaseTest, ConcatenatedCalls) {
     {
         def g(b, c)
         {
-            print(a, b, c);
+            print(a, b, c)
         }
-        return g;
+        return g
     }
-    f(1)(2,3);
+    f(1)(2,3)
     )";
     SafeRun(code, "1\n2\n3");
 }
 
 TEST_F(BaseTest, TopLevelReturn) {
     std::string code = R"(
-    var result = "123";
-    return result;
+    var result = "123"
+    return result
     )";
     ExpectRuntimeException(code, "Can not return from top level code!");
 }

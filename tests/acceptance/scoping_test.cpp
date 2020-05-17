@@ -9,16 +9,16 @@
 
 TEST_F(BaseTest, ScopingWithFunction) {
     std::string code = R"(
-    var x = "global";
+    var x = "global"
     {
         def printVar() {
-            print(x);
-            return 0;
+            print(x)
+            return 0
         }
 
-        printVar();
-        var x = "local";
-        printVar();
+        printVar()
+        var x = "local"
+        printVar()
     }
     )";
     SafeRun(code, "\"global\"\n\"global\"");
@@ -26,15 +26,15 @@ TEST_F(BaseTest, ScopingWithFunction) {
 
 TEST_F(BaseTest, NestedScopes) {
     std::string code = R"(
-    var x = 0;
+    var x = 0
     {
-        var x = 1;
+        var x = 1
         {
-            var x = 2;
+            var x = 2
             {
-                var x = 3;
+                var x = 3
                 {
-                    var x = 4;
+                    var x = 4
                     print(x)
                 }
                 print(x)

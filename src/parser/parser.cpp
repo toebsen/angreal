@@ -176,8 +176,6 @@ std::shared_ptr<AST::Declaration> Parser::parseVariableDeclaration() {
     expectToken(Token::Type::Equal);
     consume();
     expression = parseRelational();
-    expectToken(Token::Type::SemiColon);
-    consume();
     return std::make_shared<AST::Declaration>(identifier, expression);
 }
 
@@ -190,8 +188,6 @@ std::shared_ptr<AST::Assignment> Parser::parseAssignmentStatement() {
     expectToken(Token::Type::Equal);
     consume();
     expression = parseRelational();
-    expectToken(Token::Type::SemiColon);
-    consume();
     return std::make_shared<AST::Assignment>(identifier, expression);
 }
 

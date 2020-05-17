@@ -15,7 +15,7 @@ TEST_F(BaseTest, HelloWorld) {
         return "Hello " + name
     }
     # this is a nested function call
-    print(Hello("World"));
+    print(Hello("World"))
     )";
     SafeRun(code, "\"Hello World\"");
 }
@@ -24,10 +24,10 @@ TEST_F(BaseTest, Fibonacci) {
     std::string code = R"(
     def fib(n)
     {
-        if(n <= 1){ return 1;}
-        return fib(n-2) + fib(n-1);
+        if(n <= 1){ return 1}
+        return fib(n-2) + fib(n-1)
     }
-    print(fib(5));
+    print(fib(5))
     )";
     SafeRun(code, "8");
 }

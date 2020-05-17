@@ -13,10 +13,10 @@ TEST_F(BaseTest, EmptyClass) {
         class MyClass
         {
         }
-        print(MyClass);
+        print(MyClass)
 
-        var myclass = MyClass();
-        print(myclass);
+        var myclass = MyClass()
+        print(myclass)
     )";
 
     SafeRun(code, "class(MyClass)\nInstance of class(MyClass)");
