@@ -303,6 +303,21 @@ class WhileStatement : public Statement,
     block_t block;
 };
 
+using functions_t = std::vector<std::shared_ptr<FunctionDeclaration>>;
+
+class ClassDeclaration : public Statement,
+                         public std::enable_shared_from_this<ClassDeclaration> {
+   public:
+    ClassDeclaration(std::string identifier, functions_t methods);
+
+    void accept(const visitor_t& visitor) override;
+
+    ~ClassDeclaration() override = default;
+
+    const std::string identifier;
+    functions_t methods;
+};
+
 }  // namespace angreal::parser::AST
 
 #endif  // ANGREAL_AST_H

@@ -8,7 +8,7 @@
 
 Small interpreted *python*-like toy language named **Angreal**.
 
-```python
+```
 # this is a comment
 def Hello(name) {
     # this is a function
@@ -181,6 +181,7 @@ return_statement ::= 'return expression';'
 function_decl ::= 'def' identifier '('[formal_params]')' block
 formal_params ::=  identifier (',' identifier)*
 
+class_decl ::= 'class' identifier '{' function_decl* '}'
 
 expression ::= additive (comp-op additive)*
 additive ::= term (additive_op term)*

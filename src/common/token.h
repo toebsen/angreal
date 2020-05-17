@@ -45,6 +45,7 @@ class Token {
         IfStatement,
         PrintStatement,
         DefStatement,
+        ClassStatement,
         VarStatement,
         ReturnStatement,
         WhileStatement,
@@ -146,6 +147,9 @@ class Token {
                 }
                 if (value == "print") {
                     return Type::PrintStatement;
+                }
+                if (value == "class") {
+                    return Type::ClassStatement;
                 }
                 return Type::Identifier;
             case angreal::State::EndString:

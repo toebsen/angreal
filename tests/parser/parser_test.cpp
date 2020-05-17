@@ -274,3 +274,45 @@ TEST_F(BlockTest, While) {
     ASSERT_EQ_SHARED_PTR(condition, while_statement->condition);
     ASSERT_EQ(1, while_statement->block->statements.size());
 }
+
+TEST_F(VariableDeclarationTest, EmpyClassDeclaration) {
+    auto prog = lexAndParseProgram(R"(
+        class EmptyClass{};
+    )");
+    ASSERT_FALSE(prog->statements.empty());
+
+    auto class_declaration =
+        std::dynamic_pointer_cast<AST::ClassDeclaration>(prog->statements[0]);
+
+    ASSERT_EQ("EmptyClass", class_declaration->identifier);
+    ASSERT_EQ(0, class_declaration->methods.size());
+}
+
+TEST_F(VariableDeclarationTest, ClassDeclaration) {
+    auto prog = lexAndParseProgram(R"(
+        class MyClass
+        {
+            def myMethod()
+            {
+            }
+        }
+    )");
+    ASSERT_FALSE(prog->statements.empty());
+
+    auto class_declaration =
+        std::dynamic_pointer_cast<AST::ClassDeclaration>(prog->statements[0]);
+
+    ASSERT_EQ("MyClass", class_declaration->identifier);
+    ASSERT_EQ(1, class_declaration->methods.size());
+    ASSERT_EQ("myMethod", class_declaration->methods[0]->identifier);
+}
+
+TEST_F(VariableDeclarationTest, ClassDeclarationWithVarDecl) {
+    EXPECT_THROW(lexAndParseProgram(R"(
+        class MyClass
+        {
+            var x = 10;
+        }
+    )"),
+                 RuntimeError);
+}

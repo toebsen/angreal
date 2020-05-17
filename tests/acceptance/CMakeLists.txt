@@ -6,7 +6,7 @@ SET(TEST_FILES
         example_test.cpp
         scoping_test.cpp
         errors_test.cpp
-        while_test.cpp)
+        while_test.cpp class_test.cpp)
 
 add_executable(${TEST_NAME} ${TEST_FILES})
 target_link_libraries(${TEST_NAME} angreal_lexer angreal_parser angreal_interpreter gtest gtest_main)

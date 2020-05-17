@@ -50,4 +50,27 @@ string_t Function::Stringify() const {
     return "function(" + function_decl_->identifier + ")";
 }
 
+Class::Class(std::shared_ptr<ClassDeclaration> class_declaration,
+             environment_t env)
+    : class_declaration_(std::move(class_declaration)), env_(std::move(env)) {}
+
+bool Class::CheckArity(const std::vector<obj_t>& args) const { return true; }
+
+size_t Class::Arity() const { return 0; }
+
+obj_t Class::Call(interpreter_t const& interp, const std::vector<obj_t>& args) {
+    instance_t instance = std::make_shared<Instance>(shared_from_this());
+    auto type = std::make_shared<Type>(instance);
+    return std::make_shared<Object>(type);
+}
+
+string_t Class::Stringify() const {
+    return "class(" + class_declaration_->identifier + ")";
+}
+
+Instance::Instance(std::shared_ptr<Class> _class) : class_(std::move(_class)) {}
+
+string_t Instance::Stringify() const {
+    return "Instance of " + class_->Stringify();
+}
 }  // namespace angreal::interpreter::environment

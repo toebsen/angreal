@@ -29,7 +29,7 @@ std::vector<Token> Lexer::lex(const std::string& program) {
                 if (dfa_.state() == State::EndString) {
                     boost::replace_all(lexeme, "\"", "");
                 }
-                tokens.emplace_back(Token{lexeme, dfa_.state(), pos});
+                tokens.emplace_back(lexeme, dfa_.state(), pos);
             }
 
             lexeme.clear();

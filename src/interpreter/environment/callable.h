@@ -14,7 +14,7 @@ using interpreter_t = Interpreter*;
 
 namespace environment {
 
-class ICallable : private NonCopyable {
+class ICallable {
    public:
     [[nodiscard]] virtual bool CheckArity(
         const std::vector<obj_t>& args) const = 0;
@@ -47,6 +47,37 @@ class Function final : public ICallable,
     environment_t env_;
 };
 
+class Class final : public ICallable,
+                    public std::enable_shared_from_this<Class> {
+   public:
+    Class(std::shared_ptr<ClassDeclaration> class_declaration,
+          environment_t env);
+
+    Class(const Class& other) = default;
+
+    bool CheckArity(const std::vector<obj_t>& args) const override;
+
+    size_t Arity() const override;
+
+    obj_t Call(const interpreter_t& interp,
+               const std::vector<obj_t>& args) override;
+
+    string_t Stringify() const override;
+
+   private:
+    std::shared_ptr<ClassDeclaration> class_declaration_;
+    environment_t env_;
+};
+
+class Instance final {
+   public:
+    explicit Instance(std::shared_ptr<Class> _class);
+
+    string_t Stringify() const;
+
+   private:
+    std::shared_ptr<Class> class_;
+};
 }  // namespace environment
 }  // namespace angreal::interpreter
 #endif  // ANGREAL_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_

@@ -257,6 +257,14 @@ void Interpreter::visit(const std::shared_ptr<WhileStatement>& node) {
     }
 }
 
+void Interpreter::visit(const std::shared_ptr<ClassDeclaration>& node) {
+    auto class_decl = std::make_shared<Class>(node, environment_);
+    auto type = std::make_shared<Type>(class_decl);
+    obj_t o = std::make_shared<Object>(type);
+
+    environment_->Declare(node->identifier, o);
+}
+
 environment::obj_t Interpreter::LookupVariable(const string_t& name,
                                                const expression_t& expr) {
     if (auto distance_iter = locals_.find(expr);
@@ -284,5 +292,4 @@ void Interpreter::interpret(const expressions_t& expressions) {
 }
 
 std::stack<environment::obj_t>& Interpreter::Stack() { return stack_; }
-
 }  // namespace angreal::interpreter

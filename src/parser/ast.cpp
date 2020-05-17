@@ -214,4 +214,11 @@ void WhileStatement::accept(const visitor_t& visitor) {
 WhileStatement::WhileStatement(expression_t condition, block_t block)
     : condition(std::move(condition)), block(std::move(block)) {}
 
+ClassDeclaration::ClassDeclaration(string_t identifier, functions_t methods)
+    : identifier(std::move(identifier)), methods(std::move(methods)) {}
+
+void ClassDeclaration::accept(const visitor_t& visitor) {
+    visitor->visit(shared_from_this());
+}
+
 }  // namespace angreal::parser::AST

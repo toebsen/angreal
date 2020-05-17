@@ -43,6 +43,7 @@ class SemanticAnalyzer : public Visitor {
     void visit(const std::shared_ptr<Print>& node) override;
     void visit(const std::shared_ptr<IfStatement>& node) override;
     void visit(const std::shared_ptr<WhileStatement>& node) override;
+    void visit(const std::shared_ptr<ClassDeclaration>& node) override;
 
     void ResolveLocal(const node_t& node, long long int distance);
 

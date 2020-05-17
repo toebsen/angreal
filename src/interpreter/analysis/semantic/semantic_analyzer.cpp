@@ -120,4 +120,12 @@ void SemanticAnalyzer::visit(const std::shared_ptr<WhileStatement>& node) {
     Resolve(node->block);
 }
 
+void SemanticAnalyzer::visit(const std::shared_ptr<ClassDeclaration>& node) {
+    resolver_.Declare(node->identifier);
+    resolver_.Define(node->identifier);
+    for (auto method : node->methods) {
+        resolver_.ResolveFunction(method);
+    }
+}
+
 }  // namespace angreal::interpreter::analysis

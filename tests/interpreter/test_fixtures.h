@@ -113,9 +113,24 @@ class StringBinaryOpTest : public BinaryOpTest {
 };
 
 class FunctionTest : public DeclarationTest {
-   protected:
+    void DeclareFunction(const std::string& name,
+                         const statements_t& statements,
+                         const formal_parameters& parameters) {
+        auto declaration =
+            std::make_shared<FunctionDeclaration>(name, parameters, statements);
+        last_function_ = std::make_shared<IdentifierLiteral>(name);
 
-    expression_t identifier_;
+        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
+            *context_.interpreter.get());
+
+        analyzer->Resolve(declaration);
+        context_.interpreter->visit(declaration);
+    }
+
+   protected:
+    expression_t last_function_;
+
+    const expressions_t kNoArgs{};
 
     void DeclareArityZeroFunction(const std::string& name) {
         auto inner_decl = std::make_shared<AST::Declaration>(
@@ -128,20 +143,6 @@ class FunctionTest : public DeclarationTest {
 
         formal_parameters parameters = {};
         DeclareFunction(name, statements, parameters);
-    }
-    void DeclareFunction(const std::string& name,
-                         const statements_t& statements,
-                         const formal_parameters& parameters) {
-        auto declaration =
-            std::make_shared<FunctionDeclaration>(name, parameters, statements);
-        identifier_ = std::make_shared<IdentifierLiteral>(name);
-
-        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
-            *context_.interpreter.get());
-
-        analyzer->Resolve(declaration);
-
-        context_.interpreter->visit(declaration);
     }
 
     void DeclareArityOneIntFunction(const std::string& name, int init_value) {
@@ -179,6 +180,25 @@ class FunctionTest : public DeclarationTest {
         formal_parameters parameters = {
             std::make_shared<FormalParameter>("arg1")};
         DeclareFunction(name, statements, parameters);
+    }
+};
+
+class ClassTest : public FunctionTest {
+    void DeclareClass(const std::string& name, const functions_t& methods) {
+        auto declaration = std::make_shared<ClassDeclaration>(name, methods);
+        last_class_ = std::make_shared<IdentifierLiteral>(name);
+        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
+            *context_.interpreter.get());
+        analyzer->Resolve(declaration);
+        context_.interpreter->visit(declaration);
+    }
+
+   protected:
+    expression_t last_class_;
+
+    void DeclareEmptyClass(const std::string& name) {
+        functions_t methods = {};
+        DeclareClass(name, methods);
     }
 };
 #endif  // ANGREAL_TESTS_INTERPRETER_TEST_FIXTURES_H_

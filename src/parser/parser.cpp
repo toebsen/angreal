@@ -29,7 +29,7 @@ std::shared_ptr<AST::Expression> Parser::parseExpression(
 }
 
 void Parser::consume() {
-//    std::cout << "consuming: " << *next_token << std::endl;
+    //    std::cout << "consuming: " << *next_token << std::endl;
     current_token = next_token;
     next_token = current_token + 1;
 
@@ -117,11 +117,10 @@ AST::expressions_t Parser::parseActualParams() {
 }
 
 std::shared_ptr<AST::Expression> Parser::parserFunctionCall() {
-
     expression_t expression = parsePrimary();
 
     while (true) {
-        if(current_token->type() == Token::Type::LeftBracket) {
+        if (current_token->type() == Token::Type::LeftBracket) {
             consume();  //(
             AST::expressions_t args;
             if (current_token->type() != Token::Type::RightBracket) {
@@ -129,17 +128,14 @@ std::shared_ptr<AST::Expression> Parser::parserFunctionCall() {
             }
             expectToken(Token::Type::RightBracket);
             consume();
-            expression =  std::make_shared<AST::FunctionCall>(expression, args);
-        }
-        else {
+            expression = std::make_shared<AST::FunctionCall>(expression, args);
+        } else {
             break;
         }
     }
 
     return expression;
 }
-
-
 
 std::shared_ptr<AST::Expression> Parser::parsePrimary() {
     if (current_token->type() == Token::Type::Boolean ||
@@ -297,6 +293,9 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
     if (current_token->type() == Token::Type::DefStatement) {
         return parseFunctionDeclaration();
     }
+    if (current_token->type() == Token::Type::ClassStatement) {
+        return parseClassDeclaration();
+    }
     if (current_token->type() == Token::Type::PrintStatement) {
         return parsePrintStatement();
     }
@@ -350,5 +349,36 @@ std::shared_ptr<AST::WhileStatement> Parser::parseWhileStatement() {
     return std::make_shared<AST::WhileStatement>(condition, block);
 }
 
+std::shared_ptr<AST::ClassDeclaration> Parser::parseClassDeclaration() {
+    consume();  // class
+
+    expectToken(Token::Type::Identifier);
+    auto identifier = current_token->value();
+    consume();
+
+    expectToken(Token::Type::LeftCurlyBracket);
+    consume();
+
+    functions_t methods;
+    while (true) {
+        if (current_token->type() == Token::Type::RightCurlyBracket) {
+            break;
+        }
+
+        if (current_token->type() == Token::Type::DefStatement) {
+            methods.push_back(parseFunctionDeclaration());
+        } else {
+            throw RuntimeError(
+                "Only function declarations are allowed inside declaration of "
+                "class " +
+                identifier + "!");
+        }
+    }
+
+    expectToken(Token::Type::RightCurlyBracket);
+    consume();
+
+    return std::make_shared<AST::ClassDeclaration>(identifier, methods);
+}
 
 }  // namespace angreal::parser

@@ -15,8 +15,8 @@
 namespace angreal::interpreter::environment {
 
 class Type {
-    using value_t =
-        std::variant<std::nullptr_t, bool, int, float, string_t, callable_t>;
+    using value_t = std::variant<std::nullptr_t, bool, int, float, string_t,
+                                 callable_t, instance_t>;
 
    public:
     explicit Type() : value_(nullptr) {}
@@ -35,6 +35,9 @@ class Type {
     virtual bool IsCallable() {
         return std::holds_alternative<callable_t>(value_);
     };
+    virtual bool IsInstance() {
+        return std::holds_alternative<instance_t>(value_);
+    };
 
     virtual bool AsBoolean() { return std::get<bool>(value_); };
     virtual float AsFloat() { return std::get<float>(value_); };
@@ -51,6 +54,7 @@ class Type {
 
     virtual string_t AsString() { return std::get<string_t>(value_); };
     virtual callable_t AsCallable() { return std::get<callable_t>(value_); };
+    virtual instance_t AsInstance() { return std::get<instance_t>(value_); };
 
     string_t Stringify() {
         std::stringstream ss;
@@ -68,6 +72,12 @@ class Type {
         }
         if (IsString()) {
             ss << "\"" << AsString() << "\"";
+        }
+        if (IsCallable()) {
+            ss << AsCallable()->Stringify();
+        }
+        if (IsInstance()) {
+            ss << AsInstance()->Stringify();
         }
         return ss.str();
     }

@@ -34,6 +34,8 @@ class Parser {
 
     std::shared_ptr<AST::Declaration> parseVariableDeclaration();
 
+    std::shared_ptr<AST::ClassDeclaration> parseClassDeclaration();
+
     std::shared_ptr<AST::Assignment> parseAssignmentStatement();
 
     std::shared_ptr<AST::Expression> parseAdditive();

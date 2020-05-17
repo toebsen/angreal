@@ -47,12 +47,15 @@ namespace interpreter::environment {
 class Object;
 class Type;
 class ICallable;
+class Instance;
 class Environment;
 
 using obj_t = std::shared_ptr<Object>;
 using type_t = std::shared_ptr<Type>;
-using callable_t = std::shared_ptr<ICallable>;
 using environment_t = std::shared_ptr<Environment>;
+
+using callable_t = std::shared_ptr<ICallable>;
+using instance_t = std::shared_ptr<Instance>;
 }  // namespace interpreter::environment
 
 class NonCopyable {
