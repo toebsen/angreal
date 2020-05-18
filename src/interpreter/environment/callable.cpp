@@ -73,4 +73,17 @@ Instance::Instance(std::shared_ptr<Class> _class) : class_(std::move(_class)) {}
 string_t Instance::Stringify() const {
     return "Instance of " + class_->Stringify();
 }
+
+obj_t Instance::Get(const string_t& name) {
+    if (fields_.contains(name)) {
+        return fields_[name];
+    }
+
+    throw RuntimeError("Undefined property <" + name + "> of " +
+                       class_->Stringify());
+}
+void Instance::Set(const string_t& name, const obj_t& value) {
+    fields_[name] = value;
+}
+
 }  // namespace angreal::interpreter::environment

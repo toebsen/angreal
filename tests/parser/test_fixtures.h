@@ -69,8 +69,10 @@ class VariableAssignmentTest : public ParserTest {
                                 expression_t expression) {
         auto ast = lexAndParseProgram(program);
         ASSERT_EQ(1, ast->statements.size());
+        auto stmt = std::dynamic_pointer_cast<AST::ExpressionStatement>(
+            ast->statements[0]);
         auto assignment =
-            std::dynamic_pointer_cast<AST::Assignment>(ast->statements[0]);
+            std::dynamic_pointer_cast<Assignment>(stmt->expression);
         ASSERT_NE(nullptr, assignment);
         EXPECT_EQ(defaultIdentifier, assignment->identifier);
         auto expr =

@@ -102,7 +102,7 @@ std::shared_ptr<AST::Expression> Parser::parseUnary() {
         return std::make_shared<AST::UnaryOperation>(opType, expression);
     }
 
-    return parserFunctionCall();
+    return parseFunctionCall();
 }
 
 AST::expressions_t Parser::parseActualParams() {
@@ -116,7 +116,7 @@ AST::expressions_t Parser::parseActualParams() {
     return params;
 }
 
-std::shared_ptr<AST::Expression> Parser::parserFunctionCall() {
+std::shared_ptr<AST::Expression> Parser::parseFunctionCall() {
     expression_t expression = parsePrimary();
 
     while (true) {
@@ -129,6 +129,12 @@ std::shared_ptr<AST::Expression> Parser::parserFunctionCall() {
             expectToken(Token::Type::RightBracket);
             consume();
             expression = std::make_shared<AST::FunctionCall>(expression, args);
+        } else if (current_token->type() == Token::Type::Dot) {
+            consume();
+            expectToken(Token::Type::Identifier);
+            auto identifier = current_token->value();
+            consume();
+            expression = std::make_shared<AST::Get>(expression, identifier);
         } else {
             break;
         }
@@ -179,16 +185,20 @@ std::shared_ptr<AST::Declaration> Parser::parseVariableDeclaration() {
     return std::make_shared<AST::Declaration>(identifier, expression);
 }
 
-std::shared_ptr<AST::Assignment> Parser::parseAssignmentStatement() {
-    std::string identifier;
-    AST::expression_t expression;
-    expectToken(Token::Type::Identifier);
-    identifier = current_token->value();
-    consume();
+std::shared_ptr<AST::Expression> Parser::parseAssignmentStatement(
+    const expression_t& expression) {
     expectToken(Token::Type::Equal);
     consume();
-    expression = parseRelational();
-    return std::make_shared<AST::Assignment>(identifier, expression);
+    auto value = parseRelational();
+
+    if (auto ident = std::dynamic_pointer_cast<IdentifierLiteral>(expression)) {
+        return std::make_shared<AST::Assignment>(ident->name, value);
+    }
+    if (auto get = std::dynamic_pointer_cast<Get>(expression)) {
+        return std::make_shared<AST::Set>(get->expression, get->identifier,
+                                          value);
+    }
+    return nullptr;
 }
 
 AST::formal_parameters Parser::parseFormalParameters() {
@@ -276,15 +286,12 @@ std::shared_ptr<AST::Statement> Parser::parsePrintStatement() {
     consume();
     return std::make_shared<AST::Print>(args);
 }
+
 std::shared_ptr<AST::Statement> Parser::parseStatement() {
     current_line_number = current_token->position().line;
 
     if (current_token->type() == Token::Type::VarStatement) {
         return parseVariableDeclaration();
-    }
-    if (current_token->type() == Token::Type::Identifier &&
-        next_token->type() == Token::Type::Equal) {
-        return parseAssignmentStatement();
     }
     if (current_token->type() == Token::Type::DefStatement) {
         return parseFunctionDeclaration();
@@ -314,11 +321,18 @@ std::shared_ptr<AST::Statement> Parser::parseStatement() {
         consume();
         return nullptr;
     }
+
     auto expr = parseRelational();
+    if (current_token->type() == Token::Type::Equal) {
+        expr = parseAssignmentStatement(expr);
+    }
+
     if (expr) {
         return std::make_shared<ExpressionStatement>(expr);
     }
+
     consume();
+
     return nullptr;
 }
 std::shared_ptr<AST::IfStatement> Parser::parseIfStatement() {

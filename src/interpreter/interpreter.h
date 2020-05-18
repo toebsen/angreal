@@ -52,6 +52,8 @@ class Interpreter : public Visitor {
     void visit(const std::shared_ptr<IfStatement>& node) override;
     void visit(const std::shared_ptr<WhileStatement>& node) override;
     void visit(const std::shared_ptr<ClassDeclaration>& node) override;
+    void visit(const std::shared_ptr<Get>& node) override;
+    void visit(const std::shared_ptr<Set>& node) override;
 
    private:
     friend class Executor;

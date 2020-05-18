@@ -35,7 +35,7 @@ enum class State {
 const std::map<State, bool> FinalStates = {
     {State::Digit, true},
     {State::DigitPeriod, true},
-    {State::Period, false},
+    {State::Period, true},
     {State::AddSub, true},
     {State::Asterisk, true},
     {State::Slash, true},

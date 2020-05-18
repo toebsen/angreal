@@ -5,6 +5,8 @@
 #ifndef ANGREAL_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
 #define ANGREAL_SRC_INTERPRETER_ENVIRONMENT_CALLABLE_H_
 
+#include <unordered_map>
+
 #include "../parser/ast.h"
 
 namespace angreal::interpreter {
@@ -75,8 +77,12 @@ class Instance final {
 
     string_t Stringify() const;
 
+    obj_t Get(const string_t& name);
+    void Set(const string_t& name, const obj_t& value);
+
    private:
     std::shared_ptr<Class> class_;
+    std::unordered_map<string_t, obj_t> fields_;
 };
 }  // namespace environment
 }  // namespace angreal::interpreter

@@ -67,7 +67,7 @@ class Declaration : public Statement,
     const std::string identifier;
 };
 
-class Assignment : public Statement,
+class Assignment : public Expression,
                    public std::enable_shared_from_this<Assignment> {
    public:
     Assignment(std::string identifier, expression_t expression);
@@ -318,6 +318,30 @@ class ClassDeclaration : public Statement,
     functions_t methods;
 };
 
+class Get : public Expression, public std::enable_shared_from_this<Get> {
+   public:
+    Get(expression_t expression, std::string identifier);
+
+    void accept(const visitor_t& visitor) override;
+
+    ~Get() override = default;
+
+    const std::string identifier;
+    expression_t expression;
+};
+
+class Set : public Expression, public std::enable_shared_from_this<Set> {
+   public:
+    Set(expression_t expression, std::string identifier, expression_t value);
+
+    void accept(const visitor_t& visitor) override;
+
+    ~Set() override = default;
+
+    const std::string identifier;
+    expression_t expression;
+    expression_t value;
+};
 }  // namespace angreal::parser::AST
 
 #endif  // ANGREAL_AST_H

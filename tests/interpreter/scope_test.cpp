@@ -29,8 +29,9 @@ TEST_F(DeclarationTest, InnerScopeAssignmentToOuterScope) {
         "a", std::make_shared<StringLiteral>("outer")));
 
     statements_t inner_scope;
-    inner_scope.push_back(std::make_shared<AST::Assignment>(
-        "a", std::make_shared<StringLiteral>("inner")));
+    inner_scope.push_back(
+        std::make_shared<ExpressionStatement>(std::make_shared<AST::Assignment>(
+            "a", std::make_shared<StringLiteral>("inner"))));
 
     outer_scope.push_back(std::make_shared<Block>(inner_scope));
     auto prog = std::make_shared<Program>(outer_scope);

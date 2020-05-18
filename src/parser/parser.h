@@ -36,7 +36,8 @@ class Parser {
 
     std::shared_ptr<AST::ClassDeclaration> parseClassDeclaration();
 
-    std::shared_ptr<AST::Assignment> parseAssignmentStatement();
+    std::shared_ptr<AST::Expression> parseAssignmentStatement(
+        const expression_t& expression);
 
     std::shared_ptr<AST::Expression> parseAdditive();
 
@@ -46,7 +47,7 @@ class Parser {
 
     std::shared_ptr<AST::Expression> parsePrimary();
 
-    std::shared_ptr<AST::Expression> parserFunctionCall();
+    std::shared_ptr<AST::Expression> parseFunctionCall();
 
     std::shared_ptr<AST::Statement> parseReturnDeclaration();
 

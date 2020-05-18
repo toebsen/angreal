@@ -222,4 +222,20 @@ void ClassDeclaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
+Get::Get(expression_t expression, std::string identifier)
+    : expression(std::move(expression)), identifier(std::move(identifier)) {}
+
+void Get::accept(const visitor_t& visitor) {
+    visitor->visit(shared_from_this());
+}
+
+Set::Set(expression_t expression, std::string identifier, expression_t value)
+    : expression(std::move(expression)),
+      identifier(std::move(identifier)),
+      value(std::move(value)) {}
+
+void Set::accept(const visitor_t& visitor) {
+    visitor->visit(shared_from_this());
+}
+
 }  // namespace angreal::parser::AST

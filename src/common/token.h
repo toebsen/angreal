@@ -36,6 +36,7 @@ class Token {
         LeftBracket,
         RightBracket,
         Comma,
+        Dot,
         Colon,
         SemiColon,
         Equal,
@@ -187,12 +188,13 @@ class Token {
                 return Type::NewLine;
             case angreal::State::EndOfProgram:
                 return Type::EndOfProgram;
-            case State::Invalid:
-            case State::Initial:
             case State::Period:
+                return Type::Dot;
             case State::StartComment:
             case State::StartString:
             case State::WhiteSpace:
+            case State::Invalid:
+            case State::Initial:
                 return Type::Error;
         }
         return Type::Error;

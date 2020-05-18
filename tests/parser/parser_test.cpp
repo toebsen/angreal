@@ -85,10 +85,6 @@ TEST_F(ExpressionTest, BinaryOpRelational) {
         "!=", std::make_shared<AST::StringLiteral>("123"));
 }
 
-TEST_F(ExpressionTest, NestedExpressions) {
-    ASSERT_NO_THROW(lexAndParseExpression("(a-b) * foo() and bar(1,false)"));
-}
-
 // TEST_F(FunctionCallTest, FunctionCallTest) { parseFunction<>("foo()", "foo");
 // }
 //
@@ -315,4 +311,36 @@ TEST_F(VariableDeclarationTest, ClassDeclarationWithVarDecl) {
         }
     )"),
                  RuntimeError);
+}
+
+TEST_F(VariableDeclarationTest, GetExprTest) {
+    auto prog = lexAndParseProgram(R"(
+        x.y
+    )");
+    auto expr_stmt =
+        std::dynamic_pointer_cast<ExpressionStatement>(prog->statements[0]);
+    auto get_expr = std::dynamic_pointer_cast<Get>(expr_stmt->expression);
+
+    ASSERT_NE(nullptr, get_expr);
+    EXPECT_EQ("x",
+              std::dynamic_pointer_cast<IdentifierLiteral>(get_expr->expression)
+                  ->name);
+    EXPECT_EQ("y", get_expr->identifier);
+}
+
+TEST_F(VariableDeclarationTest, SetExprTest) {
+    auto prog = lexAndParseProgram(R"(
+        x.y = 123
+    )");
+    auto expr_stmt =
+        std::dynamic_pointer_cast<ExpressionStatement>(prog->statements[0]);
+    auto set_expr = std::dynamic_pointer_cast<Set>(expr_stmt->expression);
+    auto ident =
+        std::dynamic_pointer_cast<IdentifierLiteral>(set_expr->expression);
+
+    ASSERT_NE(nullptr, set_expr);
+    EXPECT_EQ("x", ident->name);
+    EXPECT_EQ("y", set_expr->identifier);
+    EXPECT_EQ(123,
+              std::dynamic_pointer_cast<IntLiteral>(set_expr->value)->value);
 }

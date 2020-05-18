@@ -157,53 +157,44 @@ Regular BNF syntax of *Angreal*:
 - [syntax](http://matt.might.net/articles/grammars-bnf-ebnf/)
 
 ```
-program ::= {statement}
+program ::= statement*
 
-block ::= '{'{statement}'}'
+# declarations
+declaration ::= variable_decl | function_decl | class_decl
+variable_decl ::= 'var' identifier '=' expression
+function_decl ::= 'def' identifier '('[parameters]')' block
+class_decl ::= 'class' identifier '{' function_decl* '}'
 
-statement ::= variable_decl |                                  
-                assignement | 
+# statements
+statement ::= declaration |
+                assignment | 
                 print_statement | 
                 if_statement | 
                 while_statement | 
                 return_statement | 
-                function_decl | 
-                class_decl |
                 block 
 
-
+block ::= '{'statement*'}'
 print_statement ::= 'print' '(' expression ')'
-if_statement ::= 'if' '('expression')'block['else'block]
-while_statement ::= 'while' '('expression')'block
+if_statement ::= 'if' '('expression')' block [ 'else' block]
+while_statement ::= 'while' '('expression')' block
 return_statement ::= 'return' expression
+assignment ::= (call '.' ) ? identifier '=' expression
 
-variable_decl ::= 'var' identifier '=' expression
-function_decl ::= 'def' identifier '('[formal_params]')' block
-formal_params ::=  identifier (',' identifier)*
-class_decl ::= 'class' identifier '{' function_decl* '}'
-
-assignment ::= identifier '=' expression
-
+# expressions
 expression ::= additive (comp-op additive)*
-
 additive ::= term (additive_op term)*
-
 multiplicative ::= primary (multiplicative_op primary)*
-
-function_call ::= expression'(' actual_params ')'
-actual_params ::= expression (',' expression)*
-
-primary ::= literal | identifier | function_call | sub_expression | unary-op
- 
+call ::= expression('(' arguments ')' | '.' identifier)*
+primary ::= literal | identifier | call | sub_expression | unary-op
 sub_expression ::= '(' expression ')' 
-
 unary-op ::= ('+'|'-'|'!') expression 
 comp-op ::= ''| ''| '='| '='| '=='| '!='
 additive_op ::= '+' | '-' | 'and' 
 multiplicative_op ::= '*' | '/' | 'or'
 
+# basic types
 identifier ::= '_'?|letter*|digit*}
-
 literal ::= bool_literal | int_literal | string_literal | float_literal 
 float_literal ::= [int_literal]fraction_literal
 fraction_literal ::= '.'digit*
@@ -211,8 +202,11 @@ int_literal ::=  ('+'|'-')? digit+
 bool_literal ::= 'true' | 'false'
 string_literal ::= '"'printable+'"'
 
+# utilitiy
+parameters ::=  identifier (',' identifier)*
+arguments ::= expression (',' expression)*
+
 printable ::= digit* | letter+
 letter ::= [a-zA-Z]
 digit ::= [0-9]
-
 ```

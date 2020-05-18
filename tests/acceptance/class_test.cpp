@@ -21,3 +21,16 @@ TEST_F(BaseTest, EmptyClass) {
 
     SafeRun(code, "class(MyClass)\nInstance of class(MyClass)");
 }
+
+TEST_F(BaseTest, ClassGetterSetter) {
+    std::string code = R"(
+        class MyClass
+        {
+        }
+        var myclass = MyClass()
+        myclass.x = 123
+        print(myclass.x);
+    )";
+
+    SafeRun(code, "123");
+}

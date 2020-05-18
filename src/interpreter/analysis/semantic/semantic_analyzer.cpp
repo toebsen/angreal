@@ -128,4 +128,13 @@ void SemanticAnalyzer::visit(const std::shared_ptr<ClassDeclaration>& node) {
     }
 }
 
+void SemanticAnalyzer::visit(const std::shared_ptr<Get>& node) {
+    Resolve(node->expression);
+}
+
+void SemanticAnalyzer::visit(const std::shared_ptr<Set>& node) {
+    Resolve(node->expression);
+    Resolve(node->value);
+}
+
 }  // namespace angreal::interpreter::analysis

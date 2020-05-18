@@ -264,6 +264,37 @@ void Interpreter::visit(const std::shared_ptr<ClassDeclaration>& node) {
     environment_->Declare(node->identifier, o);
 }
 
+void Interpreter::visit(const std::shared_ptr<Get>& node) {
+    node->expression->accept(shared_from_this());
+    auto obj = stack_.top();
+    stack_.pop();
+
+    if (obj->GetType()->IsInstance()) {
+        auto getter_obj = obj->GetType()->AsInstance()->Get(node->identifier);
+        stack_.push(getter_obj);
+        return;
+    }
+
+    throw RuntimeError("Only instances have properties! <" + node->identifier +
+                       ">");
+}
+
+void Interpreter::visit(const std::shared_ptr<Set>& node) {
+    node->expression->accept(shared_from_this());
+    auto obj = stack_.top();
+    stack_.pop();
+
+    if (!obj->GetType()->IsInstance()) {
+        throw RuntimeError("Only instances have fields");
+    }
+
+    node->value->accept(shared_from_this());
+    auto value = stack_.top();
+    stack_.pop();
+
+    obj->GetType()->AsInstance()->Set(node->identifier, value);
+}
+
 environment::obj_t Interpreter::LookupVariable(const string_t& name,
                                                const expression_t& expr) {
     if (auto distance_iter = locals_.find(expr);
@@ -291,4 +322,5 @@ void Interpreter::interpret(const expressions_t& expressions) {
 }
 
 std::stack<environment::obj_t>& Interpreter::Stack() { return stack_; }
+
 }  // namespace angreal::interpreter
