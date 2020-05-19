@@ -185,13 +185,13 @@ void Interpreter::visit(const std::shared_ptr<FunctionDeclaration>& node) {
 void Interpreter::ExecuteBlock(
     const statements_t& statements,
     const std::shared_ptr<environment::Environment>& environment) {
-    Executor executor{*this};
+    Executor executor {*this};
     executor.execute(statements, environment);
 }
 
 void Interpreter::invoke(const statements_t& statements,
                          const std::shared_ptr<environment::Environment>& env) {
-    Executor executor{*this};
+    Executor executor {*this};
     executor.execute(statements, env);
 }
 

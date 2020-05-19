@@ -11,7 +11,7 @@ namespace angreal::interpreter::analysis {
 
 Resolver::Resolver(SemanticAnalyzer& semantic_analyzer)
     : semantic_analyzer_(semantic_analyzer),
-      function_type_{FunctionType::None} {}
+      function_type_ {FunctionType::None} {}
 
 void Resolver::Declare(const string_t& name) {
     if (!scopes_.empty()) {

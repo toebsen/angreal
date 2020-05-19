@@ -38,7 +38,7 @@ class ParserTest : public ::testing::Test {
         }
     }
 
-    std::string defaultIdentifier{"x"};
+    std::string defaultIdentifier {"x"};
     Parser parser;
     Lexer lexer;
     tokens_t tokens;

@@ -127,7 +127,7 @@ TEST_F(LexerTest, BuiltInIdentifier) {
 }
 
 TEST_F(LexerTest, Punctuation) {
-    std::vector<std::string> vals{"{", "}", "(", ")", ",", ":", ";", "."};
+    std::vector<std::string> vals {"{", "}", "(", ")", ",", ":", ";", "."};
     std::vector<Token::Type> tokens = {
         Token::Type::LeftCurlyBracket,
         Token::Type::RightCurlyBracket,
@@ -156,14 +156,14 @@ TEST_F(LexerTest, Exclamation) {
 }
 
 TEST_F(LexerTest, Relational) {
-    std::vector<std::string> vals{"<", ">", "<=", ">=", "==", "!="};
+    std::vector<std::string> vals {"<", ">", "<=", ">=", "==", "!="};
     lexSequence(vals, Token::Type::RelationalOp);
 }
 TEST_F(LexerTest, Dot) {
     auto t = lexer.lex("a.b");
-    std::vector<Token::Type> expected{Token::Type::Identifier, Token::Type::Dot,
-                                      Token::Type::Identifier,
-                                      Token::Type::EndOfProgram};
+    std::vector<Token::Type> expected {
+        Token::Type::Identifier, Token::Type::Dot, Token::Type::Identifier,
+        Token::Type::EndOfProgram};
 
     ASSERT_EQ(t.size(), expected.size());
     for (int i = 0; i < t.size(); ++i) {

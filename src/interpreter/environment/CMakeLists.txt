@@ -25,6 +25,6 @@ target_include_directories(angreal_env PRIVATE ${PARSER_HEADERS_DIR})
 
 IF (WIN32)
     target_link_libraries(angreal_env bcrypt)
-ELSE()
+ELSE ()
     target_link_libraries(angreal_env)
-ENDIF()
+ENDIF ()

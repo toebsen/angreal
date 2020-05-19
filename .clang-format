@@ -6,6 +6,8 @@ DerivePointerAlignment: false
 PointerAlignment: Left
 SortIncludes: true
 IncludeBlocks: Regroup
+SortUsingDeclarations: true
+SpaceBeforeCpp11BracedList: true
 IncludeCategories:
   # Headers in <> without extension.
   - Regex:           '<([A-Za-z0-9\Q/-_\E])+>'

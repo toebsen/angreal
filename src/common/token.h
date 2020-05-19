@@ -201,7 +201,7 @@ class Token {
     };
 
    private:
-    Position position_{-1};
+    Position position_ {-1};
     Type type_;
     std::string value_;
 };

@@ -39,7 +39,9 @@ TEST_F(BaseTest, FunctioCallWithNonCallable) {
         var x = "123"
         x()
     )";
-    ExpectRuntimeException(code, "<\"123\">: is not callable. Only functions and classes can be called!");
+    ExpectRuntimeException(code,
+                           "<\"123\">: is not callable. Only functions and "
+                           "classes can be called!");
 }
 
 TEST_F(BaseTest, SameNameWithInLocalScope) {

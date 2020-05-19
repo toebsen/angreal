@@ -6,7 +6,7 @@
 
 angreal::interpreter::Executor::Executor(
     angreal::interpreter::Interpreter& interpreter)
-    : interpreter_{interpreter} {}
+    : interpreter_ {interpreter} {}
 
 angreal::interpreter::Executor::~Executor() {
     interpreter_.environment_ = original_environment_;

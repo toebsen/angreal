@@ -17,7 +17,7 @@ std::vector<Token> Lexer::lex(const std::string& program) {
 
     _program.push_back('\n');
 
-    Token::Position pos{0};
+    Token::Position pos {0};
     for (auto it = _program.begin(); it != _program.end() - 1; ++it) {
         auto c = *it;
         auto c_next = *(it + 1);

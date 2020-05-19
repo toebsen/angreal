@@ -94,7 +94,7 @@ class Return : public Statement, public std::enable_shared_from_this<Return> {
 class Print : public Statement, public std::enable_shared_from_this<Print> {
    public:
     explicit Print(expressions_t expressions)
-        : expressions(std::move(expressions)){};
+        : expressions(std::move(expressions)) {};
 
     void accept(const visitor_t& visitor) override;
 
@@ -108,7 +108,7 @@ class IdentifierLiteral
       public std::enable_shared_from_this<IdentifierLiteral> {
    public:
     explicit IdentifierLiteral(std::string identifier)
-        : name(std::move(identifier)){};
+        : name(std::move(identifier)) {};
 
     void accept(const visitor_t& visitor) override;
 
@@ -143,7 +143,7 @@ class BoolLiteral : public ValueLiteral<bool>,
    public:
     explicit BoolLiteral(const std::string& value);
 
-    explicit BoolLiteral(bool value) : ValueLiteral(value){};
+    explicit BoolLiteral(bool value) : ValueLiteral(value) {};
 
     static TypeHelper::Type type() { return TypeHelper::Type::Bool; };
 

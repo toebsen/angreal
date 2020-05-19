@@ -68,7 +68,7 @@ class Parser {
 
     std::vector<Token>::const_iterator current_token;
     std::vector<Token>::const_iterator next_token;
-    int current_line_number{0};
+    int current_line_number {0};
 };
 
 }  // namespace angreal::parser

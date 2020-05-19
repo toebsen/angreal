@@ -130,7 +130,7 @@ class FunctionTest : public DeclarationTest {
    protected:
     expression_t last_function_;
 
-    const expressions_t kNoArgs{};
+    const expressions_t kNoArgs {};
 
     void DeclareArityZeroFunction(const std::string& name) {
         auto inner_decl = std::make_shared<AST::Declaration>(
@@ -138,8 +138,8 @@ class FunctionTest : public DeclarationTest {
 
         auto ident = std::make_shared<AST::IdentifierLiteral>("text");
         context_.interpreter->ResolveLocal(ident, 0);
-        statements_t statements{inner_decl,
-                                std::make_shared<AST::Return>(ident)};
+        statements_t statements {inner_decl,
+                                 std::make_shared<AST::Return>(ident)};
 
         formal_parameters parameters = {};
         DeclareFunction(name, statements, parameters);
@@ -149,7 +149,7 @@ class FunctionTest : public DeclarationTest {
         auto ident = std::make_shared<AST::IdentifierLiteral>("test");
         context_.interpreter->ResolveLocal(ident, 0);
 
-        statements_t statements{
+        statements_t statements {
             std::make_shared<AST::Declaration>(
                 "test", std::make_shared<BinaryOperation>(
                             "+", std::make_shared<IntLiteral>(init_value),
@@ -168,7 +168,7 @@ class FunctionTest : public DeclarationTest {
         auto ident = std::make_shared<AST::IdentifierLiteral>("test");
         context_.interpreter->ResolveLocal(ident, 0);
 
-        statements_t statements{
+        statements_t statements {
             std::make_shared<AST::Declaration>(
                 "test", std::make_shared<BinaryOperation>(
                             "+", std::make_shared<IntLiteral>(init_value),
@@ -205,8 +205,8 @@ class ClassTest : public FunctionTest {
                                     const std::string& method_name,
                                     int return_value = 42) {
         functions_t methods = {std::make_shared<FunctionDeclaration>(
-            method_name, formal_parameters{},
-            statements_t{std::make_shared<Return>(
+            method_name, formal_parameters {},
+            statements_t {std::make_shared<Return>(
                 std::make_shared<IntLiteral>(return_value))})};
         DeclareClass(name, methods);
     }
