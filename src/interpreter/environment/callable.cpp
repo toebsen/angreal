@@ -18,8 +18,8 @@ bool Function::CheckArity(const std::vector<obj_t>& args) const {
 
 size_t Function::Arity() const { return function_decl_->parameters.size(); }
 
-obj_t Function::Call(const interpreter_t& interp,
-                     const std::vector<obj_t>& args) {
+std::optional<obj_t> Function::Call(const interpreter_t& interp,
+                                    const std::vector<obj_t>& args) {
     auto local_env = std::make_shared<Environment>(env_);
 
     if (!CheckArity(args)) {
@@ -43,7 +43,7 @@ obj_t Function::Call(const interpreter_t& interp,
         return ret;
     }
 
-    return obj_t();
+    return std::nullopt;
 }
 
 string_t Function::Stringify() const {
@@ -60,7 +60,8 @@ bool Class::CheckArity(const std::vector<obj_t>& args) const { return true; }
 
 size_t Class::Arity() const { return 0; }
 
-obj_t Class::Call(interpreter_t const& interp, const std::vector<obj_t>& args) {
+std::optional<obj_t> Class::Call(interpreter_t const& interp,
+                                 const std::vector<obj_t>& args) {
     instance_t instance = std::make_shared<Instance>(shared_from_this());
     auto type = std::make_shared<Type>(instance);
     return std::make_shared<Object>(type);

@@ -164,10 +164,8 @@ void Interpreter::visit(const std::shared_ptr<FunctionCall>& node) {
     }
 
     auto ret_obj = fun->Call(this, args);
-    if (ret_obj) {
-        if (!ret_obj->GetType()->IsNull()) {
-            stack_.push(ret_obj);
-        }
+    if (ret_obj.has_value() && !ret_obj.value()->GetType()->IsNull()) {
+        stack_.push(ret_obj.value());
     }
 }
 
