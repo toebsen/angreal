@@ -12,6 +12,7 @@
 
 #include <magic_enum.hpp>
 
+#include "common.h"
 #include "state.h"
 
 namespace angreal {
@@ -59,24 +60,23 @@ class Token {
         Error,
     };
 
-    static std::string type2str(Type t) {
-        return std::string(magic_enum::enum_name(t));
+    static string_t type2str(Type t) {
+        return string_t(magic_enum::enum_name(t));
     };
 
     struct Position {
         int line;
     };
 
-    Token(const std::string& value, angreal::State finalState,
-          const Position& pos)
+    Token(const string_t& value, angreal::State finalState, const Position& pos)
         : value_(value), type_(infer(value, finalState)), position_(pos) {}
 
-    Token(std::string value, const Type& type)
+    Token(string_t value, const Type& type)
         : value_(std::move(value)), type_(type) {}
 
     [[nodiscard]] inline Type type() const { return type_; };
 
-    [[nodiscard]] inline std::string value() const { return value_; };
+    [[nodiscard]] inline string_t value() const { return value_; };
 
     [[nodiscard]] Position position() const { return position_; };
 
@@ -88,8 +88,7 @@ class Token {
         return os;
     }
 
-    static Token::Type infer(const std::string& value,
-                             const angreal::State& finalSate) {
+    Token::Type infer(const string_t& value, const angreal::State& finalSate) {
         switch (finalSate) {
             case angreal::State::Digit:
                 return Type::Integer;
@@ -104,55 +103,7 @@ class Token {
             case angreal::State::EndComment:
                 return Type::Comment;
             case angreal::State::Identifier:
-                if (value == "true" || value == "false") {
-                    return Type::Boolean;
-                }
-                if (value == "if") {
-                    return Type::IfStatement;
-                }
-                if (value == "def") {
-                    return Type::DefStatement;
-                }
-                if (value == "var") {
-                    return Type::VarStatement;
-                }
-                if (value == "return") {
-                    return Type::ReturnStatement;
-                }
-                if (value == "while") {
-                    return Type::WhileStatement;
-                }
-                if (value == "for") {
-                    return Type::ForStatement;
-                }
-                if (value == "and") {
-                    return Type::AndStatement;
-                }
-                if (value == "or") {
-                    return Type::OrStatement;
-                }
-                if (value == "not") {
-                    return Type::NotStatement;
-                }
-                if (value == "int") {
-                    return Type::IntIdentifier;
-                }
-                if (value == "bool") {
-                    return Type::BoolIdentifier;
-                }
-                if (value == "float") {
-                    return Type::FloatIdentifier;
-                }
-                if (value == "string") {
-                    return Type::StringIdentifier;
-                }
-                if (value == "print") {
-                    return Type::PrintStatement;
-                }
-                if (value == "class") {
-                    return Type::ClassStatement;
-                }
-                return Type::Identifier;
+                return ReservedTokenFrom(value);
             case angreal::State::EndString:
                 return Type::String;
             case angreal::State::Equals:
@@ -160,27 +111,7 @@ class Token {
             case angreal::State::Exclamation:
                 return Type::Exclamation;
             case angreal::State::Punctuation:
-                if (value == "{") {
-                    return Type::LeftCurlyBracket;
-                }
-                if (value == "}") {
-                    return Type::RightCurlyBracket;
-                }
-                if (value == "(") {
-                    return Type::LeftBracket;
-                }
-                if (value == ")") {
-                    return Type::RightBracket;
-                }
-                if (value == ",") {
-                    return Type::Comma;
-                }
-                if (value == ":") {
-                    return Type::Colon;
-                }
-                if (value == ";") {
-                    return Type::SemiColon;
-                }
+                return punctuation_.at(value);
             case angreal::State::SingleRelational:
             case angreal::State::CombinedRelational:
                 return Type::RelationalOp;
@@ -201,9 +132,46 @@ class Token {
     };
 
    private:
+    [[nodiscard]] Token::Type ReservedTokenFrom(const string_t& value) const {
+        if (reserved_.contains(value)) {
+            return reserved_.at(value);
+        }
+        return Type::Identifier;
+    }
+
+    const std::map<string_t, Token::Type> reserved_ {
+        {"true", Type::Boolean},
+        {"false", Type::Boolean},
+        {"if", Type::IfStatement},
+        {"def", Type::DefStatement},
+        {"var", Type::VarStatement},
+        {"return", Type::ReturnStatement},
+        {"while", Type::WhileStatement},
+        {"for", Type::ForStatement},
+        {"and", Type::AndStatement},
+        {"or", Type::OrStatement},
+        {"not", Type::NotStatement},
+        {"int", Type::IntIdentifier},
+        {"bool", Type::BoolIdentifier},
+        {"float", Type::FloatIdentifier},
+        {"string", Type::StringIdentifier},
+        {"print", Type::PrintStatement},
+        {"class", Type::ClassStatement},
+    };
+
+    const std::map<string_t, Token::Type> punctuation_ {
+        {"{", Type::LeftCurlyBracket},
+        {"}", Type::RightCurlyBracket},
+        {"(", Type::LeftBracket},
+        {")", Type::RightBracket},
+        {",", Type::Comma},
+        {":", Type::Colon},
+        {";", Type::SemiColon},
+    };
+
     Position position_ {-1};
     Type type_;
-    std::string value_;
+    string_t value_;
 };
 
 }  // namespace angreal
