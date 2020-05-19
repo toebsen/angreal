@@ -153,6 +153,11 @@ expression_t Parser::parsePrimary() {
         return TypeHelper::mapTypeToLiteral(decl, value);
     }
 
+    if (current_token->type() == Token::Type::SelfStatement) {
+        consume();
+        return std::make_shared<AST::Self>();
+    }
+
     if (current_token->type() == Token::Type::Identifier) {
         auto value = current_token->value();
         consume();

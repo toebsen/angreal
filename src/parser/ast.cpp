@@ -238,4 +238,8 @@ void Set::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
+void Self::accept(const visitor_t& visitor) {
+    visitor->visit(shared_from_this());
+}
+
 }  // namespace angreal::parser::AST

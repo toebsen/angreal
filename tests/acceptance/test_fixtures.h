@@ -55,4 +55,11 @@ class BaseTest : public ::testing::Test {
     Context context_;
 };
 
+class ClassTest : public BaseTest {};
+class ConditionalTest : public BaseTest {};
+class ErroneousTest : public BaseTest {};
+class ExampleTest : public BaseTest {};
+class FunctionTest : public BaseTest {};
+class ScopingTest : public BaseTest {};
+
 #endif  // ANGREAL_TESTS_ACCEPTANCE_TEST_FIXTURES_H_

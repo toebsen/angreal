@@ -7,7 +7,7 @@
 
 #include "test_fixtures.h"
 
-TEST_F(BaseTest, InlineReturn) {
+TEST_F(FunctionTest, InlineReturn) {
     std::string code = R"(
     def foo(b)  {
         return 5 + b
@@ -17,7 +17,7 @@ TEST_F(BaseTest, InlineReturn) {
     SafeRun(code, "10");
 }
 
-TEST_F(BaseTest, ReturnOrder) {
+TEST_F(FunctionTest, ReturnOrder) {
     std::string code = R"(
     def foo()  {
         def inner()  {
@@ -36,7 +36,7 @@ TEST_F(BaseTest, ReturnOrder) {
     SafeRun(code, "5");
 }
 
-TEST_F(BaseTest, Currying) {
+TEST_F(FunctionTest, Currying) {
     std::string code = R"(
     def f(a)
     {
@@ -52,7 +52,7 @@ TEST_F(BaseTest, Currying) {
     SafeRun(code, "1\n2\n3");
 }
 
-TEST_F(BaseTest, ConcatenatedCalls) {
+TEST_F(FunctionTest, ConcatenatedCalls) {
     std::string code = R"(
     def f(a)
     {
@@ -67,7 +67,7 @@ TEST_F(BaseTest, ConcatenatedCalls) {
     SafeRun(code, "1\n2\n3");
 }
 
-TEST_F(BaseTest, TopLevelReturn) {
+TEST_F(FunctionTest, TopLevelReturn) {
     std::string code = R"(
     var result = "123"
     return result

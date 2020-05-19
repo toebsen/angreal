@@ -30,6 +30,22 @@ TEST_F(ClassTest, ClassMethods) {
     ASSERT_EQ(GetResultType()->AsInteger(), 42);
 }
 
+TEST_F(ClassTest, BoundMethod) {
+    DeclareClassWithMethodReturningSelf("MyClass", "bound");
+    auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+    auto assignment = std::make_shared<Declaration>("x", call);
+    context_.interpreter->visit(assignment);
+
+    auto getter = std::make_shared<Get>(
+        std::make_shared<IdentifierLiteral>("x"), "bound");
+    auto bound_call = std::make_shared<FunctionCall>(getter, kNoArgs);
+    context_.interpreter->visit(bound_call);
+
+    ASSERT_EQ(GetResultType()->IsInstance(), true);
+    ASSERT_EQ(GetResultType()->AsInstance()->Stringify(),
+              "Instance of class(MyClass)");
+}
+
 TEST_F(ClassTest, GetSetExpression) {
     DeclareEmptyClass("MyClass");
     auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
@@ -82,5 +98,10 @@ TEST_F(ClassTest, ErronousClassMethods) {
 
     EXPECT_THROW(context_.interpreter->visit(
                      std::make_shared<ExpressionStatement>(call)),
+                 RuntimeError);
+}
+
+TEST_F(ClassTest, ErronousSelf) {
+    EXPECT_THROW(context_.interpreter->visit(std::make_shared<Self>()),
                  RuntimeError);
 }

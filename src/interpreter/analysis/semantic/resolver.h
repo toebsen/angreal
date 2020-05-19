@@ -17,6 +17,7 @@ class SemanticAnalyzer;
 class Resolver {
    public:
     enum class FunctionType { None, Function, Method };
+    enum class ClassType { None, Class };
 
     explicit Resolver(SemanticAnalyzer& semantic_analyzer);
 
@@ -24,6 +25,8 @@ class Resolver {
     void ResolveFunction(
         const std::shared_ptr<FunctionDeclaration>& function_decl,
         const FunctionType& function_type);
+
+    void ResolveClass(const std::shared_ptr<ClassDeclaration>& class_decl);
 
     void EnterScope();
     void LeaveScope();
@@ -33,12 +36,16 @@ class Resolver {
 
     void CheckAlreadyDefined(const string_t& name);
 
-    bool IsFunction();
+    [[nodiscard]] bool IsFunction() const;
+    [[nodiscard]] bool IsMethod() const;
+
+    void Inject(const string_t& name);
 
    private:
     std::vector<std::unordered_map<string_t, bool>> scopes_;
     SemanticAnalyzer& semantic_analyzer_;
     FunctionType function_type_;
+    ClassType class_type_;
 };
 }  // namespace angreal::interpreter::analysis
 #endif  // ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_RESOLVER_H_

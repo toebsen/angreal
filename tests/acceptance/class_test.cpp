@@ -8,7 +8,7 @@
 
 #include "test_fixtures.h"
 
-TEST_F(BaseTest, EmptyClass) {
+TEST_F(ClassTest, EmptyClass) {
     std::string code = R"(
         class MyClass
         {
@@ -22,7 +22,7 @@ TEST_F(BaseTest, EmptyClass) {
     SafeRun(code, "class(MyClass)\nInstance of class(MyClass)");
 }
 
-TEST_F(BaseTest, ClassGetterSetter) {
+TEST_F(ClassTest, ClassGetterSetter) {
     std::string code = R"(
         class MyClass
         {
@@ -35,7 +35,7 @@ TEST_F(BaseTest, ClassGetterSetter) {
     SafeRun(code, "123");
 }
 
-TEST_F(BaseTest, ClassMethods) {
+TEST_F(ClassTest, ClassMethods) {
     std::string code = R"(
     class Bacon
     {
@@ -49,4 +49,22 @@ TEST_F(BaseTest, ClassMethods) {
     )";
 
     SafeRun(code, R"("Crunch crunch crunch!")");
+}
+
+TEST_F(ClassTest, BoundMethods) {
+    std::string code = R"(
+    class Bacon
+    {
+        def eat()
+        {
+            return "Mmh "+ self.name
+        }
+    }
+    var bacon = Bacon()
+    bacon.name = "Bacon"
+    var eat = bacon.eat
+    print(eat())
+    )";
+
+    SafeRun(code, R"("Mmh Bacon")");
 }

@@ -44,6 +44,8 @@ class Function final : public ICallable,
 
     string_t Stringify() const override;
 
+    obj_t bind(const obj_t& instance);
+
    private:
     std::shared_ptr<FunctionDeclaration> function_decl_;
     environment_t env_;
@@ -72,7 +74,7 @@ class Class final : public ICallable,
     environment_t env_;
 };
 
-class Instance final {
+class Instance final : public std::enable_shared_from_this<Instance> {
    public:
     explicit Instance(std::shared_ptr<Class> _class);
 
@@ -81,6 +83,8 @@ class Instance final {
     obj_t Get(const string_t& name);
 
     void Set(const string_t& name, const obj_t& value);
+
+    obj_t AsObject();
 
    private:
     std::shared_ptr<Class> class_;

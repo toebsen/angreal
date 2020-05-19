@@ -7,7 +7,7 @@
 
 #include "test_fixtures.h"
 
-TEST_F(BaseTest, SimpleWhile) {
+TEST_F(ConditionalTest, SimpleWhile) {
     std::string code = R"(
     var x = 0
     while(x < 1)
@@ -19,7 +19,7 @@ TEST_F(BaseTest, SimpleWhile) {
     SafeRun(code, "0");
 }
 
-TEST_F(BaseTest, SimpleWhile2) {
+TEST_F(ConditionalTest, SimpleWhile2) {
     std::string code = R"(
     while(false)
     {

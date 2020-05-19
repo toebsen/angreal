@@ -8,7 +8,7 @@
 
 #include "test_fixtures.h"
 
-TEST_F(BaseTest, IdentifierNotDeclared) {
+TEST_F(ErroneousTest, IdentifierNotDeclared) {
     std::string code = R"(
         var x = "123"
         print(y)
@@ -17,7 +17,7 @@ TEST_F(BaseTest, IdentifierNotDeclared) {
     ExpectRuntimeException(code, "<y> is not defined!");
 }
 
-TEST_F(BaseTest, BinOpNotCompatibleType) {
+TEST_F(ErroneousTest, BinOpNotCompatibleType) {
     std::string code = R"(
         var x = "123"
         var y = 123
@@ -26,7 +26,7 @@ TEST_F(BaseTest, BinOpNotCompatibleType) {
     ExpectRuntimeException(code, "Not able to execute: \"123\" <Add> 123");
 }
 
-TEST_F(BaseTest, UnOpNotCompatibleType) {
+TEST_F(ErroneousTest, UnOpNotCompatibleType) {
     std::string code = R"(
         var x = 123
         print(!x)
@@ -34,7 +34,7 @@ TEST_F(BaseTest, UnOpNotCompatibleType) {
     ExpectRuntimeException(code, "Not able to execute: <Not> 123 ");
 }
 
-TEST_F(BaseTest, FunctioCallWithNonCallable) {
+TEST_F(ErroneousTest, FunctioCallWithNonCallable) {
     std::string code = R"(
         var x = "123"
         x()
@@ -44,7 +44,7 @@ TEST_F(BaseTest, FunctioCallWithNonCallable) {
                            "classes can be called!");
 }
 
-TEST_F(BaseTest, SameNameWithInLocalScope) {
+TEST_F(ErroneousTest, SameNameWithInLocalScope) {
     std::string code = R"(
     # redefinition is allowed on a global scope
     var a = "first"
@@ -56,4 +56,14 @@ TEST_F(BaseTest, SameNameWithInLocalScope) {
     }
     )";
     ExpectRuntimeException(code, "variable `b` already declared in this scope");
+}
+
+TEST_F(ErroneousTest, SelfOutsideOfMethod) {
+    std::string code = R"(
+    def fun()
+    {
+        print(self);
+    }
+    )";
+    ExpectRuntimeException(code, "Self can only be used in bound methods!");
 }

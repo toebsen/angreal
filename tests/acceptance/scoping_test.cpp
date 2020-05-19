@@ -7,7 +7,7 @@
 
 #include "test_fixtures.h"
 
-TEST_F(BaseTest, ScopingWithFunction) {
+TEST_F(ScopingTest, ScopingWithFunction) {
     std::string code = R"(
     var x = "global"
     {
@@ -24,7 +24,7 @@ TEST_F(BaseTest, ScopingWithFunction) {
     SafeRun(code, "\"global\"\n\"global\"");
 }
 
-TEST_F(BaseTest, NestedScopes) {
+TEST_F(ScopingTest, NestedScopes) {
     std::string code = R"(
     var x = 0
     {

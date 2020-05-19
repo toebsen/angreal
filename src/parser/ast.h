@@ -342,6 +342,14 @@ class Set : public Expression, public std::enable_shared_from_this<Set> {
     expression_t expression;
     expression_t value;
 };
+
+class Self : public Expression, public std::enable_shared_from_this<Self> {
+   public:
+    Self() = default;
+    void accept(const visitor_t& visitor) override;
+
+    ~Self() override = default;
+};
 }  // namespace angreal::parser::AST
 
 #endif  // ANGREAL_AST_H

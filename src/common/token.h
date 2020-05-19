@@ -55,6 +55,7 @@ class Token {
         AndStatement,
         OrStatement,
         NotStatement,
+        SelfStatement,
         NewLine,
         EndOfProgram,
         Error,
@@ -157,6 +158,7 @@ class Token {
         {"string", Type::StringIdentifier},
         {"print", Type::PrintStatement},
         {"class", Type::ClassStatement},
+        {"self", Type::SelfStatement},
     };
 
     const std::map<string_t, Token::Type> punctuation_ {

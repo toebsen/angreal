@@ -210,5 +210,13 @@ class ClassTest : public FunctionTest {
                 std::make_shared<IntLiteral>(return_value))})};
         DeclareClass(name, methods);
     }
+
+    void DeclareClassWithMethodReturningSelf(const std::string& name,
+                                             const std::string& method_name) {
+        functions_t methods = {std::make_shared<FunctionDeclaration>(
+            method_name, formal_parameters {},
+            statements_t {std::make_shared<Return>(std::make_shared<Self>())})};
+        DeclareClass(name, methods);
+    }
 };
 #endif  // ANGREAL_TESTS_INTERPRETER_TEST_FIXTURES_H_

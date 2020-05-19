@@ -70,6 +70,29 @@ void Resolver::ResolveFunction(
     function_type_ = enclosing_function;
 }
 
-bool Resolver::IsFunction() { return !(function_type_ == FunctionType::None); }
+void Resolver::ResolveClass(
+    const std::shared_ptr<ClassDeclaration>& class_decl) {
+    Declare(class_decl->identifier);
+    Define(class_decl->identifier);
+    ClassType enclosing_class = class_type_;
+    EnterScope();
+    Inject("self");
+    for (auto method : class_decl->methods) {
+        ResolveFunction(method, FunctionType::Method);
+    }
+    LeaveScope();
+    class_type_ = enclosing_class;
+}
+
+bool Resolver::IsFunction() const {
+    return function_type_ == FunctionType::Function;
+}
+bool Resolver::IsMethod() const {
+    return function_type_ == FunctionType::Method;
+}
+
+void Resolver::Inject(const string_t& name) {
+    scopes_.back().emplace(name, true);
+}
 
 }  // namespace angreal::interpreter::analysis

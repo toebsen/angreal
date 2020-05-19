@@ -18,6 +18,10 @@ TEST_F(ParserTest, NewLines) {
     ASSERT_TRUE(ast->statements.empty());
 }
 
+TEST_F(ExpressionTest, Self) {
+    ASSERT_NE(nullptr, lexAndParseExpression("self"));
+}
+
 TEST_F(ExpressionTest, SimpleFactors) {
     parseSingleExpression<AST::IntLiteral>(
         "123", std::make_shared<AST::IntLiteral>(123));

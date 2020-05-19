@@ -54,6 +54,7 @@ class Interpreter : public Visitor {
     void visit(const std::shared_ptr<ClassDeclaration>& node) override;
     void visit(const std::shared_ptr<Get>& node) override;
     void visit(const std::shared_ptr<Set>& node) override;
+    void visit(const std::shared_ptr<Self>& node) override;
 
    private:
     friend class Executor;

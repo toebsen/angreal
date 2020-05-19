@@ -50,6 +50,15 @@ string_t Function::Stringify() const {
     return "function(" + function_decl_->identifier + ")";
 }
 
+obj_t Function::bind(const obj_t& instance) {
+    auto bound_env = std::make_shared<Environment>(env_);
+    bound_env->Declare("self", instance);
+    auto fun = std::make_shared<Function>(function_decl_, bound_env);
+    auto type = std::make_shared<Type>(fun);
+
+    return std::make_shared<Object>(type);
+}
+
 Class::Class(std::shared_ptr<ClassDeclaration> class_declaration,
              std::unordered_map<string_t, obj_t> methods, environment_t env)
     : class_declaration_(std::move(class_declaration)),
@@ -90,14 +99,23 @@ obj_t Instance::Get(const string_t& name) {
     }
 
     if (auto method = class_->FindMethod(name)) {
-        return method.value();
+        auto unbound = method.value();
+        auto bound = std::dynamic_pointer_cast<Function>(
+                         unbound->GetType()->AsCallable())
+                         ->bind(AsObject());
+        return bound;
     }
 
     throw RuntimeError("Undefined property <" + name + "> of " +
                        class_->Stringify());
 }
+
 void Instance::Set(const string_t& name, const obj_t& value) {
     fields_[name] = value;
+}
+
+obj_t Instance::AsObject() {
+    return std::make_shared<Object>(std::make_shared<Type>(shared_from_this()));
 }
 
 }  // namespace angreal::interpreter::environment

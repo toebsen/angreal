@@ -7,14 +7,14 @@
 
 #include "test_fixtures.h"
 
-TEST_F(BaseTest, HelloWorld) {
+TEST_F(ExampleTest, HelloWorld) {
     std::string code = R"(
     print("Hello World")
     )";
     SafeRun(code, "\"Hello World\"");
 }
 
-TEST_F(BaseTest, HelloWorld2) {
+TEST_F(ExampleTest, HelloWorld2) {
     std::string code = R"(
     # this is a comment
     def Hello(name) {
@@ -27,7 +27,7 @@ TEST_F(BaseTest, HelloWorld2) {
     SafeRun(code, "\"Hello World\"");
 }
 
-TEST_F(BaseTest, Fibonacci) {
+TEST_F(ExampleTest, Fibonacci) {
     std::string code = R"(
     def fib(n)
     {

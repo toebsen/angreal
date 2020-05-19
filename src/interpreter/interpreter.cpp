@@ -258,7 +258,7 @@ void Interpreter::visit(const std::shared_ptr<WhileStatement>& node) {
 
 void Interpreter::visit(const std::shared_ptr<ClassDeclaration>& node) {
     std::unordered_map<string_t, obj_t> methods;
-    for (auto method : node->methods) {
+    for (const auto& method : node->methods) {
         auto method_decl = std::make_shared<Function>(method, environment_);
         auto type = std::make_shared<Type>(method_decl);
         obj_t m = std::make_shared<Object>(type);
@@ -303,14 +303,18 @@ void Interpreter::visit(const std::shared_ptr<Set>& node) {
     obj->GetType()->AsInstance()->Set(node->identifier, value);
 }
 
+void Interpreter::visit(const std::shared_ptr<Self>& node) {
+    auto self = LookupVariable("self", node);
+    stack_.push(self);
+}
+
 environment::obj_t Interpreter::LookupVariable(const string_t& name,
                                                const expression_t& expr) {
     if (auto distance_iter = locals_.find(expr);
         distance_iter != locals_.end()) {
         return environment_->Get(name, distance_iter->second);
-    } else {
-        return globals_->Get(name);
     }
+    return globals_->Get(name);
 }
 void Interpreter::ResolveLocal(const node_t& node, long long int distance) {
     //  std::cout << "ResolveLocal " << node << " " << distance << std::endl;

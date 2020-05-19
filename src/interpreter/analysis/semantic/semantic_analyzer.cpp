@@ -63,7 +63,7 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Assignment>& node) {
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Return>& node) {
-    if (!resolver_.IsFunction()) {
+    if (!(resolver_.IsFunction() || resolver_.IsMethod())) {
         throw RuntimeError("Can not return from top level code!");
     }
 
@@ -125,9 +125,7 @@ void SemanticAnalyzer::visit(const std::shared_ptr<WhileStatement>& node) {
 void SemanticAnalyzer::visit(const std::shared_ptr<ClassDeclaration>& node) {
     resolver_.Declare(node->identifier);
     resolver_.Define(node->identifier);
-    for (auto method : node->methods) {
-        resolver_.ResolveFunction(method, FunctionType::Method);
-    }
+    resolver_.ResolveClass(node);
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Get>& node) {
@@ -137,6 +135,13 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Get>& node) {
 void SemanticAnalyzer::visit(const std::shared_ptr<Set>& node) {
     Resolve(node->expression);
     Resolve(node->value);
+}
+
+void SemanticAnalyzer::visit(const std::shared_ptr<Self>& node) {
+    if (!resolver_.IsMethod()) {
+        throw RuntimeError("Self can only be used in bound methods!");
+    }
+    resolver_.ResolveLocal("self", node);
 }
 
 }  // namespace angreal::interpreter::analysis

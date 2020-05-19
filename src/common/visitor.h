@@ -36,6 +36,7 @@ class Print;
 class ClassDeclaration;
 class Get;
 class Set;
+class Self;
 }  // namespace parser::AST
 
 using namespace parser::AST;
@@ -65,6 +66,7 @@ class Visitor : public std::enable_shared_from_this<Visitor>,
     virtual void visit(const std::shared_ptr<ClassDeclaration>& node) = 0;
     virtual void visit(const std::shared_ptr<Get>& node) = 0;
     virtual void visit(const std::shared_ptr<Set>& node) = 0;
+    virtual void visit(const std::shared_ptr<Self>& node) = 0;
 };
 }  // namespace angreal
 
