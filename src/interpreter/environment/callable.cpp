@@ -51,8 +51,10 @@ string_t Function::Stringify() const {
 }
 
 Class::Class(std::shared_ptr<ClassDeclaration> class_declaration,
-             environment_t env)
-    : class_declaration_(std::move(class_declaration)), env_(std::move(env)) {}
+             std::unordered_map<string_t, obj_t> methods, environment_t env)
+    : class_declaration_(std::move(class_declaration)),
+      methods_(std::move(methods)),
+      env_(std::move(env)) {}
 
 bool Class::CheckArity(const std::vector<obj_t>& args) const { return true; }
 
@@ -68,6 +70,13 @@ string_t Class::Stringify() const {
     return "class(" + class_declaration_->identifier + ")";
 }
 
+std::optional<obj_t> Class::FindMethod(string_t name) {
+    if (methods_.contains(name)) {
+        return methods_[name];
+    }
+    return std::nullopt;
+}
+
 Instance::Instance(std::shared_ptr<Class> _class) : class_(std::move(_class)) {}
 
 string_t Instance::Stringify() const {
@@ -77,6 +86,10 @@ string_t Instance::Stringify() const {
 obj_t Instance::Get(const string_t& name) {
     if (fields_.contains(name)) {
         return fields_[name];
+    }
+
+    if (auto method = class_->FindMethod(name)) {
+        return method.value();
     }
 
     throw RuntimeError("Undefined property <" + name + "> of " +

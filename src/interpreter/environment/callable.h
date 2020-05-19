@@ -53,9 +53,7 @@ class Class final : public ICallable,
                     public std::enable_shared_from_this<Class> {
    public:
     Class(std::shared_ptr<ClassDeclaration> class_declaration,
-          environment_t env);
-
-    Class(const Class& other) = default;
+          std::unordered_map<string_t, obj_t> methods, environment_t env);
 
     bool CheckArity(const std::vector<obj_t>& args) const override;
 
@@ -64,10 +62,13 @@ class Class final : public ICallable,
     obj_t Call(const interpreter_t& interp,
                const std::vector<obj_t>& args) override;
 
+    std::optional<obj_t> FindMethod(string_t name);
+
     string_t Stringify() const override;
 
    private:
     std::shared_ptr<ClassDeclaration> class_declaration_;
+    std::unordered_map<string_t, obj_t> methods_;
     environment_t env_;
 };
 
@@ -78,6 +79,7 @@ class Instance final {
     string_t Stringify() const;
 
     obj_t Get(const string_t& name);
+
     void Set(const string_t& name, const obj_t& value);
 
    private:

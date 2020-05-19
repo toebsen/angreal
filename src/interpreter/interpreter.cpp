@@ -4,6 +4,8 @@
 
 #include "interpreter.h"
 
+#include <unordered_map>
+
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
 #include "analysis/semantic/semantic_analyzer.h"
@@ -257,7 +259,15 @@ void Interpreter::visit(const std::shared_ptr<WhileStatement>& node) {
 }
 
 void Interpreter::visit(const std::shared_ptr<ClassDeclaration>& node) {
-    auto class_decl = std::make_shared<Class>(node, environment_);
+    std::unordered_map<string_t, obj_t> methods;
+    for (auto method : node->methods) {
+        auto method_decl = std::make_shared<Function>(method, environment_);
+        auto type = std::make_shared<Type>(method_decl);
+        obj_t m = std::make_shared<Object>(type);
+        methods.insert_or_assign(method->identifier, m);
+    }
+
+    auto class_decl = std::make_shared<Class>(node, methods, environment_);
     auto type = std::make_shared<Type>(class_decl);
     obj_t o = std::make_shared<Object>(type);
 

@@ -56,9 +56,10 @@ void Resolver::CheckAlreadyDefined(const string_t& name) {
 }
 
 void Resolver::ResolveFunction(
-    const std::shared_ptr<FunctionDeclaration>& function_decl) {
+    const std::shared_ptr<FunctionDeclaration>& function_decl,
+    const FunctionType& function_type) {
     FunctionType enclosing_function = function_type_;
-    function_type_ = FunctionType::Function;
+    function_type_ = function_type;
     EnterScope();
     for (const auto& param : function_decl->parameters) {
         Declare(param->identifier);
@@ -69,6 +70,6 @@ void Resolver::ResolveFunction(
     function_type_ = enclosing_function;
 }
 
-bool Resolver::IsFunction() { return function_type_ == FunctionType::Function; }
+bool Resolver::IsFunction() { return !(function_type_ == FunctionType::None); }
 
 }  // namespace angreal::interpreter::analysis

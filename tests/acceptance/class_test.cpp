@@ -34,3 +34,19 @@ TEST_F(BaseTest, ClassGetterSetter) {
 
     SafeRun(code, "123");
 }
+
+TEST_F(BaseTest, ClassMethods) {
+    std::string code = R"(
+    class Bacon
+    {
+        def eat()
+        {
+            print("Crunch crunch crunch!")
+        }
+    }
+
+    Bacon().eat()
+    )";
+
+    SafeRun(code, R"("Crunch crunch crunch!")");
+}

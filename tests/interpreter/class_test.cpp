@@ -17,6 +17,19 @@ TEST_F(ClassTest, DefaultConstructor) {
               "Instance of class(MyClass)");
 }
 
+TEST_F(ClassTest, ClassMethods) {
+    DeclareSingleFunctionClass("MyClass", "myMethod", 42);
+
+    expression_t call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+    call = std::make_shared<Get>(call, "myMethod");
+    call = std::make_shared<FunctionCall>(call, kNoArgs);
+
+    context_.interpreter->visit(std::make_shared<ExpressionStatement>(call));
+
+    ASSERT_EQ(GetResultType()->IsInteger(), true);
+    ASSERT_EQ(GetResultType()->AsInteger(), 42);
+}
+
 TEST_F(ClassTest, GetSetExpression) {
     DeclareEmptyClass("MyClass");
     auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
@@ -58,4 +71,16 @@ TEST_F(ClassTest, ErronousSetExpression) {
                               std::make_shared<IntLiteral>(123));
 
     EXPECT_THROW(context_.interpreter->visit(setter), RuntimeError);
+}
+
+TEST_F(ClassTest, ErronousClassMethods) {
+    DeclareSingleFunctionClass("MyClass", "myMethod", 42);
+
+    expression_t call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+    call = std::make_shared<Get>(call, "myMethod123");
+    call = std::make_shared<FunctionCall>(call, kNoArgs);
+
+    EXPECT_THROW(context_.interpreter->visit(
+                     std::make_shared<ExpressionStatement>(call)),
+                 RuntimeError);
 }

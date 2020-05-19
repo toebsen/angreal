@@ -15,14 +15,15 @@ namespace angreal::interpreter::analysis {
 
 class SemanticAnalyzer;
 class Resolver {
-    enum class FunctionType { None, Function };
-
    public:
+    enum class FunctionType { None, Function, Method };
+
     explicit Resolver(SemanticAnalyzer& semantic_analyzer);
 
     void ResolveLocal(const string_t& name, const node_t& expr);
     void ResolveFunction(
-        const std::shared_ptr<FunctionDeclaration>& function_decl);
+        const std::shared_ptr<FunctionDeclaration>& function_decl,
+        const FunctionType& function_type);
 
     void EnterScope();
     void LeaveScope();

@@ -20,6 +20,23 @@ struct Symbols {
         return letters;
     }
 
+    static const std::set<char> Printable() {
+        auto printable = Letters();
+        printable.merge(Digits());
+        printable.merge(Whitespace());
+        printable.merge(Period());
+        printable.merge(Period());
+        printable.merge(AddSub());
+        printable.merge(Slash());
+        printable.merge(HashTag());
+        printable.merge(UnderScore());
+        printable.merge(Equals());
+        printable.merge(Punctuation());
+        printable.merge(Relational());
+        printable.merge(Exclamation());
+        return printable;
+    }
+
     static std::set<char> Digits() {
         return {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     };

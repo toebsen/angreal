@@ -9,6 +9,13 @@
 
 TEST_F(BaseTest, HelloWorld) {
     std::string code = R"(
+    print("Hello World")
+    )";
+    SafeRun(code, "\"Hello World\"");
+}
+
+TEST_F(BaseTest, HelloWorld2) {
+    std::string code = R"(
     # this is a comment
     def Hello(name) {
         # this is a function

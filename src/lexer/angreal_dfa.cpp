@@ -72,12 +72,11 @@ void AngrealDFA::setupCommentTransitions() {
 void AngrealDFA::setupIdentifierTransitions() {
     add_transition(State::Identifier, Symbols::UnderScore(), State::Identifier);
     add_transition(State::Identifier, Symbols::Letters(), State::Identifier);
+    add_transition(State::Identifier, Symbols::Digits(), State::Identifier);
 }
 
 void AngrealDFA::setupStringTransitions() {
-    add_transition(State::StartString, Symbols::Letters(), State::StartString);
-    add_transition(State::StartString, Symbols::Digits(), State::StartString);
-    add_transition(State::StartString, Symbols::Whitespace(),
+    add_transition(State::StartString, Symbols::Printable(),
                    State::StartString);
     add_transition(State::StartString, Symbols::QuotationMark(),
                    State::EndString);

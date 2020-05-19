@@ -8,6 +8,8 @@
 
 namespace angreal::interpreter::analysis {
 
+using FunctionType = Resolver::FunctionType;
+
 SemanticAnalyzer::SemanticAnalyzer(Interpreter& interpreter)
     : resolver_(*this), interpreter_(interpreter) {}
 
@@ -100,7 +102,7 @@ void SemanticAnalyzer::visit(const std::shared_ptr<FormalParameter>& node) {}
 void SemanticAnalyzer::visit(const std::shared_ptr<FunctionDeclaration>& node) {
     resolver_.Declare(node->identifier);
     resolver_.Define(node->identifier);
-    resolver_.ResolveFunction(node);
+    resolver_.ResolveFunction(node, FunctionType::Function);
 }
 
 void SemanticAnalyzer::ResolveLocal(const node_t& node,
@@ -124,7 +126,7 @@ void SemanticAnalyzer::visit(const std::shared_ptr<ClassDeclaration>& node) {
     resolver_.Declare(node->identifier);
     resolver_.Define(node->identifier);
     for (auto method : node->methods) {
-        resolver_.ResolveFunction(method);
+        resolver_.ResolveFunction(method, FunctionType::Method);
     }
 }
 

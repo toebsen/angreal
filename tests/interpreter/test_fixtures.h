@@ -200,5 +200,15 @@ class ClassTest : public FunctionTest {
         functions_t methods = {};
         DeclareClass(name, methods);
     }
+
+    void DeclareSingleFunctionClass(const std::string& name,
+                                    const std::string& method_name,
+                                    int return_value = 42) {
+        functions_t methods = {std::make_shared<FunctionDeclaration>(
+            method_name, formal_parameters{},
+            statements_t{std::make_shared<Return>(
+                std::make_shared<IntLiteral>(return_value))})};
+        DeclareClass(name, methods);
+    }
 };
 #endif  // ANGREAL_TESTS_INTERPRETER_TEST_FIXTURES_H_
