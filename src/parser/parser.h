@@ -18,59 +18,57 @@ class Parser {
     std::shared_ptr<AST::Program> parseProgram(
         const std::vector<Token>& tokens);
 
-    std::shared_ptr<AST::Expression> parseExpression(
-        const std::vector<Token>& tokens);
+    expression_t parseExpression(const std::vector<Token>& tokens);
 
    protected:
-    std::shared_ptr<AST::FunctionDeclaration> parseFunctionDeclaration();
+    expression_t parseRelational();
 
+    expression_t parseAssignment(const expression_t& expression);
+
+    expression_t parseAdditive();
+
+    expression_t parseMultiplicative();
+
+    expression_t parseUnary();
+
+    expression_t parsePrimary();
+
+    expression_t parseFunctionCall();
+
+    statement_t parseBlock();
+
+    statement_t parseVariableDeclaration();
+
+    statement_t parseFunctionDeclaration();
+
+    statement_t parseClassDeclaration();
+
+    statement_t parseReturnDeclaration();
+
+    statement_t parsePrintStatement();
+
+    statement_t parseIfStatement();
+
+    statement_t parseWhileStatement();
+
+   private:
     AST::formal_parameters parseFormalParameters();
 
     std::shared_ptr<AST::FormalParameter> parseFormalParameter();
 
-    std::shared_ptr<AST::Block> parseBlock();
+    AST::expressions_t parseActualParams();
 
-    std::shared_ptr<AST::Expression> parseRelational();
+    std::optional<statement_t> parseStatement();
 
-    std::shared_ptr<AST::Declaration> parseVariableDeclaration();
-
-    std::shared_ptr<AST::ClassDeclaration> parseClassDeclaration();
-
-    std::shared_ptr<AST::Expression> parseAssignmentStatement(
-        const expression_t& expression);
-
-    std::shared_ptr<AST::Expression> parseAdditive();
-
-    std::shared_ptr<AST::Expression> parseMultiplicative();
-
-    std::shared_ptr<AST::Expression> parseUnary();
-
-    std::shared_ptr<AST::Expression> parsePrimary();
-
-    std::shared_ptr<AST::Expression> parseFunctionCall();
-
-    std::shared_ptr<AST::Statement> parseReturnDeclaration();
-
-    std::shared_ptr<AST::Statement> parsePrintStatement();
-
-    std::shared_ptr<AST::Statement> parseStatement();
-
-    std::shared_ptr<AST::IfStatement> parseIfStatement();
-
-    std::shared_ptr<AST::WhileStatement> parseWhileStatement();
-
-   private:
     void consume();
 
-    void expectToken(Token::Type t);
+    void expectToken(Token::Type t) const;
 
-    void error(const std::string& message);
+    void error(const std::string& message) const;
 
     std::vector<Token>::const_iterator current_token;
     std::vector<Token>::const_iterator next_token;
     int current_line_number{0};
-
-    AST::expressions_t parseActualParams();
 };
 
 }  // namespace angreal::parser
