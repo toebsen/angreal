@@ -201,6 +201,12 @@ class ClassTest : public FunctionTest {
         DeclareClass(name, methods);
     }
 
+    statement_t AssignMember(const std::string& member_name,
+                             const expression_t& value) {
+        return std::make_shared<ExpressionStatement>(std::make_shared<Set>(
+            std::make_shared<Self>(), member_name, value));
+    }
+
     void DeclareSingleFunctionClass(const std::string& name,
                                     const std::string& method_name,
                                     int return_value = 42) {
@@ -208,6 +214,40 @@ class ClassTest : public FunctionTest {
             method_name, formal_parameters {},
             statements_t {std::make_shared<Return>(
                 std::make_shared<IntLiteral>(return_value))})};
+        DeclareClass(name, methods);
+    }
+
+    void DeclareClassWithInitializerNoArgs(const std::string& name,
+                                           const std::string& member_name,
+                                           int member_value = 42) {
+        functions_t methods = {std::make_shared<FunctionDeclaration>(
+            "init", formal_parameters {},
+            statements_t {
+                AssignMember(member_name,
+                             std::make_shared<IntLiteral>(member_value)),
+            })};
+        DeclareClass(name, methods);
+    }
+
+    void DeclareClassWithInitializerSingleArg(const std::string& name,
+                                              const std::string& member_name,
+                                              const std::string& arg_name) {
+        functions_t methods = {std::make_shared<FunctionDeclaration>(
+            "init",
+            formal_parameters {std::make_shared<FormalParameter>(arg_name)},
+            statements_t {
+                AssignMember(member_name,
+                             std::make_shared<IdentifierLiteral>(arg_name)),
+            })};
+        DeclareClass(name, methods);
+    }
+
+    void DeclareClassWithReturnInitializer(const std::string& name) {
+        functions_t methods = {std::make_shared<FunctionDeclaration>(
+            "init", formal_parameters {},
+            statements_t {
+                std::make_shared<Return>(expression_t()),
+            })};
         DeclareClass(name, methods);
     }
 

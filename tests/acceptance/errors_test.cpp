@@ -67,3 +67,16 @@ TEST_F(ErroneousTest, SelfOutsideOfMethod) {
     )";
     ExpectRuntimeException(code, "Self can only be used in bound methods!");
 }
+
+TEST_F(ErroneousTest, ReturnValueFromClassInitializer) {
+    std::string code = R"(
+    class InitReturn
+    {
+        def init()
+        {
+            return "123"
+        }
+    }
+    )";
+    ExpectRuntimeException(code, "Can not return a value from an initializer!");
+}

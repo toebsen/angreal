@@ -44,16 +44,19 @@ class Function final : public ICallable,
 
     string_t Stringify() const override;
 
-    obj_t bind(const obj_t& instance);
+    obj_t Bind(const obj_t& instance);
 
    private:
     std::shared_ptr<FunctionDeclaration> function_decl_;
     environment_t env_;
+    bool is_initializer_ {false};
 };
 
 class Class final : public ICallable,
                     public std::enable_shared_from_this<Class> {
    public:
+    static const string_t kInitializerName;
+
     Class(std::shared_ptr<ClassDeclaration> class_declaration,
           std::unordered_map<string_t, obj_t> methods, environment_t env);
 
@@ -64,7 +67,7 @@ class Class final : public ICallable,
     std::optional<obj_t> Call(const interpreter_t& interp,
                               const std::vector<obj_t>& args) override;
 
-    std::optional<obj_t> FindMethod(string_t name);
+    std::optional<obj_t> FindMethod(const string_t& name) const;
 
     string_t Stringify() const override;
 
@@ -72,6 +75,7 @@ class Class final : public ICallable,
     std::shared_ptr<ClassDeclaration> class_declaration_;
     std::unordered_map<string_t, obj_t> methods_;
     environment_t env_;
+    callable_t initializer_;
 };
 
 class Instance final : public std::enable_shared_from_this<Instance> {

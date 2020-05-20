@@ -75,24 +75,30 @@ void Resolver::ResolveClass(
     Declare(class_decl->identifier);
     Define(class_decl->identifier);
     ClassType enclosing_class = class_type_;
+    class_type_ = ClassType::Class;
     EnterScope();
     Inject("self");
     for (auto method : class_decl->methods) {
-        ResolveFunction(method, FunctionType::Method);
+        FunctionType type = method->identifier == "init"
+                                ? FunctionType::Initializer
+                                : FunctionType::Method;
+        ResolveFunction(method, type);
     }
     LeaveScope();
     class_type_ = enclosing_class;
 }
-
-bool Resolver::IsFunction() const {
-    return function_type_ == FunctionType::Function;
+bool Resolver::IsNoFunction() const {
+    return function_type_ == FunctionType::None;
 }
-bool Resolver::IsMethod() const {
-    return function_type_ == FunctionType::Method;
+
+bool Resolver::IsInitializer() const {
+    return function_type_ == FunctionType::Initializer;
 }
 
 void Resolver::Inject(const string_t& name) {
     scopes_.back().emplace(name, true);
 }
+
+bool Resolver::IsClass() const { return class_type_ == ClassType::Class; }
 
 }  // namespace angreal::interpreter::analysis

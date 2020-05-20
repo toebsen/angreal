@@ -68,3 +68,24 @@ TEST_F(ClassTest, BoundMethods) {
 
     SafeRun(code, R"("Mmh Bacon")");
 }
+
+TEST_F(ClassTest, Initializer) {
+    std::string code = R"(
+    class Bacon
+    {
+        def init()
+        {
+            self.name = "Bacon"
+        }
+
+        def eat()
+        {
+            return "Mmh "+ self.name
+        }
+    }
+    var bacon = Bacon()
+    print(bacon.eat())
+    )";
+
+    SafeRun(code, R"("Mmh Bacon")");
+}

@@ -63,11 +63,16 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Assignment>& node) {
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Return>& node) {
-    if (!(resolver_.IsFunction() || resolver_.IsMethod())) {
+    if (resolver_.IsNoFunction()) {
         throw RuntimeError("Can not return from top level code!");
     }
 
-    Resolve(node->expression);
+    if (node->expression) {
+        if (resolver_.IsInitializer()) {
+            throw RuntimeError("Can not return a value from an initializer!");
+        }
+        Resolve(node->expression);
+    }
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<IdentifierLiteral>& node) {
@@ -138,7 +143,7 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Set>& node) {
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Self>& node) {
-    if (!resolver_.IsMethod()) {
+    if (!resolver_.IsClass()) {
         throw RuntimeError("Self can only be used in bound methods!");
     }
     resolver_.ResolveLocal("self", node);

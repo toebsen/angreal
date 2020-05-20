@@ -8,12 +8,16 @@
 
 namespace angreal::interpreter::environment {
 
+const string_t Class::kInitializerName = "init";
+
 Function::Function(std::shared_ptr<FunctionDeclaration> function_decl,
                    environment_t env)
-    : function_decl_(std::move(function_decl)), env_(std::move(env)) {}
+    : function_decl_(std::move(function_decl)),
+      env_(std::move(env)),
+      is_initializer_ {function_decl_->identifier == Class::kInitializerName} {}
 
 bool Function::CheckArity(const std::vector<obj_t>& args) const {
-    return args.size() == function_decl_->parameters.size();
+    return args.size() == Arity();
 }
 
 size_t Function::Arity() const { return function_decl_->parameters.size(); }
@@ -40,6 +44,9 @@ std::optional<obj_t> Function::Call(const interpreter_t& interp,
     try {
         interp->invoke(function_decl_->statements, local_env);
     } catch (obj_t& ret) {
+        if (is_initializer_) {
+            return env_->Get("self", 0);
+        }
         return ret;
     }
 
@@ -50,7 +57,7 @@ string_t Function::Stringify() const {
     return "function(" + function_decl_->identifier + ")";
 }
 
-obj_t Function::bind(const obj_t& instance) {
+obj_t Function::Bind(const obj_t& instance) {
     auto bound_env = std::make_shared<Environment>(env_);
     bound_env->Declare("self", instance);
     auto fun = std::make_shared<Function>(function_decl_, bound_env);
@@ -63,26 +70,46 @@ Class::Class(std::shared_ptr<ClassDeclaration> class_declaration,
              std::unordered_map<string_t, obj_t> methods, environment_t env)
     : class_declaration_(std::move(class_declaration)),
       methods_(std::move(methods)),
-      env_(std::move(env)) {}
+      env_(std::move(env)),
+      initializer_() {}
 
-bool Class::CheckArity(const std::vector<obj_t>& args) const { return true; }
+bool Class::CheckArity(const std::vector<obj_t>& args) const {
+    if (initializer_) {
+        return initializer_->CheckArity(args);
+    }
+    return true;
+}
 
-size_t Class::Arity() const { return 0; }
+size_t Class::Arity() const {
+    if (initializer_) {
+        return initializer_->Arity();
+    }
+    return 0;
+}
 
 std::optional<obj_t> Class::Call(interpreter_t const& interp,
                                  const std::vector<obj_t>& args) {
     instance_t instance = std::make_shared<Instance>(shared_from_this());
     auto type = std::make_shared<Type>(instance);
-    return std::make_shared<Object>(type);
+    auto default_instance = std::make_shared<Object>(type);
+
+    if (FindMethod(kInitializerName)) {
+        auto bound =
+            default_instance->GetType()->AsInstance()->Get(kInitializerName);
+        initializer_ = bound->GetType()->AsCallable();
+        initializer_->Call(interp, args);
+    }
+
+    return default_instance;
 }
 
 string_t Class::Stringify() const {
     return "class(" + class_declaration_->identifier + ")";
 }
 
-std::optional<obj_t> Class::FindMethod(string_t name) {
+std::optional<obj_t> Class::FindMethod(const string_t& name) const {
     if (methods_.contains(name)) {
-        return methods_[name];
+        return methods_.at(name);
     }
     return std::nullopt;
 }
@@ -102,7 +129,7 @@ obj_t Instance::Get(const string_t& name) {
         auto unbound = method.value();
         auto bound = std::dynamic_pointer_cast<Function>(
                          unbound->GetType()->AsCallable())
-                         ->bind(AsObject());
+                         ->Bind(AsObject());
         return bound;
     }
 

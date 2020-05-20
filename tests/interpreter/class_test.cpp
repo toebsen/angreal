@@ -1,6 +1,6 @@
 //
-// Created by toebs on 17.05.2020.
 //
+// Created by toebs on 17.05.2020.
 
 #include <string>
 
@@ -8,7 +8,7 @@
 
 #include "test_fixtures.h"
 
-TEST_F(ClassTest, DefaultConstructor) {
+TEST_F(ClassTest, WhenClassCalled_ThenDefaultInitialize) {
     DeclareEmptyClass("MyClass");
     auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
     context_.interpreter->visit(call);
@@ -17,7 +17,7 @@ TEST_F(ClassTest, DefaultConstructor) {
               "Instance of class(MyClass)");
 }
 
-TEST_F(ClassTest, ClassMethods) {
+TEST_F(ClassTest, WhenMethodCall_ThenMethodIsCalled) {
     DeclareSingleFunctionClass("MyClass", "myMethod", 42);
 
     expression_t call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
@@ -30,7 +30,7 @@ TEST_F(ClassTest, ClassMethods) {
     ASSERT_EQ(GetResultType()->AsInteger(), 42);
 }
 
-TEST_F(ClassTest, BoundMethod) {
+TEST_F(ClassTest, WhenMethodReturnSelf_ThenBoundToClassInstance) {
     DeclareClassWithMethodReturningSelf("MyClass", "bound");
     auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
     auto assignment = std::make_shared<Declaration>("x", call);
@@ -46,7 +46,75 @@ TEST_F(ClassTest, BoundMethod) {
               "Instance of class(MyClass)");
 }
 
-TEST_F(ClassTest, GetSetExpression) {
+TEST_F(ClassTest, WhenClassHasInitializer_ThenInitializerIsCalled) {
+    DeclareClassWithInitializerNoArgs("MyClass", "val", 42);
+
+    auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+    auto assignment = std::make_shared<Declaration>("x", call);
+    context_.interpreter->visit(assignment);
+
+    auto getter =
+        std::make_shared<Get>(std::make_shared<IdentifierLiteral>("x"), "val");
+    context_.interpreter->visit(getter);
+
+    ASSERT_EQ(GetResultType()->IsInteger(), true);
+    ASSERT_EQ(GetResultType()->AsInteger(), 42);
+}
+
+TEST_F(ClassTest,
+       WhenClassHasInitializerWithArgs_ThenInitializerIsCalledWithArgs) {
+    DeclareClassWithInitializerSingleArg("MyClass", "val", "value");
+
+    auto call = std::make_shared<FunctionCall>(
+        last_class_, expressions_t {std::make_shared<IntLiteral>(42)});
+    auto assignment = std::make_shared<Declaration>("x", call);
+    context_.interpreter->visit(assignment);
+
+    auto getter =
+        std::make_shared<Get>(std::make_shared<IdentifierLiteral>("x"), "val");
+    context_.interpreter->visit(getter);
+
+    ASSERT_EQ(GetResultType()->IsInteger(), true);
+    ASSERT_EQ(GetResultType()->AsInteger(), 42);
+}
+
+TEST_F(ClassTest, WhenDirectInitialiazerCall_ThenReturnInstance) {
+    DeclareClassWithReturnInitializer("MyClass");
+
+    try {
+        auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+        auto assignment = std::make_shared<Declaration>("x", call);
+        context_.interpreter->visit(assignment);
+
+        auto getter = std::make_shared<Get>(
+            std::make_shared<IdentifierLiteral>("x"), "init");
+        auto init_call = std::make_shared<FunctionCall>(getter, kNoArgs);
+
+        context_.interpreter->visit(init_call);
+
+        ASSERT_EQ(GetResultType()->IsInstance(), true);
+        ASSERT_EQ(GetResultType()->AsInstance()->Stringify(),
+                  "Instance of class(MyClass)");
+
+    } catch (std::exception& e) {
+        FAIL() << e.what();
+    }
+}
+
+TEST_F(ClassTest, WhenInitialiazerIsWithTooManyArgs_ThenRuntimeError) {
+    DeclareClassWithInitializerNoArgs("MyClass", "val", 42);
+    auto call = std::make_shared<FunctionCall>(
+        last_class_, expressions_t {std::make_shared<IntLiteral>(42)});
+    EXPECT_THROW(context_.interpreter->visit(call), RuntimeError);
+}
+
+TEST_F(ClassTest, WhenInitialiazerWithNotEnoughArgs_ThenRuntimeError) {
+    DeclareClassWithInitializerSingleArg("MyClass", "val", "arg1");
+    auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+    EXPECT_THROW(context_.interpreter->visit(call), RuntimeError);
+}
+
+TEST_F(ClassTest, WhenFieldIsSet_ThenFieldIsRetrievedWithGet) {
     DeclareEmptyClass("MyClass");
     auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
     auto assignment = std::make_shared<Declaration>("x", call);
@@ -66,7 +134,7 @@ TEST_F(ClassTest, GetSetExpression) {
     ASSERT_EQ(GetResultType()->AsInteger(), 123);
 }
 
-TEST_F(ClassTest, ErronousGetExpression) {
+TEST_F(ClassTest, WhenErronousGetExpression_ThenRuntimeError) {
     auto assignment =
         std::make_shared<Declaration>("x", std::make_shared<IntLiteral>(123));
     context_.interpreter->visit(assignment);
@@ -77,7 +145,7 @@ TEST_F(ClassTest, ErronousGetExpression) {
     EXPECT_THROW(context_.interpreter->visit(getter), RuntimeError);
 }
 
-TEST_F(ClassTest, ErronousSetExpression) {
+TEST_F(ClassTest, WhenErronousSetExpression_ThenRuntimeError) {
     auto assignment =
         std::make_shared<Declaration>("x", std::make_shared<IntLiteral>(123));
     context_.interpreter->visit(assignment);
@@ -89,7 +157,7 @@ TEST_F(ClassTest, ErronousSetExpression) {
     EXPECT_THROW(context_.interpreter->visit(setter), RuntimeError);
 }
 
-TEST_F(ClassTest, ErronousClassMethods) {
+TEST_F(ClassTest, WhenErronousClassMethods_ThenRuntimeError) {
     DeclareSingleFunctionClass("MyClass", "myMethod", 42);
 
     expression_t call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
@@ -101,7 +169,7 @@ TEST_F(ClassTest, ErronousClassMethods) {
                  RuntimeError);
 }
 
-TEST_F(ClassTest, ErronousSelf) {
+TEST_F(ClassTest, WhenErronousSelfUsage_ThenRuntimeError) {
     EXPECT_THROW(context_.interpreter->visit(std::make_shared<Self>()),
                  RuntimeError);
 }

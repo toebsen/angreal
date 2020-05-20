@@ -64,13 +64,12 @@ void Interpreter::visit(const std::shared_ptr<Return>& node) {
         stack_.pop();
         throw obj;
     }
-    throw Object();
+    throw std::make_shared<Object>();
 }
 #pragma clang diagnostic pop
 
 void Interpreter::visit(const std::shared_ptr<IdentifierLiteral>& node) {
-    auto o = LookupVariable(node->name, node);
-    if (o) {
+    if (auto o = LookupVariable(node->name, node)) {
         stack_.push(o);
     } else {
         throw RuntimeError("Identifier <" + node->name + "> does not exist");

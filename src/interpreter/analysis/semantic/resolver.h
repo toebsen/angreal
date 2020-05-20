@@ -16,7 +16,7 @@ namespace angreal::interpreter::analysis {
 class SemanticAnalyzer;
 class Resolver {
    public:
-    enum class FunctionType { None, Function, Method };
+    enum class FunctionType { None, Function, Initializer, Method };
     enum class ClassType { None, Class };
 
     explicit Resolver(SemanticAnalyzer& semantic_analyzer);
@@ -36,8 +36,10 @@ class Resolver {
 
     void CheckAlreadyDefined(const string_t& name);
 
-    [[nodiscard]] bool IsFunction() const;
-    [[nodiscard]] bool IsMethod() const;
+    [[nodiscard]] bool IsNoFunction() const;
+    [[nodiscard]] bool IsInitializer() const;
+
+    [[nodiscard]] bool IsClass() const;
 
     void Inject(const string_t& name);
 
