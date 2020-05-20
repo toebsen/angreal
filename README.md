@@ -1,5 +1,7 @@
 
 [![Build Status](https://travis-ci.com/toebsen/angreal.svg?branch=master)](https://travis-ci.com/toebsen/angreal)
+[![Coverage Status](https://coveralls.io/repos/github/toebsen/angreal/badge.svg?branch=master)](https://coveralls.io/github/toebsen/angreal?branch=master)
+
 ![test-clang-format](https://github.com/toebsen/angreal/workflows/test-clang-format/badge.svg?branch=master)
 
 # Readme
