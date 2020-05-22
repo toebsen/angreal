@@ -62,6 +62,8 @@ class VariableDeclarationTest : public ParserTest {
     }
 };
 
+class ClassDeclarationTest : public VariableDeclarationTest {};
+
 class VariableAssignmentTest : public ParserTest {
    protected:
     template <typename Expression>

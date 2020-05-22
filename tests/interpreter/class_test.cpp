@@ -46,6 +46,31 @@ TEST_F(ClassTest, WhenMethodReturnSelf_ThenBoundToClassInstance) {
               "Instance of class(MyClass)");
 }
 
+TEST_F(ClassTest, WhenClassInherits_ThenBaseMethodsCanBeCalled) {
+    DeclareClassWithInheritance("Derived", "BaseClass", "from_base");
+
+    auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+    auto assignment = std::make_shared<Declaration>("x", call);
+    context_.interpreter->visit(assignment);
+
+    auto getter = std::make_shared<Get>(
+        std::make_shared<IdentifierLiteral>("x"), "from_base");
+
+    auto bound_call = std::make_shared<FunctionCall>(getter, kNoArgs);
+
+    context_.interpreter->visit(bound_call);
+
+    ASSERT_EQ(GetResultType()->IsInstance(), true);
+    ASSERT_EQ(GetResultType()->AsInstance()->Stringify(),
+              "Instance of class(Derived)");
+}
+
+TEST_F(ClassTest, WhenClassInheritsFromString_ThenErrorIsRaised) {
+    DeclareString("MyString", "123");
+    EXPECT_THROW(DeclareClass("Derived", kNoFunctions, "MyString"),
+                 RuntimeError);
+}
+
 TEST_F(ClassTest, WhenClassHasInitializer_ThenInitializerIsCalled) {
     DeclareClassWithInitializerNoArgs("MyClass", "val", 42);
 

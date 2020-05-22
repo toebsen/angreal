@@ -14,9 +14,9 @@ Object::Object(type_t type) : id_(ID::Create()), type_(std::move(type)) {}
 
 bool Object::operator==(const Object& rhs) const { return ID() == rhs.ID(); }
 
-ObjectID Object::ID() const { return id_; }
+inline ObjectID Object::ID() const { return id_; }
 
-const type_t& Object::GetType() const { return type_; }
+inline const type_t& Object::GetType() const { return type_; }
 
 bool Object::HasSameType(const Object& rhs) const {
     if (!GetType() || !rhs.GetType()) {

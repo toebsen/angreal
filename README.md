@@ -165,7 +165,7 @@ program ::= statement*
 declaration ::= variable_decl | function_decl | class_decl
 variable_decl ::= 'var' identifier '=' expression
 function_decl ::= 'def' identifier '('[parameters]')' block
-class_decl ::= 'class' identifier '{' function_decl* '}'
+class_decl ::= 'class' identifier ['(' identifier ')'] '{' function_decl* '}'
 
 # statements
 statement ::= declaration |
@@ -178,7 +178,7 @@ statement ::= declaration |
 
 block ::= '{'statement*'}'
 print_statement ::= 'print' '(' expression ')'
-if_statement ::= 'if' '('expression')' block [ 'else' block]
+if_statement ::= 'if' '('expression')' block ['else' block]
 while_statement ::= 'while' '('expression')' block
 return_statement ::= 'return' expression
 assignment ::= (call '.' ) ? identifier '=' expression

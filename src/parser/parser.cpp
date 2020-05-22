@@ -367,6 +367,20 @@ statement_t Parser::parseClassDeclaration() {
     auto identifier = current_token->value();
     consume();
 
+    std::optional<identifier_t> superclass;
+    if (current_token->type() == Token::Type::LeftBracket) {
+        // optional superclass
+        consume();
+
+        expectToken(Token::Type::Identifier);
+        superclass =
+            std::make_shared<IdentifierLiteral>(current_token->value());
+        consume();
+
+        expectToken(Token::Type::RightBracket);
+        consume();
+    }
+
     expectToken(Token::Type::LeftCurlyBracket);
     consume();
 
@@ -390,7 +404,8 @@ statement_t Parser::parseClassDeclaration() {
     expectToken(Token::Type::RightCurlyBracket);
     consume();
 
-    return std::make_shared<AST::ClassDeclaration>(identifier, methods);
+    return std::make_shared<AST::ClassDeclaration>(identifier, methods,
+                                                   superclass);
 }
 
 }  // namespace angreal::parser

@@ -264,7 +264,27 @@ void Interpreter::visit(const std::shared_ptr<ClassDeclaration>& node) {
         methods.insert_or_assign(method->identifier, m);
     }
 
-    auto class_decl = std::make_shared<Class>(node, methods, environment_);
+    std::optional<obj_t> superclass {std::nullopt};
+    if (node->superclass.has_value()) {
+        node->superclass.value()->accept(shared_from_this());
+        superclass = stack_.top();
+        stack_.pop();
+
+        const auto is_class {superclass.value()->GetType()->IsCallable() &&
+                             std::dynamic_pointer_cast<Class>(
+                                 superclass.value()->GetType()->AsCallable()) !=
+                                 nullptr};
+
+        if (!is_class) {
+            throw RuntimeError("Class <" + node->identifier +
+                               "> Superclass must be a class. Not " +
+                               superclass.value()->GetType()->Stringify() +
+                               "!");
+        }
+    }
+
+    auto class_decl =
+        std::make_shared<Class>(node, methods, superclass, environment_);
     auto type = std::make_shared<Type>(class_decl);
     obj_t o = std::make_shared<Object>(type);
 

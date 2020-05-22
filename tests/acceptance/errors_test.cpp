@@ -80,3 +80,12 @@ TEST_F(ErroneousTest, ReturnValueFromClassInitializer) {
     )";
     ExpectRuntimeException(code, "Can not return a value from an initializer!");
 }
+
+TEST_F(ErroneousTest, ClassInheritingFromItself) {
+    std::string code = R"(
+    class BigEgo(BigEgo)
+    {
+    }
+    )";
+    ExpectRuntimeException(code, "Class BigEgo can not inherit from itself!");
+}

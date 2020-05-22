@@ -58,7 +58,8 @@ class Class final : public ICallable,
     static const string_t kInitializerName;
 
     Class(std::shared_ptr<ClassDeclaration> class_declaration,
-          std::unordered_map<string_t, obj_t> methods, environment_t env);
+          std::unordered_map<string_t, obj_t> methods,
+          std::optional<obj_t> superclass, environment_t env);
 
     bool CheckArity(const std::vector<obj_t>& args) const override;
 
@@ -74,6 +75,7 @@ class Class final : public ICallable,
    private:
     std::shared_ptr<ClassDeclaration> class_declaration_;
     std::unordered_map<string_t, obj_t> methods_;
+    std::optional<obj_t> superclass_;
     environment_t env_;
     callable_t initializer_;
 };

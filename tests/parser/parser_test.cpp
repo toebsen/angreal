@@ -275,7 +275,7 @@ TEST_F(BlockTest, While) {
     ASSERT_EQ(1, while_statement->block->statements.size());
 }
 
-TEST_F(VariableDeclarationTest, EmpyClassDeclaration) {
+TEST_F(ClassDeclarationTest, EmpyClassDeclaration) {
     auto prog = lexAndParseProgram(R"(
         class EmptyClass{};
     )");
@@ -288,7 +288,30 @@ TEST_F(VariableDeclarationTest, EmpyClassDeclaration) {
     ASSERT_EQ(0, class_declaration->methods.size());
 }
 
-TEST_F(VariableDeclarationTest, ClassDeclaration) {
+TEST_F(ClassDeclarationTest, EmpyClassWithSuperDeclaration) {
+    auto prog = lexAndParseProgram(R"(
+        class EmptyClass(OtherClass){};
+    )");
+    ASSERT_FALSE(prog->statements.empty());
+
+    auto class_declaration =
+        std::dynamic_pointer_cast<AST::ClassDeclaration>(prog->statements[0]);
+
+    ASSERT_EQ("EmptyClass", class_declaration->identifier);
+    ASSERT_EQ("OtherClass", std::dynamic_pointer_cast<IdentifierLiteral>(
+                                class_declaration->superclass.value())
+                                ->name);
+    ASSERT_EQ(0, class_declaration->methods.size());
+}
+
+TEST_F(ClassDeclarationTest, EmpyClassWithStringSuperDeclaration) {
+    EXPECT_THROW(lexAndParseProgram(R"(
+        class EmptyClass("OtherClass"){};
+    )"),
+                 RuntimeError);
+}
+
+TEST_F(ClassDeclarationTest, ClassDeclaration) {
     auto prog = lexAndParseProgram(R"(
         class MyClass
         {
@@ -307,7 +330,7 @@ TEST_F(VariableDeclarationTest, ClassDeclaration) {
     ASSERT_EQ("myMethod", class_declaration->methods[0]->identifier);
 }
 
-TEST_F(VariableDeclarationTest, ClassDeclarationWithVarDecl) {
+TEST_F(ClassDeclarationTest, ClassDeclarationWithVarDecl) {
     EXPECT_THROW(lexAndParseProgram(R"(
         class MyClass
         {
@@ -317,7 +340,7 @@ TEST_F(VariableDeclarationTest, ClassDeclarationWithVarDecl) {
                  RuntimeError);
 }
 
-TEST_F(VariableDeclarationTest, GetExprTest) {
+TEST_F(ClassDeclarationTest, GetExprTest) {
     auto prog = lexAndParseProgram(R"(
         x.y
     )");
@@ -332,7 +355,7 @@ TEST_F(VariableDeclarationTest, GetExprTest) {
     EXPECT_EQ("y", get_expr->identifier);
 }
 
-TEST_F(VariableDeclarationTest, SetExprTest) {
+TEST_F(ClassDeclarationTest, SetExprTest) {
     auto prog = lexAndParseProgram(R"(
         x.y = 123
     )");

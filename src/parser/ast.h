@@ -305,16 +305,20 @@ class WhileStatement : public Statement,
 
 using functions_t = std::vector<std::shared_ptr<FunctionDeclaration>>;
 
+using identifier_t = std::shared_ptr<IdentifierLiteral>;
+
 class ClassDeclaration : public Statement,
                          public std::enable_shared_from_this<ClassDeclaration> {
    public:
-    ClassDeclaration(std::string identifier, functions_t methods);
+    ClassDeclaration(std::string identifier, functions_t methods,
+                     std::optional<identifier_t> superclass = std::nullopt);
 
     void accept(const visitor_t& visitor) override;
 
     ~ClassDeclaration() override = default;
 
     const std::string identifier;
+    std::optional<identifier_t> superclass;
     functions_t methods;
 };
 

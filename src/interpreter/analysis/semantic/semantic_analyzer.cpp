@@ -130,6 +130,13 @@ void SemanticAnalyzer::visit(const std::shared_ptr<WhileStatement>& node) {
 void SemanticAnalyzer::visit(const std::shared_ptr<ClassDeclaration>& node) {
     resolver_.Declare(node->identifier);
     resolver_.Define(node->identifier);
+    if (node->superclass) {
+        if (node->identifier == node->superclass.value()->name) {
+            throw RuntimeError("Class " + node->identifier +
+                               " can not inherit from itself!");
+        }
+        Resolve(node->superclass.value());
+    }
     resolver_.ResolveClass(node);
 }
 
