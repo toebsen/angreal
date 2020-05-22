@@ -1,0 +1,7 @@
+name: clang-tidy
+
+on: pull-request
+  jobs:
+    check:
+      runs-on: ubuntu-latest
+      uses: muxee/clang-tidy-action@master
