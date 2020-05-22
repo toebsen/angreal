@@ -13,5 +13,3 @@ jobs:
           exclude: './third_party,./_deps,./tests'
           extensions: 'h,cpp'
           clangFormatVersion: 9
-      - uses: muxee/clang-tidy-action@master
-
