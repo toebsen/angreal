@@ -105,8 +105,8 @@ TEST_F(ClassTest, WhenSuperDoesNotHaveMethod_ThenRuntimeError) {
 }
 
 TEST_F(ClassTest, WhenSuperIsUsedWithoutBaseClass_ThenErrorIsRaised) {
-    EXPECT_THROW(DeclareClassWithSuperUsage("Derived", "", "doesnt_matter"),
-                 RuntimeError);
+    DeclareClassWithSuperUsage("Derived", "", "doesnt_matter");
+    EXPECT_TRUE(context_.error_handler_->HasError());
 }
 
 TEST_F(ClassTest, WhenClassInheritsFromString_ThenErrorIsRaised) {

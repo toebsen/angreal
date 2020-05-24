@@ -20,6 +20,8 @@ using namespace angreal::interpreter::environment;
 
 class BaseTest : public ::testing::Test {
    public:
+    BaseTest() : context_() {}
+
     void SafeRun(const std::string& code, const std::string& expected) {
         try {
             testing::internal::CaptureStdout();
@@ -49,6 +51,17 @@ class BaseTest : public ::testing::Test {
                 }
             },
             RuntimeError);
+    }
+
+    void ExpectStaticError(const std::string& code,
+                           const std::string& expected_error) {
+        try {
+            context_.interpreter->interpret(code);
+            EXPECT_TRUE(context_.error_handler_->HasError());
+            // Todo(toebsen): Add expected error match
+        } catch (...) {
+            FAIL() << "Expected Static Error with message: " << expected_error;
+        }
     }
 
    protected:

@@ -8,6 +8,7 @@
 #define ANGREAL_SRC_INTERPRETER_CONTEXT_H_
 
 #include "environment/environment.h"
+#include "error_handler/error_reporter.h"
 #include "interpreter.h"
 
 using angreal::interpreter::environment::Environment;
@@ -16,12 +17,15 @@ namespace angreal::interpreter {
 
 class Context {
    public:
-    Context() {
+    explicit Context(
+        error_handler_t error_handler = std::make_shared<ErrorReporter>()) {
+        error_handler_ = error_handler;
         global = std::make_shared<Environment>();
-        interpreter = std::make_shared<Interpreter>(global);
+        interpreter = std::make_shared<Interpreter>(error_handler_, global);
     }
     std::shared_ptr<Environment> global;
     std::shared_ptr<Interpreter> interpreter;
+    error_handler_t error_handler_;
 };
 }  // namespace angreal::interpreter
 

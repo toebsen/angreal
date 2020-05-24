@@ -7,6 +7,8 @@
 
 #include <stack>
 
+#include <error_handler.h>
+
 #include "environment/environment.h"
 #include "visitor.h"
 
@@ -17,6 +19,7 @@ class Executor;
 class Interpreter : public Visitor {
    public:
     explicit Interpreter(
+        error_handler_t error_handler,
         const std::shared_ptr<environment::Environment>& global);
 
     void interpret(const string_t& code);
@@ -66,6 +69,8 @@ class Interpreter : public Visitor {
 
     environment::obj_t LookupVariable(const string_t& name,
                                       const expression_t& expr);
+
+    error_handler_t error_handler_;
 
     std::stack<environment::obj_t> stack_;
     std::shared_ptr<environment::Environment> globals_;

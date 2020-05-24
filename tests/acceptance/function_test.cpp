@@ -72,5 +72,5 @@ TEST_F(FunctionTest, TopLevelReturn) {
     var result = "123"
     return result
     )";
-    ExpectRuntimeException(code, "Can not return from top level code!");
+    ExpectStaticError(code, "Can not return from top level code!");
 }

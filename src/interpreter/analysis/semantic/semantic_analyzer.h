@@ -5,7 +5,10 @@
 #ifndef ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
 #define ANGREAL_SRC_INTERPRETER_ANALYSIS_SEMANTIC_SEMANTIC_ANALYZER_H_
 
+#include <error_handler.h>
+
 #include "ast_interfaces.h"
+#include "error_handler.h"
 #include "resolver.h"
 #include "visitor.h"
 
@@ -16,7 +19,8 @@ namespace analysis {
 
 class SemanticAnalyzer : public Visitor {
    public:
-    explicit SemanticAnalyzer(Interpreter& interpreter);
+    explicit SemanticAnalyzer(error_handler_t error_handler,
+                              Interpreter& interpreter);
 
     void Resolve(const expression_t& expr);
     void Resolve(const expressions_t& expressions);
@@ -52,6 +56,7 @@ class SemanticAnalyzer : public Visitor {
     void ResolveLocal(const node_t& node, long long int distance);
 
    private:
+    error_handler_t error_handler_;
     Resolver resolver_;
     Interpreter& interpreter_;
 };

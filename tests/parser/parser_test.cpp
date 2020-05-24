@@ -174,7 +174,8 @@ TEST_F(VariableDeclarationTest, BoolDeclarationErrors) {
         "var x: bool = true;",
     };
     for (auto t : erroneous_program) {
-        EXPECT_THROW(lexAndParseProgram(t), std::runtime_error);
+        lexAndParseProgram(t);
+        EXPECT_EQ(true, error_handler_->HasError());
     }
 }
 
@@ -186,7 +187,8 @@ TEST_F(VariableDeclarationTest, IntDeclarationErrors) {
         "var x: int 1;",
     };
     for (auto t : erroneous_program) {
-        EXPECT_THROW(lexAndParseProgram(t), std::runtime_error);
+        lexAndParseProgram(t);
+        EXPECT_EQ(true, error_handler_->HasError());
     }
 }
 
@@ -198,7 +200,8 @@ TEST_F(VariableDeclarationTest, FloatDeclarationErrors) {
         "var x: float 1.23;",
     };
     for (auto t : erroneous_program) {
-        EXPECT_THROW(lexAndParseProgram(t), std::runtime_error);
+        lexAndParseProgram(t);
+        EXPECT_EQ(true, error_handler_->HasError());
     }
 }
 
@@ -210,7 +213,8 @@ TEST_F(VariableDeclarationTest, StringDeclarationErrors) {
         "var x: string 1.23;",
     };
     for (auto t : erroneous_program) {
-        EXPECT_THROW(lexAndParseProgram(t), std::runtime_error);
+        lexAndParseProgram(t);
+        EXPECT_EQ(true, error_handler_->HasError());
     }
 }
 
@@ -307,10 +311,11 @@ TEST_F(ClassDeclarationTest, EmpyClassWithSuperDeclaration) {
 }
 
 TEST_F(ClassDeclarationTest, EmpyClassWithStringSuperDeclaration) {
-    EXPECT_THROW(lexAndParseProgram(R"(
+    lexAndParseProgram(R"(
         class EmptyClass("OtherClass"){};
-    )"),
-                 RuntimeError);
+    )");
+
+    EXPECT_EQ(true, error_handler_->HasError());
 }
 
 TEST_F(ClassDeclarationTest, ClassDeclaration) {
@@ -333,13 +338,14 @@ TEST_F(ClassDeclarationTest, ClassDeclaration) {
 }
 
 TEST_F(ClassDeclarationTest, ClassDeclarationWithVarDecl) {
-    EXPECT_THROW(lexAndParseProgram(R"(
+    lexAndParseProgram(R"(
         class MyClass
         {
             var x = 10;
         }
-    )"),
-                 RuntimeError);
+    )");
+
+    EXPECT_EQ(true, error_handler_->HasError());
 }
 
 TEST_F(ClassDeclarationTest, GetExprTest) {

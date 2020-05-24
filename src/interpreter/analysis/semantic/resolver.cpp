@@ -9,8 +9,10 @@
 
 namespace angreal::interpreter::analysis {
 
-Resolver::Resolver(SemanticAnalyzer& semantic_analyzer)
-    : semantic_analyzer_(semantic_analyzer),
+Resolver::Resolver(error_handler_t error_handler,
+                   SemanticAnalyzer& semantic_analyzer)
+    : error_handler_(error_handler),
+      semantic_analyzer_(semantic_analyzer),
       function_type_ {FunctionType::None},
       class_type_ {ClassType::None} {}
 
@@ -18,8 +20,8 @@ void Resolver::Declare(const string_t& name) {
     if (!scopes_.empty()) {
         auto& scope = scopes_.back();
         if (scope.find(name) != scope.end()) {
-            throw RuntimeError("variable `" + name +
-                               "` already declared in this scope");
+            error_handler_->AnalysisError("variable `" + name +
+                                          "` already declared in this scope");
         }
 
         scope[name] = false;
@@ -50,8 +52,8 @@ void Resolver::CheckAlreadyDefined(const string_t& name) {
     if (!scopes_.empty()) {
         auto& scope = scopes_.back();
         if (scope.find(name) != scope.end() && !scope.contains(name)) {
-            throw RuntimeError("cannot read local variable `" + name +
-                               "` in its own initializer");
+            error_handler_->AnalysisError("cannot read local variable `" +
+                                          name + "` in its own initializer");
         }
     }
 }

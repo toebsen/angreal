@@ -10,8 +10,11 @@ namespace angreal::interpreter::analysis {
 
 using FunctionType = Resolver::FunctionType;
 
-SemanticAnalyzer::SemanticAnalyzer(Interpreter& interpreter)
-    : resolver_(*this), interpreter_(interpreter) {}
+SemanticAnalyzer::SemanticAnalyzer(error_handler_t error_handler,
+                                   Interpreter& interpreter)
+    : error_handler_(error_handler),
+      resolver_(error_handler, *this),
+      interpreter_(interpreter) {}
 
 void SemanticAnalyzer::Resolve(const expression_t& expr) {
     expr->accept(shared_from_this());
@@ -64,12 +67,13 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Assignment>& node) {
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Return>& node) {
     if (resolver_.IsNoFunction()) {
-        throw RuntimeError("Can not return from top level code!");
+        error_handler_->AnalysisError("Can not return from top level code!");
     }
 
     if (node->expression) {
         if (resolver_.IsInitializer()) {
-            throw RuntimeError("Can not return a value from an initializer!");
+            error_handler_->AnalysisError(
+                "Can not return a value from an initializer!");
         }
         Resolve(node->expression);
     }
@@ -132,8 +136,8 @@ void SemanticAnalyzer::visit(const std::shared_ptr<ClassDeclaration>& node) {
     resolver_.Define(node->identifier);
     if (node->superclass) {
         if (node->identifier == node->superclass.value()->name) {
-            throw RuntimeError("Class " + node->identifier +
-                               " can not inherit from itself!");
+            error_handler_->AnalysisError("Class " + node->identifier +
+                                          " can not inherit from itself!");
         }
         Resolve(node->superclass.value());
     }
@@ -151,17 +155,17 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Set>& node) {
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Self>& node) {
     if (resolver_.IsNoClass()) {
-        throw RuntimeError("self can only be used within classes!");
+        error_handler_->AnalysisError("self can only be used within classes!");
     }
     resolver_.ResolveLocal("self", node);
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Super>& node) {
     if (resolver_.IsNoClass()) {
-        throw RuntimeError("super can only be used within classes!");
+        error_handler_->AnalysisError("super can only be used within classes!");
     }
     if (!resolver_.IsSubClass()) {
-        throw RuntimeError(
+        error_handler_->AnalysisError(
             "Cannot use super in a class without a super class!");
     }
 

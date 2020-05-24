@@ -5,6 +5,10 @@
 #include "parser.h"
 
 namespace angreal::parser {
+
+Parser::Parser(const error_handler_t& error_handler)
+    : error_handler_(error_handler) {}
+
 std::shared_ptr<AST::Program> Parser::parseProgram(
     const std::vector<Token>& tokens) {
     AST::statements_t statements;
@@ -52,7 +56,7 @@ void Parser::error(const std::string& message) const {
     ss << "('" << current_token->value() << "')";
     ss << " in line: " << std::to_string(current_line_number);
 
-    throw RuntimeError(ss.str());
+    error_handler_->ParserError(ss.str());
 }
 
 expression_t Parser::parseRelational() {
@@ -402,10 +406,11 @@ statement_t Parser::parseClassDeclaration() {
             methods.push_back(std::dynamic_pointer_cast<FunctionDeclaration>(
                 parseFunctionDeclaration()));
         } else {
-            throw RuntimeError(
+            error(
                 "Only function declarations are allowed inside declaration of "
                 "class " +
                 identifier + "!");
+            break;
         }
     }
 

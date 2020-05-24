@@ -55,7 +55,7 @@ TEST_F(ErroneousTest, SameNameWithInLocalScope) {
       var b = "second"
     }
     )";
-    ExpectRuntimeException(code, "variable `b` already declared in this scope");
+    ExpectStaticError(code, "variable `b` already declared in this scope");
 }
 
 TEST_F(ErroneousTest, SelfOutsideOfMethod) {
@@ -65,7 +65,7 @@ TEST_F(ErroneousTest, SelfOutsideOfMethod) {
         print(self);
     }
     )";
-    ExpectRuntimeException(code, "self can only be used within classes!");
+    ExpectStaticError(code, "self can only be used within classes!");
 }
 
 TEST_F(ErroneousTest, SuperOutsideOfMethod) {
@@ -75,7 +75,7 @@ TEST_F(ErroneousTest, SuperOutsideOfMethod) {
         print(super.method());
     }
     )";
-    ExpectRuntimeException(code, "super can only be used within classes!");
+    ExpectStaticError(code, "super can only be used within classes!");
 }
 
 TEST_F(ErroneousTest, SuperOutsideOfSuperclass) {
@@ -88,8 +88,8 @@ TEST_F(ErroneousTest, SuperOutsideOfSuperclass) {
         }
     }
     )";
-    ExpectRuntimeException(
-        code, "Cannot use super in a class without a super class!");
+    ExpectStaticError(code,
+                      "Cannot use super in a class without a super class!");
 }
 
 TEST_F(ErroneousTest, ReturnValueFromClassInitializer) {
@@ -102,7 +102,7 @@ TEST_F(ErroneousTest, ReturnValueFromClassInitializer) {
         }
     }
     )";
-    ExpectRuntimeException(code, "Can not return a value from an initializer!");
+    ExpectStaticError(code, "Can not return a value from an initializer!");
 }
 
 TEST_F(ErroneousTest, ClassInheritingFromItself) {
@@ -111,5 +111,5 @@ TEST_F(ErroneousTest, ClassInheritingFromItself) {
     {
     }
     )";
-    ExpectRuntimeException(code, "Class BigEgo can not inherit from itself!");
+    ExpectStaticError(code, "Class BigEgo can not inherit from itself!");
 }
