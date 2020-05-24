@@ -65,6 +65,50 @@ TEST_F(ClassTest, WhenClassInherits_ThenBaseMethodsCanBeCalled) {
               "Instance of class(Derived)");
 }
 
+TEST_F(ClassTest, WhenSuperIsUsed_ThenBaseMethodsIsCalled) {
+    DeclareClassWithSuperUsage("Derived", "BaseClass", "test");
+
+    auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+    auto assignment = std::make_shared<Declaration>("x", call);
+    context_.interpreter->visit(assignment);
+
+    auto getter =
+        std::make_shared<Get>(std::make_shared<IdentifierLiteral>("x"), "test");
+    auto bound_call = std::make_shared<FunctionCall>(getter, kNoArgs);
+
+    context_.interpreter->visit(bound_call);
+
+    ASSERT_EQ(GetResultType()->IsString(), true);
+    ASSERT_EQ(GetResultType()->AsString(), "BaseClassDerived");
+}
+
+TEST_F(ClassTest, WhenSuperDoesNotHaveMethod_ThenRuntimeError) {
+    DeclareEmptyClass("Empty");
+
+    functions_t methods = {std::make_shared<FunctionDeclaration>(
+        "test", formal_parameters {},
+        statements_t {std::make_shared<ExpressionStatement>(
+            std::make_shared<FunctionCall>(
+                std::make_shared<Super>("does_not_exist"), kNoArgs))})};
+
+    DeclareClass("Derived", methods, "Empty");
+
+    auto call = std::make_shared<FunctionCall>(last_class_, kNoArgs);
+    auto assignment = std::make_shared<Declaration>("x", call);
+    context_.interpreter->visit(assignment);
+
+    auto getter =
+        std::make_shared<Get>(std::make_shared<IdentifierLiteral>("x"), "test");
+    auto bound_call = std::make_shared<FunctionCall>(getter, kNoArgs);
+
+    EXPECT_THROW(context_.interpreter->visit(bound_call), RuntimeError);
+}
+
+TEST_F(ClassTest, WhenSuperIsUsedWithoutBaseClass_ThenErrorIsRaised) {
+    EXPECT_THROW(DeclareClassWithSuperUsage("Derived", "", "doesnt_matter"),
+                 RuntimeError);
+}
+
 TEST_F(ClassTest, WhenClassInheritsFromString_ThenErrorIsRaised) {
     DeclareString("MyString", "123");
     EXPECT_THROW(DeclareClass("Derived", kNoFunctions, "MyString"),

@@ -161,6 +161,14 @@ expression_t Parser::parsePrimary() {
     if (current_token->type() == Token::Type::Identifier) {
         auto value = current_token->value();
         consume();
+        if (value == "super") {
+            expectToken(Token::Type::Dot);
+            consume();
+            expectToken(Token::Type::Identifier);
+            auto ident = current_token->value();
+            consume();
+            return std::make_shared<AST::Super>(ident);
+        }
         return std::make_shared<AST::IdentifierLiteral>(value);
     }
 

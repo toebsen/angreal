@@ -106,5 +106,6 @@ environment_t Environment::Ancestor(size_t distance) {
     }
     return envp;
 }
+environment_t Environment::Parent() { return Ancestor(1); }
 
 }  // namespace angreal::interpreter::environment

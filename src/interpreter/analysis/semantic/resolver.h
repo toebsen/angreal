@@ -17,7 +17,7 @@ class SemanticAnalyzer;
 class Resolver {
    public:
     enum class FunctionType { None, Function, Initializer, Method };
-    enum class ClassType { None, Class };
+    enum class ClassType { None, Class, SubClass };
 
     explicit Resolver(SemanticAnalyzer& semantic_analyzer);
 
@@ -39,7 +39,8 @@ class Resolver {
     [[nodiscard]] bool IsNoFunction() const;
     [[nodiscard]] bool IsInitializer() const;
 
-    [[nodiscard]] bool IsClass() const;
+    [[nodiscard]] bool IsNoClass() const;
+    [[nodiscard]] bool IsSubClass() const;
 
     void Inject(const string_t& name);
 

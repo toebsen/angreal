@@ -245,4 +245,10 @@ void Self::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 
+Super::Super(std::string identifier) : identifier(std::move(identifier)) {}
+
+void Super::accept(const visitor_t& visitor) {
+    visitor->visit(shared_from_this());
+}
+
 }  // namespace angreal::parser::AST

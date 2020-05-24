@@ -86,6 +86,13 @@ class VariableAssignmentTest : public ParserTest {
 
 class ExpressionTest : public ParserTest {
    protected:
+    template <typename T>
+    auto parseSingleExpressionAs(const std::string& program) {
+        auto expr = lexAndParseExpression(program);
+        ASSERT_NE(nullptr, expr);
+        EXPECT_NE(nullptr, std::dynamic_pointer_cast<T>(expr));
+    }
+
     template <typename Expression>
     void parseSingleExpression(const std::string& program,
                                expression_t expectedExpression) {

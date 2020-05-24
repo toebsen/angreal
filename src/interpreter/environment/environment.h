@@ -30,6 +30,8 @@ class Environment final : public NonCopyable,
     void Assign(const std::string& name, const obj_t& obj);
     void Assign(const std::string& name, const obj_t& obj, size_t distance);
 
+    environment_t Parent();
+
    private:
     [[nodiscard]] inline obj_t Get(const ObjectID& id);
 

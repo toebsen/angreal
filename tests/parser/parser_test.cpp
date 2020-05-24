@@ -18,9 +18,7 @@ TEST_F(ParserTest, NewLines) {
     ASSERT_TRUE(ast->statements.empty());
 }
 
-TEST_F(ExpressionTest, Self) {
-    ASSERT_NE(nullptr, lexAndParseExpression("self"));
-}
+TEST_F(ExpressionTest, Self) { parseSingleExpressionAs<AST::Self>("self"); }
 
 TEST_F(ExpressionTest, SimpleFactors) {
     parseSingleExpression<AST::IntLiteral>(
@@ -40,6 +38,10 @@ TEST_F(ExpressionTest, SubExpressions) {
         "(x)", std::make_shared<AST::IdentifierLiteral>("x"));
     parseSingleExpression<AST::IdentifierLiteral>(
         "((x))", std::make_shared<AST::IdentifierLiteral>("x"));
+}
+
+TEST_F(ExpressionTest, Super) {
+    parseSingleExpressionAs<AST::Super>("super.test");
 }
 
 TEST_F(ExpressionTest, UnaryOp) {

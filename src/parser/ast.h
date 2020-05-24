@@ -354,6 +354,15 @@ class Self : public Expression, public std::enable_shared_from_this<Self> {
 
     ~Self() override = default;
 };
+
+class Super : public Expression, public std::enable_shared_from_this<Super> {
+   public:
+    Super(std::string identifier);
+    void accept(const visitor_t& visitor) override;
+
+    ~Super() override = default;
+    const std::string identifier;
+};
 }  // namespace angreal::parser::AST
 
 #endif  // ANGREAL_AST_H

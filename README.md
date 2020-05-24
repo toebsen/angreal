@@ -188,7 +188,7 @@ expression ::= additive (comp-op additive)*
 additive ::= term (additive_op term)*
 multiplicative ::= primary (multiplicative_op primary)*
 call ::= expression('(' arguments ')' | '.' identifier)*
-primary ::= literal | identifier | call | sub_expression | unary-op
+primary ::= literal | identifier | call | sub_expression | unary-op | 'super''.'identifier
 sub_expression ::= '(' expression ')' 
 unary-op ::= ('+'|'-'|'!') expression 
 comp-op ::= ''| ''| '='| '='| '=='| '!='
