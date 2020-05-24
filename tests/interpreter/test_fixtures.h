@@ -184,17 +184,25 @@ class FunctionTest : public DeclarationTest {
 };
 
 class ClassTest : public FunctionTest {
-    void DeclareClass(const std::string& name, const functions_t& methods) {
-        auto declaration = std::make_shared<ClassDeclaration>(name, methods);
+   protected:
+    expression_t last_class_;
+    const functions_t kNoFunctions {};
+
+    void DeclareClass(const std::string& name, const functions_t& methods,
+                      const std::string& base_class = "") {
+        std::optional<identifier_t> superclass {std::nullopt};
+        if (!base_class.empty()) {
+            superclass = std::make_shared<IdentifierLiteral>(base_class);
+        }
+        auto declaration =
+            std::make_shared<ClassDeclaration>(name, methods, superclass);
+
         last_class_ = std::make_shared<IdentifierLiteral>(name);
         auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
             *context_.interpreter.get());
         analyzer->Resolve(declaration);
         context_.interpreter->visit(declaration);
     }
-
-   protected:
-    expression_t last_class_;
 
     void DeclareEmptyClass(const std::string& name) {
         functions_t methods = {};
@@ -257,6 +265,59 @@ class ClassTest : public FunctionTest {
             method_name, formal_parameters {},
             statements_t {std::make_shared<Return>(std::make_shared<Self>())})};
         DeclareClass(name, methods);
+    }
+
+    void DeclareClassWithInheritance(const std::string& name,
+                                     const std::string& base_class,
+                                     const std::string& method_name) {
+        functions_t methods = {std::make_shared<FunctionDeclaration>(
+            method_name, formal_parameters {},
+            statements_t {std::make_shared<Return>(std::make_shared<Self>())})};
+
+        DeclareClass(base_class, methods);
+        DeclareClass(name, kNoFunctions, base_class);
+    }
+
+    void DeclareClassWithSuperUsage(const std::string& name,
+                                    const std::string& base_class,
+                                    const std::string& method_name) {
+        /*
+         * class base_class
+         * {
+         *  def method_name()
+         *  {
+         *    return "A"
+         *  }
+         * }
+         *
+         * class name(base_class)
+         * {
+         *  def method_name()
+         *  {
+         *    return super.method_name() + "B"
+         *  }
+         * }
+         */
+
+        if (!base_class.empty()) {
+            functions_t base_methods = {std::make_shared<FunctionDeclaration>(
+                method_name, formal_parameters {},
+                statements_t {std::make_shared<Return>(
+                    std::make_shared<StringLiteral>(base_class))})};
+
+            DeclareClass(base_class, base_methods);
+        }
+
+        functions_t methods = {std::make_shared<FunctionDeclaration>(
+            method_name, formal_parameters {},
+            statements_t {
+                std::make_shared<Return>(std::make_shared<BinaryOperation>(
+                    "+",
+                    std::make_shared<FunctionCall>(
+                        std::make_shared<Super>(method_name), kNoArgs),
+                    std::make_shared<StringLiteral>(name)))})};
+
+        DeclareClass(name, methods, base_class);
     }
 };
 #endif  // ANGREAL_TESTS_INTERPRETER_TEST_FIXTURES_H_

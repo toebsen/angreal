@@ -305,16 +305,20 @@ class WhileStatement : public Statement,
 
 using functions_t = std::vector<std::shared_ptr<FunctionDeclaration>>;
 
+using identifier_t = std::shared_ptr<IdentifierLiteral>;
+
 class ClassDeclaration : public Statement,
                          public std::enable_shared_from_this<ClassDeclaration> {
    public:
-    ClassDeclaration(std::string identifier, functions_t methods);
+    ClassDeclaration(std::string identifier, functions_t methods,
+                     std::optional<identifier_t> superclass = std::nullopt);
 
     void accept(const visitor_t& visitor) override;
 
     ~ClassDeclaration() override = default;
 
     const std::string identifier;
+    std::optional<identifier_t> superclass;
     functions_t methods;
 };
 
@@ -349,6 +353,15 @@ class Self : public Expression, public std::enable_shared_from_this<Self> {
     void accept(const visitor_t& visitor) override;
 
     ~Self() override = default;
+};
+
+class Super : public Expression, public std::enable_shared_from_this<Super> {
+   public:
+    Super(std::string identifier);
+    void accept(const visitor_t& visitor) override;
+
+    ~Super() override = default;
+    const std::string identifier;
 };
 }  // namespace angreal::parser::AST
 

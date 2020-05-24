@@ -215,8 +215,11 @@ void WhileStatement::accept(const visitor_t& visitor) {
 WhileStatement::WhileStatement(expression_t condition, block_t block)
     : condition(std::move(condition)), block(std::move(block)) {}
 
-ClassDeclaration::ClassDeclaration(string_t identifier, functions_t methods)
-    : identifier(std::move(identifier)), methods(std::move(methods)) {}
+ClassDeclaration::ClassDeclaration(string_t identifier, functions_t methods,
+                                   std::optional<identifier_t> superclass)
+    : identifier(std::move(identifier)),
+      methods(std::move(methods)),
+      superclass(std::move(superclass)) {}
 
 void ClassDeclaration::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
@@ -239,6 +242,12 @@ void Set::accept(const visitor_t& visitor) {
 }
 
 void Self::accept(const visitor_t& visitor) {
+    visitor->visit(shared_from_this());
+}
+
+Super::Super(std::string identifier) : identifier(std::move(identifier)) {}
+
+void Super::accept(const visitor_t& visitor) {
     visitor->visit(shared_from_this());
 }
 

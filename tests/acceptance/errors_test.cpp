@@ -65,7 +65,31 @@ TEST_F(ErroneousTest, SelfOutsideOfMethod) {
         print(self);
     }
     )";
-    ExpectRuntimeException(code, "Self can only be used in bound methods!");
+    ExpectRuntimeException(code, "self can only be used within classes!");
+}
+
+TEST_F(ErroneousTest, SuperOutsideOfMethod) {
+    std::string code = R"(
+    def fun()
+    {
+        print(super.method());
+    }
+    )";
+    ExpectRuntimeException(code, "super can only be used within classes!");
+}
+
+TEST_F(ErroneousTest, SuperOutsideOfSuperclass) {
+    std::string code = R"(
+    class Fun
+    {
+        def test()
+        {
+            super.method();
+        }
+    }
+    )";
+    ExpectRuntimeException(
+        code, "Cannot use super in a class without a super class!");
 }
 
 TEST_F(ErroneousTest, ReturnValueFromClassInitializer) {
@@ -79,4 +103,13 @@ TEST_F(ErroneousTest, ReturnValueFromClassInitializer) {
     }
     )";
     ExpectRuntimeException(code, "Can not return a value from an initializer!");
+}
+
+TEST_F(ErroneousTest, ClassInheritingFromItself) {
+    std::string code = R"(
+    class BigEgo(BigEgo)
+    {
+    }
+    )";
+    ExpectRuntimeException(code, "Class BigEgo can not inherit from itself!");
 }

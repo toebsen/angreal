@@ -256,6 +256,30 @@ void Interpreter::visit(const std::shared_ptr<WhileStatement>& node) {
 }
 
 void Interpreter::visit(const std::shared_ptr<ClassDeclaration>& node) {
+    std::optional<obj_t> superclass {std::nullopt};
+    if (node->superclass.has_value()) {
+        node->superclass.value()->accept(shared_from_this());
+        superclass = stack_.top();
+        stack_.pop();
+
+        const auto is_class {superclass.value()->GetType()->IsCallable() &&
+                             std::dynamic_pointer_cast<Class>(
+                                 superclass.value()->GetType()->AsCallable()) !=
+                                 nullptr};
+
+        if (!is_class) {
+            throw RuntimeError("Class <" + node->identifier +
+                               "> Superclass must be a class. Not " +
+                               superclass.value()->GetType()->Stringify() +
+                               "!");
+        }
+    }
+
+    if (superclass) {
+        environment_ = std::make_shared<Environment>(environment_);
+        environment_->Declare("super", superclass.value());
+    }
+
     std::unordered_map<string_t, obj_t> methods;
     for (const auto& method : node->methods) {
         auto method_decl = std::make_shared<Function>(method, environment_);
@@ -264,10 +288,15 @@ void Interpreter::visit(const std::shared_ptr<ClassDeclaration>& node) {
         methods.insert_or_assign(method->identifier, m);
     }
 
-    auto class_decl = std::make_shared<Class>(node, methods, environment_);
+    auto class_decl =
+        std::make_shared<Class>(node, methods, superclass, environment_);
+
+    if (superclass) {
+        environment_ = environment_->Parent();
+    }
+
     auto type = std::make_shared<Type>(class_decl);
     obj_t o = std::make_shared<Object>(type);
-
     environment_->Declare(node->identifier, o);
 }
 
@@ -305,6 +334,26 @@ void Interpreter::visit(const std::shared_ptr<Set>& node) {
 void Interpreter::visit(const std::shared_ptr<Self>& node) {
     auto self = LookupVariable("self", node);
     stack_.push(self);
+}
+
+void Interpreter::visit(const std::shared_ptr<Super>& node) {
+    auto distance = locals_.find(node);
+
+    auto obj = LookupVariable("super", node);
+    auto super = std::dynamic_pointer_cast<Class>(obj->GetType()->AsCallable());
+    auto instance = environment_->Get("self", distance->second - 1);
+    auto method = super->FindMethod(node->identifier);
+
+    if (!method || !method.value()->GetType()->IsCallable()) {
+        throw RuntimeError("super(" + super->Stringify() + ") of " +
+                           instance->GetType()->Stringify() +
+                           "does not have method <" + node->identifier + ">");
+    }
+
+    auto function = std::dynamic_pointer_cast<Function>(
+        method.value()->GetType()->AsCallable());
+
+    stack_.push(function->Bind(instance));
 }
 
 environment::obj_t Interpreter::LookupVariable(const string_t& name,

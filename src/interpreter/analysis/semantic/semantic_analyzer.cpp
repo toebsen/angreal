@@ -130,6 +130,13 @@ void SemanticAnalyzer::visit(const std::shared_ptr<WhileStatement>& node) {
 void SemanticAnalyzer::visit(const std::shared_ptr<ClassDeclaration>& node) {
     resolver_.Declare(node->identifier);
     resolver_.Define(node->identifier);
+    if (node->superclass) {
+        if (node->identifier == node->superclass.value()->name) {
+            throw RuntimeError("Class " + node->identifier +
+                               " can not inherit from itself!");
+        }
+        Resolve(node->superclass.value());
+    }
     resolver_.ResolveClass(node);
 }
 
@@ -143,10 +150,22 @@ void SemanticAnalyzer::visit(const std::shared_ptr<Set>& node) {
 }
 
 void SemanticAnalyzer::visit(const std::shared_ptr<Self>& node) {
-    if (!resolver_.IsClass()) {
-        throw RuntimeError("Self can only be used in bound methods!");
+    if (resolver_.IsNoClass()) {
+        throw RuntimeError("self can only be used within classes!");
     }
     resolver_.ResolveLocal("self", node);
+}
+
+void SemanticAnalyzer::visit(const std::shared_ptr<Super>& node) {
+    if (resolver_.IsNoClass()) {
+        throw RuntimeError("super can only be used within classes!");
+    }
+    if (!resolver_.IsSubClass()) {
+        throw RuntimeError(
+            "Cannot use super in a class without a super class!");
+    }
+
+    resolver_.ResolveLocal("super", node);
 }
 
 }  // namespace angreal::interpreter::analysis

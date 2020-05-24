@@ -89,3 +89,60 @@ TEST_F(ClassTest, Initializer) {
 
     SafeRun(code, R"("Mmh Bacon")");
 }
+
+TEST_F(ClassTest, ProperBindingOfSuper) {
+    std::string code = R"(
+    class A {
+      def method() {
+        print("A method");
+      }
+    }
+
+    class B(A) {
+      def method() {
+        print("B method");
+      }
+
+      def test() {
+        super.method();
+      }
+    }
+
+    class C(B) {}
+
+    C().test();
+    )";
+
+    SafeRun(code, R"("A method")");
+}
+
+TEST_F(ClassTest, ProperBindingOfSuperWithIntializers) {
+    std::string code = R"(
+    class A {
+      def init()
+      {
+        self.name = "A";
+      }
+
+      def method() {
+        print(self.name + " method");
+      }
+    }
+
+    class B(A) {
+      def init()
+      {
+        super.init();
+        self.name = "B";
+      }
+
+      def test() {
+        super.method();
+      }
+    }
+
+    B().test();
+    )";
+
+    SafeRun(code, R"("B method")");
+}

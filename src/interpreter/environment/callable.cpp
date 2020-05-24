@@ -67,9 +67,11 @@ obj_t Function::Bind(const obj_t& instance) {
 }
 
 Class::Class(std::shared_ptr<ClassDeclaration> class_declaration,
-             std::unordered_map<string_t, obj_t> methods, environment_t env)
+             std::unordered_map<string_t, obj_t> methods,
+             std::optional<obj_t> superclass, environment_t env)
     : class_declaration_(std::move(class_declaration)),
       methods_(std::move(methods)),
+      superclass_(std::move(superclass)),
       env_(std::move(env)),
       initializer_() {}
 
@@ -111,6 +113,15 @@ std::optional<obj_t> Class::FindMethod(const string_t& name) const {
     if (methods_.contains(name)) {
         return methods_.at(name);
     }
+
+    if (superclass_.has_value()) {
+        auto superclass = std::dynamic_pointer_cast<Class>(
+            superclass_.value()->GetType()->AsCallable());
+        if (auto super_method = superclass->FindMethod(name)) {
+            return super_method;
+        }
+    }
+
     return std::nullopt;
 }
 
