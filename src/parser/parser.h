@@ -8,6 +8,7 @@
 #include <functional>
 
 #include "ast.h"
+#include "error_handler.h"
 #include "token.h"
 #include "type_helper.h"
 
@@ -15,6 +16,8 @@ namespace angreal::parser {
 
 class Parser {
    public:
+    explicit Parser(const error_handler_t& error_handler);
+
     std::shared_ptr<AST::Program> parseProgram(
         const std::vector<Token>& tokens);
 
@@ -52,6 +55,9 @@ class Parser {
     statement_t parseWhileStatement();
 
    private:
+    template <typename Type, typename... Args>
+    inline std::shared_ptr<Type> MakeASTNode(Args&&... args);
+
     AST::formal_parameters parseFormalParameters();
 
     std::shared_ptr<AST::FormalParameter> parseFormalParameter();
@@ -64,7 +70,7 @@ class Parser {
 
     void expectToken(Token::Type t) const;
 
-    void error(const std::string& message) const;
+    error_handler_t error_handler_;
 
     std::vector<Token>::const_iterator current_token;
     std::vector<Token>::const_iterator next_token;

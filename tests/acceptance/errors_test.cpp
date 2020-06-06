@@ -23,7 +23,8 @@ TEST_F(ErroneousTest, BinOpNotCompatibleType) {
         var y = 123
         print(x+y)
     )";
-    ExpectRuntimeException(code, "Not able to execute: \"123\" <Add> 123");
+    ExpectRuntimeException(code,
+                           "Line: 3 | Not able to execute: \"123\" <Add> 123");
 }
 
 TEST_F(ErroneousTest, UnOpNotCompatibleType) {
@@ -31,7 +32,7 @@ TEST_F(ErroneousTest, UnOpNotCompatibleType) {
         var x = 123
         print(!x)
     )";
-    ExpectRuntimeException(code, "Not able to execute: <Not> 123 ");
+    ExpectRuntimeException(code, "Line: 2 | Not able to execute: <Not> 123 ");
 }
 
 TEST_F(ErroneousTest, FunctioCallWithNonCallable) {
@@ -40,8 +41,8 @@ TEST_F(ErroneousTest, FunctioCallWithNonCallable) {
         x()
     )";
     ExpectRuntimeException(code,
-                           "<\"123\">: is not callable. Only functions and "
-                           "classes can be called!");
+        "Line: 3 | <\"123\">: is not callable. Only functions and "
+        "classes can be called!");
 }
 
 TEST_F(ErroneousTest, SameNameWithInLocalScope) {
@@ -55,7 +56,8 @@ TEST_F(ErroneousTest, SameNameWithInLocalScope) {
       var b = "second"
     }
     )";
-    ExpectRuntimeException(code, "variable `b` already declared in this scope");
+    ExpectStaticError(code,
+                      "Line: 8 | variable <b> already declared in this scope");
 }
 
 TEST_F(ErroneousTest, SelfOutsideOfMethod) {
@@ -65,7 +67,7 @@ TEST_F(ErroneousTest, SelfOutsideOfMethod) {
         print(self);
     }
     )";
-    ExpectRuntimeException(code, "self can only be used within classes!");
+    ExpectStaticError(code, "Line: 3 | self can only be used within classes!");
 }
 
 TEST_F(ErroneousTest, SuperOutsideOfMethod) {
@@ -75,7 +77,7 @@ TEST_F(ErroneousTest, SuperOutsideOfMethod) {
         print(super.method());
     }
     )";
-    ExpectRuntimeException(code, "super can only be used within classes!");
+    ExpectStaticError(code, "Line: 3 | super can only be used within classes!");
 }
 
 TEST_F(ErroneousTest, SuperOutsideOfSuperclass) {
@@ -88,8 +90,8 @@ TEST_F(ErroneousTest, SuperOutsideOfSuperclass) {
         }
     }
     )";
-    ExpectRuntimeException(
-        code, "Cannot use super in a class without a super class!");
+    ExpectStaticError(
+        code, "Line: 5 | Cannot use super in a class without a super class!");
 }
 
 TEST_F(ErroneousTest, ReturnValueFromClassInitializer) {
@@ -102,7 +104,8 @@ TEST_F(ErroneousTest, ReturnValueFromClassInitializer) {
         }
     }
     )";
-    ExpectRuntimeException(code, "Can not return a value from an initializer!");
+    ExpectStaticError(code,
+                      "Line: 6 | Can not return a value from an initializer!");
 }
 
 TEST_F(ErroneousTest, ClassInheritingFromItself) {
@@ -111,5 +114,6 @@ TEST_F(ErroneousTest, ClassInheritingFromItself) {
     {
     }
     )";
-    ExpectRuntimeException(code, "Class BigEgo can not inherit from itself!");
+    ExpectStaticError(code,
+                      "Line: 4 | Class BigEgo can not inherit from itself!");
 }

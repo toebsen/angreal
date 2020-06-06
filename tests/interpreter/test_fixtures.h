@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 
+#include "../error_reporter_mocks.h"
 #include "analysis/semantic/semantic_analyzer.h"
 #include "context.h"
 #include "parser/ast.h"
@@ -19,7 +20,10 @@ using namespace angreal::interpreter::environment;
 class BaseTest : public ::testing::Test {
    public:
    protected:
-    Context context_;
+    Context context_ {std::make_shared<mock::ErrorReporter>()};
+    std::shared_ptr<analysis::SemanticAnalyzer> analyzer_ =
+        std::make_shared<analysis::SemanticAnalyzer>(
+            context_.error_handler_, *context_.interpreter.get());
 };
 
 class DeclarationTest : public BaseTest {
@@ -120,10 +124,7 @@ class FunctionTest : public DeclarationTest {
             std::make_shared<FunctionDeclaration>(name, parameters, statements);
         last_function_ = std::make_shared<IdentifierLiteral>(name);
 
-        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
-            *context_.interpreter.get());
-
-        analyzer->Resolve(declaration);
+        analyzer_->Resolve(declaration);
         context_.interpreter->visit(declaration);
     }
 
@@ -198,9 +199,7 @@ class ClassTest : public FunctionTest {
             std::make_shared<ClassDeclaration>(name, methods, superclass);
 
         last_class_ = std::make_shared<IdentifierLiteral>(name);
-        auto analyzer = std::make_shared<analysis::SemanticAnalyzer>(
-            *context_.interpreter.get());
-        analyzer->Resolve(declaration);
+        analyzer_->Resolve(declaration);
         context_.interpreter->visit(declaration);
     }
 

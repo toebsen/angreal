@@ -9,6 +9,7 @@
 
 #include <gtest/gtest.h>
 
+#include "../error_reporter_mocks.h"
 #include "lexer/lexer.h"
 #include "parser/ast.h"
 #include "parser/parser.h"
@@ -22,6 +23,8 @@ typedef std::vector<Token> tokens_t;
 
 class ParserTest : public ::testing::Test {
    protected:
+    ParserTest() : parser(error_handler_) {}
+
     auto lexAndParseProgram(const std::string& program) {
         tokens = lexer.lex(program);
         return parser.parseProgram(tokens);
@@ -38,6 +41,7 @@ class ParserTest : public ::testing::Test {
         }
     }
 
+    error_handler_t error_handler_ {std::make_shared<mock::ErrorReporter>()};
     std::string defaultIdentifier {"x"};
     Parser parser;
     Lexer lexer;

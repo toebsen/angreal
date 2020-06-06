@@ -10,6 +10,7 @@
 
 #include "ast_interfaces.h"
 #include "common.h"
+#include "error_handler.h"
 
 namespace angreal::interpreter::analysis {
 
@@ -19,7 +20,8 @@ class Resolver {
     enum class FunctionType { None, Function, Initializer, Method };
     enum class ClassType { None, Class, SubClass };
 
-    explicit Resolver(SemanticAnalyzer& semantic_analyzer);
+    explicit Resolver(error_handler_t error_handler,
+                      SemanticAnalyzer& semantic_analyzer);
 
     void ResolveLocal(const string_t& name, const node_t& expr);
     void ResolveFunction(
@@ -31,10 +33,10 @@ class Resolver {
     void EnterScope();
     void LeaveScope();
 
-    void Declare(const string_t& name);
+    void Declare(const string_t& name, node_t node);
     void Define(const string_t& name);
 
-    void CheckAlreadyDefined(const string_t& name);
+    void CheckAlreadyDefined(const string_t& name, node_t node);
 
     [[nodiscard]] bool IsNoFunction() const;
     [[nodiscard]] bool IsInitializer() const;
@@ -45,6 +47,8 @@ class Resolver {
     void Inject(const string_t& name);
 
    private:
+    error_handler_t error_handler_;
+
     std::vector<std::unordered_map<string_t, bool>> scopes_;
     SemanticAnalyzer& semantic_analyzer_;
     FunctionType function_type_;

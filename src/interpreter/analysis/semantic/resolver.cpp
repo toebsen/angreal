@@ -9,17 +9,19 @@
 
 namespace angreal::interpreter::analysis {
 
-Resolver::Resolver(SemanticAnalyzer& semantic_analyzer)
-    : semantic_analyzer_(semantic_analyzer),
+Resolver::Resolver(error_handler_t error_handler,
+                   SemanticAnalyzer& semantic_analyzer)
+    : error_handler_(error_handler),
+      semantic_analyzer_(semantic_analyzer),
       function_type_ {FunctionType::None},
       class_type_ {ClassType::None} {}
 
-void Resolver::Declare(const string_t& name) {
+void Resolver::Declare(const string_t& name, node_t node) {
     if (!scopes_.empty()) {
         auto& scope = scopes_.back();
         if (scope.find(name) != scope.end()) {
-            throw RuntimeError("variable `" + name +
-                               "` already declared in this scope");
+            error_handler_->AnalysisError(
+                "variable <" + name + "> already declared in this scope", node);
         }
 
         scope[name] = false;
@@ -46,12 +48,13 @@ void Resolver::ResolveLocal(const string_t& name, const node_t& expr) {
         }
     }
 }
-void Resolver::CheckAlreadyDefined(const string_t& name) {
+void Resolver::CheckAlreadyDefined(const string_t& name, node_t node) {
     if (!scopes_.empty()) {
         auto& scope = scopes_.back();
         if (scope.find(name) != scope.end() && !scope.contains(name)) {
-            throw RuntimeError("cannot read local variable `" + name +
-                               "` in its own initializer");
+            error_handler_->AnalysisError("cannot read local variable `" +
+                                              name + "` in its own initializer",
+                                          node);
         }
     }
 }
@@ -63,7 +66,7 @@ void Resolver::ResolveFunction(
     function_type_ = function_type;
     EnterScope();
     for (const auto& param : function_decl->parameters) {
-        Declare(param->identifier);
+        Declare(param->identifier, function_decl);
         Define(param->identifier);
     }
     semantic_analyzer_.Resolve(function_decl->statements);
@@ -73,7 +76,7 @@ void Resolver::ResolveFunction(
 
 void Resolver::ResolveClass(
     const std::shared_ptr<ClassDeclaration>& class_decl) {
-    Declare(class_decl->identifier);
+    Declare(class_decl->identifier, class_decl);
     Define(class_decl->identifier);
     ClassType enclosing_class = class_type_;
     class_type_ = ClassType::Class;
