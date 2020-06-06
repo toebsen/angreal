@@ -33,10 +33,10 @@ class Resolver {
     void EnterScope();
     void LeaveScope();
 
-    void Declare(const string_t& name);
+    void Declare(const string_t& name, node_t node);
     void Define(const string_t& name);
 
-    void CheckAlreadyDefined(const string_t& name);
+    void CheckAlreadyDefined(const string_t& name, node_t node);
 
     [[nodiscard]] bool IsNoFunction() const;
     [[nodiscard]] bool IsInitializer() const;

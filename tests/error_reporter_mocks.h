@@ -12,7 +12,14 @@ class ErrorReporter : public IErrorHandler {
    public:
     bool HasError() override { return error_occurred; };
 
+    std::string LastError() override { return last_error; };
+
     void ParserError(const string_t& error) override {
+        error_occurred = true;
+        last_error = error;
+    };
+
+    void ParserError(const string_t& error, const Token&) override {
         error_occurred = true;
         last_error = error;
     };
@@ -22,11 +29,19 @@ class ErrorReporter : public IErrorHandler {
         last_error = error;
     };
 
+    void AnalysisError(const string_t& error, node_t node) override {
+        AnalysisError(error);
+    }
+
     void RuntimeError(const string_t& error) override {
         error_occurred = true;
         last_error = error;
         throw angreal::RuntimeError(error);
     };
+
+    void RuntimeError(const string_t& error, node_t node) override {
+        RuntimeError(error);
+    }
 
     void HandleCrucialError(const string_t& error) override {
         last_error = error;

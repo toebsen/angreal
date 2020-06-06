@@ -9,6 +9,15 @@ namespace angreal::parser {
 Parser::Parser(const error_handler_t& error_handler)
     : error_handler_(error_handler) {}
 
+template <typename Type, typename... Args>
+std::shared_ptr<Type> Parser::MakeASTNode(Args&&... args) {
+    {
+        auto node = std::make_shared<Type>(std::forward<Args>(args)...);
+        node->SetLine(current_line_number);
+        return node;
+    }
+}
+
 std::shared_ptr<AST::Program> Parser::parseProgram(
     const std::vector<Token>& tokens) {
     AST::statements_t statements;
@@ -21,7 +30,7 @@ std::shared_ptr<AST::Program> Parser::parseProgram(
             statements.push_back(stmt.value());
         }
     }
-    return std::make_shared<AST::Program>(statements);
+    return MakeASTNode<AST::Program>(statements);
 }
 
 expression_t Parser::parseExpression(const std::vector<Token>& tokens) {
@@ -46,17 +55,8 @@ void Parser::expectToken(Token::Type t) const {
         std::stringstream ss;
         ss << "Expected " << Token::type2str(t)
            << ", but got: " << Token::type2str(current_token->type());
-        error(ss.str());
+        error_handler_->ParserError(ss.str(), *current_token);
     }
-}
-
-void Parser::error(const std::string& message) const {
-    std::stringstream ss;
-    ss << "ERROR: " << message << " for ";
-    ss << "('" << current_token->value() << "')";
-    ss << " in line: " << std::to_string(current_line_number);
-
-    error_handler_->ParserError(ss.str());
 }
 
 expression_t Parser::parseRelational() {
@@ -65,7 +65,7 @@ expression_t Parser::parseRelational() {
         auto opType = current_token->value();
         consume();
         auto rhs = parseAdditive();
-        return std::make_shared<AST::BinaryOperation>(opType, expr, rhs);
+        return MakeASTNode<AST::BinaryOperation>(opType, expr, rhs);
     }
     return expr;
 }
@@ -77,7 +77,7 @@ expression_t Parser::parseAdditive() {
         auto opType = current_token->value();
         consume();
         auto rhs = parseMultiplicative();
-        return std::make_shared<AST::BinaryOperation>(opType, expr, rhs);
+        return MakeASTNode<AST::BinaryOperation>(opType, expr, rhs);
     }
     return expr;
 }
@@ -90,7 +90,7 @@ expression_t Parser::parseMultiplicative() {
         auto opType = current_token->value();
         consume();
         auto rhs = parsePrimary();
-        return std::make_shared<AST::BinaryOperation>(opType, expr, rhs);
+        return MakeASTNode<AST::BinaryOperation>(opType, expr, rhs);
     }
     return expr;
 }
@@ -101,7 +101,7 @@ expression_t Parser::parseUnary() {
         auto opType = current_token->value();
         consume();
         AST::expression_t expression = parseRelational();
-        return std::make_shared<AST::UnaryOperation>(opType, expression);
+        return MakeASTNode<AST::UnaryOperation>(opType, expression);
     }
 
     return parseFunctionCall();
@@ -130,13 +130,13 @@ expression_t Parser::parseFunctionCall() {
             }
             expectToken(Token::Type::RightBracket);
             consume();
-            expression = std::make_shared<AST::FunctionCall>(expression, args);
+            expression = MakeASTNode<AST::FunctionCall>(expression, args);
         } else if (current_token->type() == Token::Type::Dot) {
             consume();
             expectToken(Token::Type::Identifier);
             auto identifier = current_token->value();
             consume();
-            expression = std::make_shared<AST::Get>(expression, identifier);
+            expression = MakeASTNode<AST::Get>(expression, identifier);
         } else {
             break;
         }
@@ -159,7 +159,7 @@ expression_t Parser::parsePrimary() {
 
     if (current_token->type() == Token::Type::SelfStatement) {
         consume();
-        return std::make_shared<AST::Self>();
+        return MakeASTNode<AST::Self>();
     }
 
     if (current_token->type() == Token::Type::Identifier) {
@@ -171,9 +171,9 @@ expression_t Parser::parsePrimary() {
             expectToken(Token::Type::Identifier);
             auto ident = current_token->value();
             consume();
-            return std::make_shared<AST::Super>(ident);
+            return MakeASTNode<AST::Super>(ident);
         }
-        return std::make_shared<AST::IdentifierLiteral>(value);
+        return MakeASTNode<AST::IdentifierLiteral>(value);
     }
 
     if (current_token->type() == Token::Type::LeftBracket) {
@@ -197,7 +197,7 @@ statement_t Parser::parseVariableDeclaration() {
     expectToken(Token::Type::Equal);
     consume();
     expression = parseRelational();
-    return std::make_shared<AST::Declaration>(identifier, expression);
+    return MakeASTNode<AST::Declaration>(identifier, expression);
 }
 
 expression_t Parser::parseAssignment(const expression_t& expression) {
@@ -206,11 +206,10 @@ expression_t Parser::parseAssignment(const expression_t& expression) {
     auto value = parseRelational();
 
     if (auto ident = std::dynamic_pointer_cast<IdentifierLiteral>(expression)) {
-        return std::make_shared<AST::Assignment>(ident->name, value);
+        return MakeASTNode<AST::Assignment>(ident->name, value);
     }
     if (auto get = std::dynamic_pointer_cast<Get>(expression)) {
-        return std::make_shared<AST::Set>(get->expression, get->identifier,
-                                          value);
+        return MakeASTNode<AST::Set>(get->expression, get->identifier, value);
     }
     return nullptr;
 }
@@ -242,7 +241,7 @@ std::shared_ptr<AST::FormalParameter> Parser::parseFormalParameter() {
     std::string identifier = current_token->value();
     consume();
 
-    return std::make_shared<AST::FormalParameter>(identifier);
+    return MakeASTNode<AST::FormalParameter>(identifier);
 }
 
 statement_t Parser::parseFunctionDeclaration() {
@@ -255,8 +254,8 @@ statement_t Parser::parseFunctionDeclaration() {
 
     auto block = std::dynamic_pointer_cast<Block>(parseBlock());
 
-    return std::make_shared<AST::FunctionDeclaration>(identifier, parameters,
-                                                      block->statements);
+    return MakeASTNode<AST::FunctionDeclaration>(identifier, parameters,
+                                                 block->statements);
 }
 
 statement_t Parser::parseBlock() {
@@ -266,7 +265,7 @@ statement_t Parser::parseBlock() {
     if (current_token->type() == Token::Type::RightCurlyBracket) {
         // don't parse empty block
         consume();
-        return std::make_shared<AST::Block>(statements);
+        return MakeASTNode<AST::Block>(statements);
     }
 
     do {
@@ -278,14 +277,14 @@ statement_t Parser::parseBlock() {
 
     expectToken(Token::Type::RightCurlyBracket);
     consume();
-    return std::make_shared<AST::Block>(statements);
+    return MakeASTNode<AST::Block>(statements);
 }
 
 statement_t Parser::parseReturnDeclaration() {
     AST::expression_t expression;
     consume();
     expression = parseRelational();
-    return std::make_shared<AST::Return>(expression);
+    return MakeASTNode<AST::Return>(expression);
 }
 
 statement_t Parser::parsePrintStatement() {
@@ -297,7 +296,7 @@ statement_t Parser::parsePrintStatement() {
     }
     expectToken(Token::Type::RightBracket);
     consume();
-    return std::make_shared<AST::Print>(args);
+    return MakeASTNode<AST::Print>(args);
 }
 
 std::optional<statement_t> Parser::parseStatement() {
@@ -341,7 +340,7 @@ std::optional<statement_t> Parser::parseStatement() {
     }
 
     if (expr) {
-        return std::make_shared<ExpressionStatement>(expr);
+        return MakeASTNode<ExpressionStatement>(expr);
     }
 
     consume();
@@ -360,8 +359,7 @@ statement_t Parser::parseIfStatement() {
         else_branch = std::dynamic_pointer_cast<Block>(parseBlock());
     }
 
-    return std::make_shared<AST::IfStatement>(condition, if_branch,
-                                              else_branch);
+    return MakeASTNode<AST::IfStatement>(condition, if_branch, else_branch);
 }
 
 statement_t Parser::parseWhileStatement() {
@@ -369,14 +367,14 @@ statement_t Parser::parseWhileStatement() {
     expression_t condition = parseRelational();
     block_t block = std::dynamic_pointer_cast<Block>(parseBlock());
 
-    return std::make_shared<AST::WhileStatement>(condition, block);
+    return MakeASTNode<AST::WhileStatement>(condition, block);
 }
 
 statement_t Parser::parseClassDeclaration() {
     consume();  // class
 
     expectToken(Token::Type::Identifier);
-    auto identifier = current_token->value();
+    auto identifier = *current_token;
     consume();
 
     std::optional<identifier_t> superclass;
@@ -385,8 +383,7 @@ statement_t Parser::parseClassDeclaration() {
         consume();
 
         expectToken(Token::Type::Identifier);
-        superclass =
-            std::make_shared<IdentifierLiteral>(current_token->value());
+        superclass = MakeASTNode<IdentifierLiteral>(current_token->value());
         consume();
 
         expectToken(Token::Type::RightBracket);
@@ -406,10 +403,10 @@ statement_t Parser::parseClassDeclaration() {
             methods.push_back(std::dynamic_pointer_cast<FunctionDeclaration>(
                 parseFunctionDeclaration()));
         } else {
-            error(
+            error_handler_->ParserError(
                 "Only function declarations are allowed inside declaration of "
-                "class " +
-                identifier + "!");
+                "class !",
+                identifier);
             break;
         }
     }
@@ -417,8 +414,8 @@ statement_t Parser::parseClassDeclaration() {
     expectToken(Token::Type::RightCurlyBracket);
     consume();
 
-    return std::make_shared<AST::ClassDeclaration>(identifier, methods,
-                                                   superclass);
+    return MakeASTNode<AST::ClassDeclaration>(identifier.value(), methods,
+                                              superclass);
 }
 
 }  // namespace angreal::parser

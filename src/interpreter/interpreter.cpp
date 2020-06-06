@@ -73,8 +73,8 @@ void Interpreter::visit(const std::shared_ptr<IdentifierLiteral>& node) {
     if (auto o = LookupVariable(node->name, node)) {
         stack_.push(o);
     } else {
-        error_handler_->RuntimeError("Identifier <" + node->name +
-                                     "> does not exist");
+        error_handler_->RuntimeError(
+            "Identifier <" + node->name + "> does not exist", node);
     }
 }
 
@@ -114,7 +114,7 @@ void Interpreter::visit(const std::shared_ptr<UnaryOperation>& node) {
         ss << "Not able to execute: ";
         ss << "<" << magic_enum::enum_name(node->type) << "> ";
         ss << a->GetType()->Stringify() << " ";
-        error_handler_->RuntimeError(ss.str());
+        error_handler_->RuntimeError(ss.str(), node);
     }
     stack_.push(o);
 }
@@ -137,7 +137,7 @@ void Interpreter::visit(const std::shared_ptr<BinaryOperation>& node) {
         ss << a->GetType()->Stringify() << " ";
         ss << "<" << magic_enum::enum_name(node->type) << "> ";
         ss << b->GetType()->Stringify();
-        error_handler_->RuntimeError(ss.str());
+        error_handler_->RuntimeError(ss.str(), node);
     }
     stack_.push(o);
 }
@@ -152,7 +152,7 @@ void Interpreter::visit(const std::shared_ptr<FunctionCall>& node) {
         std::stringstream ss;
         ss << "<" << callee->GetType()->Stringify() << ">: ";
         ss << "is not callable. Only functions and classes can be called!";
-        error_handler_->RuntimeError(ss.str());
+        error_handler_->RuntimeError(ss.str(), node);
     }
 
     auto fun = callee->GetType()->AsCallable();
@@ -287,8 +287,9 @@ void Interpreter::visit(const std::shared_ptr<ClassDeclaration>& node) {
         if (!is_class) {
             error_handler_->RuntimeError(
                 "Class <" + node->identifier +
-                "> Superclass must be a class. Not " +
-                superclass.value()->GetType()->Stringify() + "!");
+                    "> Superclass must be a class. Not " +
+                    superclass.value()->GetType()->Stringify() + "!",
+                node);
         }
     }
 
@@ -328,8 +329,8 @@ void Interpreter::visit(const std::shared_ptr<Get>& node) {
         return;
     }
 
-    error_handler_->RuntimeError("Only instances have properties! <" +
-                                 node->identifier + ">");
+    error_handler_->RuntimeError(
+        "Only instances have properties! <" + node->identifier + ">", node);
 }
 
 void Interpreter::visit(const std::shared_ptr<Set>& node) {
@@ -338,7 +339,7 @@ void Interpreter::visit(const std::shared_ptr<Set>& node) {
     stack_.pop();
 
     if (!obj->GetType()->IsInstance()) {
-        error_handler_->RuntimeError("Only instances have fields");
+        error_handler_->RuntimeError("Only instances have fields", node);
     }
 
     node->value->accept(shared_from_this());
@@ -363,9 +364,10 @@ void Interpreter::visit(const std::shared_ptr<Super>& node) {
 
     if (!method || !method.value()->GetType()->IsCallable()) {
         error_handler_->RuntimeError("super(" + super->Stringify() + ") of " +
-                                     instance->GetType()->Stringify() +
-                                     "does not have method <" +
-                                     node->identifier + ">");
+                                         instance->GetType()->Stringify() +
+                                         "does not have method <" +
+                                         node->identifier + ">",
+                                     node);
     }
 
     auto function = std::dynamic_pointer_cast<Function>(

@@ -58,6 +58,7 @@ class BaseTest : public ::testing::Test {
         try {
             context_.interpreter->interpret(code);
             EXPECT_TRUE(context_.error_handler_->HasError());
+            EXPECT_EQ(expected_error, context_.error_handler_->LastError());
             // Todo(toebsen): Add expected error match
         } catch (...) {
             FAIL() << "Expected Static Error with message: " << expected_error;

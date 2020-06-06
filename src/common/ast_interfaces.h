@@ -8,6 +8,7 @@
 #define ANGREAL_AST_INTERFACES_H
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "common.h"
@@ -20,6 +21,12 @@ class Node : private NonCopyable {
     ~Node() override = default;
 
     virtual void accept(const visitor_t& visitor) = 0;
+
+    void SetLine(uint32_t line) { line_no = line; };
+    std::optional<uint32_t> GetLine() { return line_no; };
+
+   protected:
+    std::optional<uint32_t> line_no;
 };
 
 class Statement : public Node {

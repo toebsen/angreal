@@ -55,6 +55,9 @@ class Parser {
     statement_t parseWhileStatement();
 
    private:
+    template <typename Type, typename... Args>
+    inline std::shared_ptr<Type> MakeASTNode(Args&&... args);
+
     AST::formal_parameters parseFormalParameters();
 
     std::shared_ptr<AST::FormalParameter> parseFormalParameter();
@@ -66,8 +69,6 @@ class Parser {
     void consume();
 
     void expectToken(Token::Type t) const;
-
-    void error(const std::string& message) const;
 
     error_handler_t error_handler_;
 
