@@ -78,6 +78,13 @@ type_t BinaryOp::Mul() {
     if (lhs_->IsFloat() && rhs_->IsFloat()) {
         return type_t(new FloatType(op(lhs_->AsFloat(), rhs_->AsFloat())));
     }
+    if (lhs_->IsString() && rhs_->IsInteger()) {
+        string_t result = "";
+        for (size_t c = 0; c < rhs_->AsInteger(); ++c) {
+            result += lhs_->AsString();
+        }
+        return type_t(new StringType(result));
+    }
     return type_t();
 }
 

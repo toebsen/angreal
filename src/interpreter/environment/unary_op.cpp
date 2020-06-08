@@ -28,32 +28,53 @@ type_t UnaryOP::Call() {
 }
 
 type_t UnaryOP::NegateNumeric() {
-    auto op = [](auto a) { return a * -1; };
-    if (type_->IsInteger()) {
-        return type_t(new IntType(op(type_->AsInteger())));
-    }
-    if (type_->IsFloat()) {
-        return type_t(new FloatType(op(type_->AsFloat())));
-    }
-    return type_t();
+    auto resulting_type = type_t();
+    std::visit(
+        overloaded {[&resulting_type](std::nullptr_t val) {},
+                    [&resulting_type](bool val) {},
+                    [&resulting_type](int i) {
+                        resulting_type = std::make_shared<IntType>(-1 * i);
+                    },
+                    [&resulting_type](float f) {
+                        resulting_type = std::make_shared<FloatType>(-1 * f);
+                    },
+                    [&resulting_type](const string_t s) {},
+                    [&resulting_type](const callable_t c) {},
+                    [&resulting_type](const instance_t i) {}},
+        type_->value());
+    return resulting_type;
 }
 
 type_t UnaryOP::Add() {
-    auto op = [](auto a) { return a * +1; };
-    if (type_->IsInteger()) {
-        return type_t(new IntType(op(type_->AsInteger())));
-    }
-    if (type_->IsFloat()) {
-        return type_t(new FloatType(op(type_->AsFloat())));
-    }
-    return type_t();
+    auto resulting_type = type_t();
+    std::visit(overloaded {[&resulting_type](std::nullptr_t val) {},
+                           [&resulting_type](bool val) {},
+                           [&resulting_type](int i) {
+                               resulting_type = std::make_shared<IntType>(i);
+                           },
+                           [&resulting_type](float f) {
+                               resulting_type = std::make_shared<FloatType>(f);
+                           },
+                           [&resulting_type](const string_t s) {},
+                           [&resulting_type](const callable_t c) {},
+                           [&resulting_type](const instance_t i) {}},
+               type_->value());
+    return resulting_type;
 }
 
 type_t UnaryOP::NegateBool() {
-    if (type_->IsBoolean()) {
-        return type_t(new BoolType(!type_->AsBoolean()));
-    }
-    return type_t();
+    auto resulting_type = type_t();
+    std::visit(
+        overloaded {[&resulting_type](std::nullptr_t val) {},
+                    [&resulting_type](bool val) {
+                        resulting_type = std::make_shared<BoolType>(!val);
+                    },
+                    [&resulting_type](int i) {}, [&resulting_type](float f) {},
+                    [&resulting_type](const string_t s) {},
+                    [&resulting_type](const callable_t c) {},
+                    [&resulting_type](const instance_t i) {}},
+        type_->value());
+    return resulting_type;
 }
 
 }  // namespace angreal::interpreter::environment
