@@ -75,8 +75,11 @@ template <class... Ts>
 struct overloaded : Ts... {
     using Ts::operator()...;
 };
+
+// clang-format off
 template <class... Ts>
-overloaded(Ts...) -> overloaded<Ts...>;
+overloaded(Ts...)->overloaded<Ts...>;
+// clang-format on
 
 }  // namespace angreal
 
