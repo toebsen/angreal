@@ -23,63 +23,54 @@ class Type {
     explicit Type(value_t value) : value_(std::move(value)) {}
     //    explicit Type(CallablePtr value) : value_(std::move(value)) {}
 
-    virtual bool IsNull() {
+    inline bool IsNull() {
         return std::holds_alternative<std::nullptr_t>(value_);
     }
-    virtual bool IsBoolean() { return std::holds_alternative<bool>(value_); }
-    virtual bool IsFloat() { return std::holds_alternative<float>(value_); };
-    virtual bool IsInteger() { return std::holds_alternative<int>(value_); };
-    virtual bool IsString() {
-        return std::holds_alternative<string_t>(value_);
-    };
-    virtual bool IsCallable() {
+    inline bool IsBoolean() { return std::holds_alternative<bool>(value_); }
+    inline bool IsFloat() { return std::holds_alternative<float>(value_); };
+    inline bool IsInteger() { return std::holds_alternative<int>(value_); };
+    inline bool IsString() { return std::holds_alternative<string_t>(value_); };
+    inline bool IsCallable() {
         return std::holds_alternative<callable_t>(value_);
     };
-    virtual bool IsInstance() {
+    inline bool IsInstance() {
         return std::holds_alternative<instance_t>(value_);
     };
 
-    virtual bool AsBoolean() { return std::get<bool>(value_); };
-    virtual float AsFloat() { return std::get<float>(value_); };
-    virtual int AsInteger() { return std::get<int>(value_); };
+    inline bool AsBoolean() { return std::get<bool>(value_); };
+    inline float AsFloat() { return std::get<float>(value_); };
+    inline int AsInteger() { return std::get<int>(value_); };
 
-    virtual bool IsTruthy() {
-        // TODO(toebs): add missing
-        if (IsBoolean()) {
-            return AsBoolean();
-        }
+    inline string_t AsString() { return std::get<string_t>(value_); };
+    inline callable_t AsCallable() { return std::get<callable_t>(value_); };
+    inline instance_t AsInstance() { return std::get<instance_t>(value_); };
 
-        return false;
+    inline value_t value() { return value_; }
+
+    bool IsTruthy() {
+        return std::visit(
+            Overloaded {[](std::nullptr_t val) { return false; },
+                        [](bool val) { return val; },
+                        [](int i) { return static_cast<bool>(i); },
+                        [](float f) { return static_cast<bool>(f); },
+                        [](string_t s) { return !s.empty(); },
+                        [](callable_t c) { return true; },
+                        [](instance_t i) { return true; }},
+            value_);
     };
 
-    virtual string_t AsString() { return std::get<string_t>(value_); };
-    virtual callable_t AsCallable() { return std::get<callable_t>(value_); };
-    virtual instance_t AsInstance() { return std::get<instance_t>(value_); };
-
     string_t Stringify() {
-        std::stringstream ss;
-        if (IsBoolean()) {
-            ss << std::boolalpha << AsBoolean();
-        }
-        if (IsFloat()) {
-            ss << AsFloat();
-        }
-        if (IsInteger()) {
-            ss << AsInteger();
-        }
-        if (IsNull()) {
-            ss << "None";
-        }
-        if (IsString()) {
-            ss << "\"" << AsString() << "\"";
-        }
-        if (IsCallable()) {
-            ss << AsCallable()->Stringify();
-        }
-        if (IsInstance()) {
-            ss << AsInstance()->Stringify();
-        }
-        return ss.str();
+        return std::visit(
+            Overloaded {[](std::nullptr_t val) { return string_t("None"); },
+                        [](bool val) {
+                            return val ? string_t("true") : string_t("false");
+                        },
+                        [](int i) { return std::to_string(i); },
+                        [](float f) { return std::to_string(f); },
+                        [](string_t s) { return string_t("\"" + s + "\""); },
+                        [](callable_t c) { return c->Stringify(); },
+                        [](instance_t i) { return i->Stringify(); }},
+            value_);
     }
 
     [[nodiscard]] inline bool HasSameType(const Type& rhs) const {

@@ -70,6 +70,17 @@ class NonCopyable {
     virtual ~NonCopyable() = default;
 };
 
+// https://dev.to/tmr232/that-overloaded-trick-overloading-lambdas-in-c17
+template <class... Ts>
+struct Overloaded : Ts... {
+    using Ts::operator()...;
+};
+
+// clang-format off
+template <class... Ts>
+Overloaded(Ts...)->Overloaded<Ts...>;
+// clang-format on
+
 }  // namespace angreal
 
 #endif  // ANGREAL_SRC_COMMON_COMMON_H_

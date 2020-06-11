@@ -28,32 +28,42 @@ type_t UnaryOP::Call() {
 }
 
 type_t UnaryOP::NegateNumeric() {
-    auto op = [](auto a) { return a * -1; };
-    if (type_->IsInteger()) {
-        return type_t(new IntType(op(type_->AsInteger())));
-    }
-    if (type_->IsFloat()) {
-        return type_t(new FloatType(op(type_->AsFloat())));
-    }
-    return type_t();
+    return std::visit(
+        Overloaded {
+            [](std::nullptr_t val) { return type_t(); },
+            [](bool val) { return type_t(); },
+            [](int i) -> type_t { return std::make_shared<IntType>(-1 * i); },
+            [](float f) -> type_t {
+                return std::make_shared<FloatType>(-1 * f);
+            },
+            [](const string_t s) { return type_t(); },
+            [](const callable_t c) { return type_t(); },
+            [](const instance_t i) { return type_t(); }},
+        type_->value());
 }
 
 type_t UnaryOP::Add() {
-    auto op = [](auto a) { return a * +1; };
-    if (type_->IsInteger()) {
-        return type_t(new IntType(op(type_->AsInteger())));
-    }
-    if (type_->IsFloat()) {
-        return type_t(new FloatType(op(type_->AsFloat())));
-    }
-    return type_t();
+    return std::visit(
+        Overloaded {
+            [](std::nullptr_t val) { return type_t(); },
+            [](bool val) { return type_t(); },
+            [](int i) -> type_t { return std::make_shared<IntType>(i); },
+            [](float f) -> type_t { return std::make_shared<FloatType>(f); },
+            [](const string_t s) { return type_t(); },
+            [](const callable_t c) { return type_t(); },
+            [](const instance_t i) { return type_t(); }},
+        type_->value());
 }
 
 type_t UnaryOP::NegateBool() {
-    if (type_->IsBoolean()) {
-        return type_t(new BoolType(!type_->AsBoolean()));
-    }
-    return type_t();
+    return std::visit(
+        Overloaded {
+            [](std::nullptr_t val) { return type_t(); },
+            [](bool val) -> type_t { return std::make_shared<BoolType>(!val); },
+            [](int i) { return type_t(); }, [](float f) { return type_t(); },
+            [](const string_t s) { return type_t(); },
+            [](const callable_t c) { return type_t(); },
+            [](const instance_t i) { return type_t(); }},
+        type_->value());
 }
-
 }  // namespace angreal::interpreter::environment

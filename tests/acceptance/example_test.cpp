@@ -14,6 +14,13 @@ TEST_F(ExampleTest, HelloWorld) {
     SafeRun(code, "\"Hello World\"");
 }
 
+TEST_F(ExampleTest, StringMultiply) {
+    std::string code = R"(
+    print( "!" * 5)
+    )";
+    SafeRun(code, "\"!!!!!\"");
+}
+
 TEST_F(ExampleTest, HelloWorld2) {
     std::string code = R"(
     # this is a comment
