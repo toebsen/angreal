@@ -59,7 +59,7 @@ class Type {
         std::stringstream ss;
 
         std::visit(
-            overloaded {[&ss](std::nullptr_t val) { ss << "None"; },
+            Overloaded {[&ss](std::nullptr_t val) { ss << "None"; },
                         [&ss](bool val) { ss << std::boolalpha << val; },
                         [&ss](int i) { ss << i; }, [&ss](float f) { ss << f; },
                         [&ss](string_t s) { ss << "\"" << s << "\""; },

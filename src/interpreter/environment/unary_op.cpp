@@ -30,7 +30,7 @@ type_t UnaryOP::Call() {
 type_t UnaryOP::NegateNumeric() {
     auto resulting_type = type_t();
     std::visit(
-        overloaded {[&resulting_type](std::nullptr_t val) {},
+        Overloaded {[&resulting_type](std::nullptr_t val) {},
                     [&resulting_type](bool val) {},
                     [&resulting_type](int i) {
                         resulting_type = std::make_shared<IntType>(-1 * i);
@@ -47,7 +47,7 @@ type_t UnaryOP::NegateNumeric() {
 
 type_t UnaryOP::Add() {
     auto resulting_type = type_t();
-    std::visit(overloaded {[&resulting_type](std::nullptr_t val) {},
+    std::visit(Overloaded {[&resulting_type](std::nullptr_t val) {},
                            [&resulting_type](bool val) {},
                            [&resulting_type](int i) {
                                resulting_type = std::make_shared<IntType>(i);
@@ -65,7 +65,7 @@ type_t UnaryOP::Add() {
 type_t UnaryOP::NegateBool() {
     auto resulting_type = type_t();
     std::visit(
-        overloaded {[&resulting_type](std::nullptr_t val) {},
+        Overloaded {[&resulting_type](std::nullptr_t val) {},
                     [&resulting_type](bool val) {
                         resulting_type = std::make_shared<BoolType>(!val);
                     },

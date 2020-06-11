@@ -72,13 +72,13 @@ class NonCopyable {
 
 // https://dev.to/tmr232/that-overloaded-trick-overloading-lambdas-in-c17
 template <class... Ts>
-struct overloaded : Ts... {
+struct Overloaded : Ts... {
     using Ts::operator()...;
 };
 
 // clang-format off
 template <class... Ts>
-overloaded(Ts...)->overloaded<Ts...>;
+Overloaded(Ts...)->Overloaded<Ts...>;
 // clang-format on
 
 }  // namespace angreal
