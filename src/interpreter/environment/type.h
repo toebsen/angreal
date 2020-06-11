@@ -41,32 +41,36 @@ class Type {
     inline float AsFloat() { return std::get<float>(value_); };
     inline int AsInteger() { return std::get<int>(value_); };
 
-    inline value_t value() { return value_; }
-    inline bool IsTruthy() {
-        // TODO(toebs): add missing
-        if (IsBoolean()) {
-            return AsBoolean();
-        }
-
-        return false;
-    };
-
     inline string_t AsString() { return std::get<string_t>(value_); };
     inline callable_t AsCallable() { return std::get<callable_t>(value_); };
     inline instance_t AsInstance() { return std::get<instance_t>(value_); };
 
-    string_t Stringify() {
-        std::stringstream ss;
+    inline value_t value() { return value_; }
 
-        std::visit(
-            Overloaded {[&ss](std::nullptr_t val) { ss << "None"; },
-                        [&ss](bool val) { ss << std::boolalpha << val; },
-                        [&ss](int i) { ss << i; }, [&ss](float f) { ss << f; },
-                        [&ss](string_t s) { ss << "\"" << s << "\""; },
-                        [&ss](callable_t c) { ss << c->Stringify(); },
-                        [&ss](instance_t i) { ss << i->Stringify(); }},
+    bool IsTruthy() {
+        return std::visit(
+            Overloaded {[](std::nullptr_t val) { return false; },
+                        [](bool val) { return val; },
+                        [](int i) { return static_cast<bool>(i); },
+                        [](float f) { return static_cast<bool>(f); },
+                        [](string_t s) { return !s.empty(); },
+                        [](callable_t c) { return true; },
+                        [](instance_t i) { return true; }},
             value_);
-        return ss.str();
+    };
+
+    string_t Stringify() {
+        return std::visit(
+            Overloaded {[](std::nullptr_t val) { return string_t("None"); },
+                        [](bool val) {
+                            return val ? string_t("true") : string_t("false");
+                        },
+                        [](int i) { return std::to_string(i); },
+                        [](float f) { return std::to_string(f); },
+                        [](string_t s) { return string_t("\"" + s + "\""); },
+                        [](callable_t c) { return c->Stringify(); },
+                        [](instance_t i) { return i->Stringify(); }},
+            value_);
     }
 
     [[nodiscard]] inline bool HasSameType(const Type& rhs) const {
