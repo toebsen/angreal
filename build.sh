@@ -5,7 +5,7 @@ set -euo pipefail
 mkdir -p build && cd build
 
 # Configure
-cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug ..
+cmake -DENABLE_COVERAGE=ON -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON..
 
 # Build (for Make on Unix equivalent to `make -j $(nproc)`)
 cmake --build . --config Debug -- -j $(nproc)

@@ -16,11 +16,17 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage")
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lgcov --coverage")
-    else ()
-        message(STATUS "ENABLE_COVERAGE=OFF")
     endif ()
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
     # using Intel C++
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     # using Visual Studio C++
 endif ()
+
+macro(set_mutable_for_testing NAME)
+    MESSAGE(STATUS "Setting <${NAME}> mutable for testing!")
+    target_compile_definitions(${NAME} PRIVATE ENABLE_TESTS=${ENABLE_TESTS})
+endmacro()
+
+MESSAGE(STATUS "Coverage = ${ENABLE_COVERAGE}")
+MESSAGE(STATUS "Tests    = ${ENABLE_TESTS}")

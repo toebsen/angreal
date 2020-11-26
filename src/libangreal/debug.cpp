@@ -7,7 +7,6 @@
 
 #include "chunk.h"
 
-#define OP_CODE(code) static_cast<uint8_t>(code)
 
 namespace angreal::debug {
 
@@ -41,9 +40,9 @@ int ConsoleDebugger::disassembleInstruction(Chunk* chunk, int offset) {
 
     auto instruction = chunk->Get(offset);
     switch (instruction) {
-        case OP_CODE(OpCode::Return):
+        case AS_BYTE(OpCode::Return):
             return simpleInstruction("OP_RETURN", offset);
-        case OP_CODE(OpCode::Constant):
+        case AS_BYTE(OpCode::Constant):
             return constantInstruction("OP_CONSTANT", chunk, offset);
         default:
             printf("Unknown opcode %d\n", instruction);

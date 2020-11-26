@@ -17,8 +17,7 @@ class ValueArray final {
     const value_t& Get(size_t offset) const;
     const value_t& Peek() const;
 
-   private:
-    std::vector<value_t> values_;
+    PRIVATE : std::vector<value_t> values_;
 };
 
 void PrintValue(const value_t& value);

@@ -30,8 +30,7 @@ struct Chunk final {
 
     ValueArray& Constants();
 
-   private:
-    std::vector<uint8_t> codes_;
+    PRIVATE : std::vector<uint8_t> codes_;
     ValueArray constants_;
     std::vector<line_t> lines_;
 };

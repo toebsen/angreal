@@ -12,7 +12,13 @@
 #include <stddef.h>
 #include <stdint.h>
 
-namespace angreal {
-namespace common {}
-}  // namespace angreal
-#endif  // ANGREAL_SRC_COMMON_H_
+#ifdef ENABLE_TESTS
+#define PRIVATE public
+#else
+#define PRIVATE private
+#endif
+
+#define AS_BYTE(value) static_cast<uint8_t>(value)
+
+namespace angreal {}  // namespace angreal
+#endif                // ANGREAL_SRC_COMMON_H_
