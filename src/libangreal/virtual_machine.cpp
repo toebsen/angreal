@@ -4,6 +4,7 @@
 #include "virtual_machine.h"
 
 #include "chunk.h"
+#include "debug.h"
 #include "value.h"
 
 namespace angreal {
@@ -26,6 +27,10 @@ InterpretResult VirtualMachine::Run() {
 #define READ_CONSTANT() (chunk_->Constants().Get(READ_BYTE()))
 
     for (;;) {
+#ifdef DEBUG_TRACE_EXECUTION
+        debug::disassembleInstruction(
+            chunk_, static_cast<size_t>(ip_ - chunk_->Begin()));
+#endif
         switch (READ_BYTE()) {
             case AS_BYTE(OpCode::Constant): {
                 value_t constant = READ_CONSTANT();

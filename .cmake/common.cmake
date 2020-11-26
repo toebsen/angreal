@@ -28,5 +28,6 @@ macro(set_mutable_for_testing NAME)
     target_compile_definitions(${NAME} PRIVATE ENABLE_TESTS=${ENABLE_TESTS})
 endmacro()
 
-MESSAGE(STATUS "Coverage = ${ENABLE_COVERAGE}")
-MESSAGE(STATUS "Tests    = ${ENABLE_TESTS}")
+MESSAGE(STATUS "Coverage              = ${ENABLE_COVERAGE}")
+MESSAGE(STATUS "Tests                 = ${ENABLE_TESTS}")
+MESSAGE(STATUS "Debug Trace Execution = ${DEBUG_TRACE_EXECUTION}")

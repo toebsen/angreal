@@ -15,13 +15,12 @@ int main(int argc, const char* argv[]) {
 
     vm.Init();
     Chunk chunk;
-    debug::ConsoleDebugger console_debugger;
+
     auto constant = chunk.Constants().Write(1.2f);
     chunk.WriteChunk(OpCode::Constant, 123);
     chunk.WriteChunk(constant, 123);
 
     chunk.WriteChunk(OpCode::Return, 124);
-    console_debugger.disassembleChunk(&chunk, "test");
     auto result = vm.Interpret(&chunk);
 
     std::cout << "Result=" << static_cast<int>(result) << std::endl;
