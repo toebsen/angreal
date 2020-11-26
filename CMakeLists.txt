@@ -17,13 +17,12 @@ include(.cmake/gtest.cmake)
 
 ########## Project ##############
 
-set(ANGREAL_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 set(THIRD_PARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party")
 include_directories("${THIRD_PARTY_DIR}/magic_enum")
 
 add_subdirectory(src)
-set(ANGREAL_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
 
 enable_testing()
 add_subdirectory(tests)
