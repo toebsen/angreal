@@ -7,7 +7,6 @@
 
 #include "chunk.h"
 
-
 namespace angreal::debug {
 
 static int simpleInstruction(const char* name, int offset) {

@@ -2,12 +2,18 @@
 // Created by toebsen on 26.11.2020.
 //
 
+#include <iostream>
+
 #include "chunk.h"
 #include "debug.h"
+#include "virtual_machine.h"
 
 using namespace angreal;
 
 int main(int argc, const char* argv[]) {
+    VirtualMachine vm;
+
+    vm.Init();
     Chunk chunk;
     debug::ConsoleDebugger console_debugger;
     auto constant = chunk.Constants().Write(1.2f);
@@ -16,5 +22,10 @@ int main(int argc, const char* argv[]) {
 
     chunk.WriteChunk(OpCode::Return, 124);
     console_debugger.disassembleChunk(&chunk, "test");
+    auto result = vm.Interpret(&chunk);
+
+    std::cout << "Result=" << static_cast<int>(result) << std::endl;
+
+    vm.DeInit();
     return 0;
 }

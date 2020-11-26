@@ -2,6 +2,7 @@ set(LIBANGREAL_SOURCE
         chunk.cpp
         debug.cpp
         value.cpp
+        virtual_machine.cpp
         )
 
 

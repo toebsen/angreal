@@ -4,6 +4,7 @@ add_executable(${TEST_NAME}
 
         test_chunk.cpp
         test_value.cpp
+        test_vm.cpp
 
         ${ANGREAL_INCLUDES})
 

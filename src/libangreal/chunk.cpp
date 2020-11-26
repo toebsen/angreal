@@ -21,4 +21,6 @@ ValueArray& Chunk::Constants() { return constants_; }
 
 Chunk::line_t Chunk::GetLine(size_t offset) const { return lines_.at(offset); }
 
+uint8_t* Chunk::Begin() { return &codes_.front(); }
+
 }  // namespace angreal
