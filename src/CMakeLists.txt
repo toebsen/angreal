@@ -1,2 +1,3 @@
-# to be deprecated
-# add_subdirectory(tree_walker)
+add_subdirectory(include)
+add_subdirectory(libangreal)
+add_subdirectory(angreal)
