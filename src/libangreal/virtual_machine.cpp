@@ -7,7 +7,19 @@
 #include "debug.h"
 #include "value.h"
 
+#define READ_BYTE() (*ip_++)
+#define READ_CONSTANT() (chunk_->Constants().Get(READ_BYTE()))
+#define BINARY_OP(op)                    \
+    do {                                 \
+        auto b = value_stack_.pop_one(); \
+        auto a = value_stack_.pop_one(); \
+        value_stack_.push(a op b);       \
+    } while (false)
+
 namespace angreal {
+
+VirtualMachine::VirtualMachine(StackTracer& stack_tracer)
+    : stack_tracer_(stack_tracer) {}
 
 void VirtualMachine::Init() {
     chunk_ = nullptr;
@@ -25,18 +37,9 @@ InterpretResult VirtualMachine::Interpret(Chunk* chunk) {
 }
 
 InterpretResult VirtualMachine::Run() {
-#define READ_BYTE() (*ip_++)
-#define READ_CONSTANT() (chunk_->Constants().Get(READ_BYTE()))
-
     for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
-        printf("          ");
-        for (auto it = value_stack_.cbegin(); it != value_stack_.cend(); it++) {
-            printf("[ ");
-            PrintValue((*it));
-            printf(" ]");
-        }
-        printf("\n");
+        stack_tracer_.TraceStack(value_stack_);
         debug::disassembleInstruction(
             chunk_, static_cast<size_t>(ip_ - chunk_->Begin()));
 #endif
@@ -44,20 +47,48 @@ InterpretResult VirtualMachine::Run() {
             case AS_BYTE(OpCode::Constant): {
                 value_t constant = READ_CONSTANT();
                 value_stack_.push(constant);
-
+                break;
+            }
+            case AS_BYTE(OpCode::Negate): {
+                value_t constant = value_stack_.pop_one();
+                value_stack_.push(-constant);
+                break;
+            }
+            case AS_BYTE(OpCode::Add): {
+                BINARY_OP(+);
+                break;
+            }
+            case AS_BYTE(OpCode::Subtract): {
+                BINARY_OP(-);
+                break;
+            }
+            case AS_BYTE(OpCode::Multiply): {
+                BINARY_OP(*);
+                break;
+            }
+            case AS_BYTE(OpCode::Divide): {
+                BINARY_OP(/);
                 break;
             }
             case AS_BYTE(OpCode::Return): {
-                value_t constant = value_stack_.top();
-                value_stack_.pop();
-                PrintValue(constant);
-                printf("\n");
+                if (!value_stack_.empty()) {
+                    value_t constant = value_stack_.pop_one();
+                    PrintValue(constant);
+                    printf("\n");
+                }
                 return InterpretResult::Ok;
             }
         }
     }
-#undef READ_BYTE
-#undef READ_CONSTANT
 }
 
+void StackTracer::TraceStack(const Stack<value_t>& stack) {
+    printf("          ");
+    for (auto it = stack.cbegin(); it != stack.cend(); it++) {
+        printf("[ ");
+        PrintValue((*it));
+        printf(" ]");
+    }
+    printf("\n");
+}
 }  // namespace angreal

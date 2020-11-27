@@ -3,7 +3,6 @@ set(LIBANGREAL_SOURCE
         debug.cpp
         value.cpp
         virtual_machine.cpp
-        stack.h
         )
 
 

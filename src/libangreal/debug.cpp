@@ -41,6 +41,16 @@ size_t disassembleInstruction(Chunk* chunk, size_t offset) {
     switch (instruction) {
         case AS_BYTE(OpCode::Return):
             return simpleInstruction("OP_RETURN", offset);
+        case AS_BYTE(OpCode::Negate):
+            return simpleInstruction("OP_NEGATE", offset);
+        case AS_BYTE(OpCode::Add):
+            return simpleInstruction("OP_ADD", offset);
+        case AS_BYTE(OpCode::Subtract):
+            return simpleInstruction("OP_SUBTRACT", offset);
+        case AS_BYTE(OpCode::Multiply):
+            return simpleInstruction("OP_MULTIPLY", offset);
+        case AS_BYTE(OpCode::Divide):
+            return simpleInstruction("OP_DIVIDE", offset);
         case AS_BYTE(OpCode::Constant):
             return constantInstruction("OP_CONSTANT", chunk, offset);
         default:

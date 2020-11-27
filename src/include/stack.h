@@ -16,6 +16,11 @@ class Stack : public std::stack<T, Container> {
     inline constexpr auto cbegin() const { return std::cbegin(c); }
     inline constexpr auto cend() const { return std::cend(c); }
 
+    inline auto pop_one() {
+        auto val = this->top();
+        this->pop();
+        return val;
+    }
     void reset() { c.clear(); };
 };
 }  // namespace angreal

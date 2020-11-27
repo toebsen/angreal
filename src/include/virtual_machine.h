@@ -18,9 +18,13 @@ enum class InterpretResult : uint8_t {
     RuntimeError,
 };
 
+class StackTracer;
+
 class VirtualMachine final {
    public:
-    VirtualMachine() = default;
+    using ValueStack = Stack<value_t>;
+
+    VirtualMachine(StackTracer& stack_tracer);
 
     VirtualMachine(const VirtualMachine& other) = delete;
     VirtualMachine(VirtualMachine&& other) = delete;
@@ -33,13 +37,22 @@ class VirtualMachine final {
 
     InterpretResult Interpret(Chunk* chunk);
 
-   protected:
-    InterpretResult Run();
-
     PRIVATE : Chunk* chunk_;
     uint8_t* ip_;
-    Stack<value_t> value_stack_;
+    ValueStack value_stack_;
+    StackTracer& stack_tracer_;
+
+   private:
+    InterpretResult Run();
 };
+
+class StackTracer {
+   public:
+    virtual ~StackTracer() = default;
+
+    virtual void TraceStack(const Stack<value_t>& stack);
+};
+
 }  // namespace angreal
 
 #endif  // ANGREAL_SRC_LIBANGREAL_VIRTUAL_MACHINE_H_

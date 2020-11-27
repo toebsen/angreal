@@ -12,6 +12,11 @@ namespace angreal {
 enum class OpCode : uint8_t {
     Return,
     Constant,
+    Negate,
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
 };
 
 struct Chunk final {

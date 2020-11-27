@@ -8,7 +8,7 @@ add_executable(${TEST_NAME}
 
         ${ANGREAL_INCLUDES})
 
-target_link_libraries(${TEST_NAME} libangreal gtest gtest_main)
+target_link_libraries(${TEST_NAME} libangreal gtest gmock gtest_main)
 target_include_directories(${TEST_NAME} PRIVATE ${ANGREAL_INCLUDE_DIR})
 set_mutable_for_testing(${TEST_NAME})
 
