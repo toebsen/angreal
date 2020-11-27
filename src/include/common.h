@@ -5,7 +5,10 @@
 #ifndef ANGREAL_SRC_COMMON_H_
 #define ANGREAL_SRC_COMMON_H_
 
+#include <deque>
+#include <memory>
 #include <ostream>
+#include <stack>
 #include <vector>
 
 #include <stdbool.h>

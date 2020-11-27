@@ -5,6 +5,8 @@
 #define ANGREAL_SRC_LIBANGREAL_VIRTUAL_MACHINE_H_
 
 #include "common.h"
+#include "stack.h"
+#include "value.h"
 
 namespace angreal {
 
@@ -36,6 +38,7 @@ class VirtualMachine final {
 
     PRIVATE : Chunk* chunk_;
     uint8_t* ip_;
+    Stack<value_t> value_stack_;
 };
 }  // namespace angreal
 

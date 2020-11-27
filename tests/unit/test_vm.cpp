@@ -14,7 +14,9 @@ class UtVMTest : public testing::Test {
    protected:
     void SetUp() override { vm.Init(); };
     void TearDown() override { vm.DeInit(); };
+
     const value_t kArbitraryValue {42};
+    Chunk chunk;
     VirtualMachine vm;
 };
 
@@ -24,19 +26,18 @@ TEST_F(UtVMTest, WhenInitial_ThenNoValuesPresent) {
 }
 
 TEST_F(UtVMTest, WhenInterpretingReturn_ThenResultIsOk) {
-    Chunk chunk;
-
     chunk.WriteChunk(OpCode::Return, 0);
 
     ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
+    ASSERT_TRUE(vm.value_stack_.empty());
 }
 
 TEST_F(UtVMTest, WhenInterpretingConstant_ThenResultIsOk) {
-    Chunk chunk;
     auto address = chunk.Constants().Write(kArbitraryValue);
     chunk.WriteChunk(OpCode::Constant, 0);
     chunk.WriteChunk(address, 0);
-
     chunk.WriteChunk(OpCode::Return, 0);
+
     ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
+    ASSERT_EQ(1, vm.value_stack_.size());
 }
