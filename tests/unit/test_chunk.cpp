@@ -8,7 +8,9 @@
 
 using namespace angreal;
 
-class UtChunkTest : public testing::Test {
+using namespace ::testing;
+
+class UtChunkTest : public ::testing::Test {
    protected:
     Chunk chunk;
 };

@@ -7,29 +7,30 @@
 
 #include "chunk.h"
 
-namespace angreal::debug {
+namespace angreal {
 
-static int simpleInstruction(const char* name, size_t offset) {
-    printf("%s\n", name);
+int DebugTracer::simpleInstruction(const std::string& name, size_t offset) {
+    printf("%s\n", name.c_str());
     return offset + 1;
 }
 
-static int constantInstruction(const char* name, Chunk* chunk, size_t offset) {
+int DebugTracer::constantInstruction(const std::string& name, Chunk* chunk,
+                                     size_t offset) {
     auto constant = chunk->Get(offset + 1);
-    printf("%-16s %4d '", name, constant);
+    printf("%-16s %4d '", name.c_str(), constant);
     PrintValue(chunk->Constants().Get(constant));
     printf("'\n");
     return offset + 2;
 }
 
-void disassembleChunk(Chunk* chunk, const char* name) {
+void DebugTracer::disassembleChunk(Chunk* chunk, const char* name) {
     printf("== %s ==\n", name);
     for (int offset = 0; offset < chunk->Count();) {
         offset = disassembleInstruction(chunk, offset);
     }
 }
 
-size_t disassembleInstruction(Chunk* chunk, size_t offset) {
+size_t DebugTracer::disassembleInstruction(Chunk* chunk, size_t offset) {
     printf("%04d ", offset);
     if (offset > 0 && chunk->GetLine(offset) == chunk->GetLine(offset - 1)) {
         printf("   | ");
@@ -54,9 +55,22 @@ size_t disassembleInstruction(Chunk* chunk, size_t offset) {
         case AS_BYTE(OpCode::Constant):
             return constantInstruction("OP_CONSTANT", chunk, offset);
         default:
-            printf("Unknown opcode %d\n", instruction);
-            return offset + 1;
+            return unkownOpCode(instruction, offset);
     }
 }
 
+void DebugTracer::TraceStack(Stack<value_t>& stack) {
+    printf("          ");
+    for (auto it = stack.cbegin(); it != stack.cend(); it++) {
+        printf("[ ");
+        PrintValue((*it));
+        printf(" ]");
+    }
+    printf("\n");
+}
+
+int DebugTracer::unkownOpCode(uint8_t code, size_t offset) {
+    printf("Unknown opcode %d\n", code);
+    return offset + 1;
+}
 }  // namespace angreal::debug

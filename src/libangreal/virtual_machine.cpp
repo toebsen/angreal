@@ -18,8 +18,8 @@
 
 namespace angreal {
 
-VirtualMachine::VirtualMachine(StackTracer& stack_tracer)
-    : stack_tracer_(stack_tracer) {}
+VirtualMachine::VirtualMachine(DebugTracer& debug_tracer)
+    : debug_tracer_(debug_tracer) {}
 
 void VirtualMachine::Init() {
     chunk_ = nullptr;
@@ -39,8 +39,8 @@ InterpretResult VirtualMachine::Interpret(Chunk* chunk) {
 InterpretResult VirtualMachine::Run() {
     for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
-        stack_tracer_.TraceStack(value_stack_);
-        debug::disassembleInstruction(
+        debug_tracer_.TraceStack(value_stack_);
+        debug_tracer_.disassembleInstruction(
             chunk_, static_cast<size_t>(ip_ - chunk_->Begin()));
 #endif
         switch (READ_BYTE()) {
@@ -82,13 +82,4 @@ InterpretResult VirtualMachine::Run() {
     }
 }
 
-void StackTracer::TraceStack(const Stack<value_t>& stack) {
-    printf("          ");
-    for (auto it = stack.cbegin(); it != stack.cend(); it++) {
-        printf("[ ");
-        PrintValue((*it));
-        printf(" ]");
-    }
-    printf("\n");
-}
 }  // namespace angreal

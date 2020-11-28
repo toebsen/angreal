@@ -7,12 +7,13 @@
 #define DEBUG_TRACE_EXECUTION 1
 
 #include "chunk.h"
+#include "debug.h"
 #include "virtual_machine.h"
 
 using namespace angreal;
 
 int main(int argc, const char* argv[]) {
-    StackTracer tracer;
+    DebugTracer tracer;
     VirtualMachine vm(tracer);
 
     vm.Init();
