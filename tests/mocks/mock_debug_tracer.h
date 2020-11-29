@@ -12,12 +12,13 @@
 namespace angreal {
 namespace mocks {
 class MockDebugTracer : public DebugTracer {
-   public:
-    MOCK_METHOD(void, TraceStack, (VirtualMachine::ValueStack&));
+ public:
+  MOCK_METHOD(void, TraceStack, (VirtualMachine::ValueStack & ));
 
-    MOCK_METHOD(int, simpleInstruction, (const std::string&, size_t));
-    MOCK_METHOD(int, constantInstruction, (const std::string&, Chunk*, size_t));
-    MOCK_METHOD(int, unkownOpCode, (uint8_t, size_t));
+  MOCK_METHOD(int, SimpleInstruction, (const std::string&, size_t));
+  MOCK_METHOD(int, ConstantInstruction, (const std::string&, Chunk*, size_t));
+  MOCK_METHOD(int, UnknownOpCode, (uint8_t, size_t));
+  MOCK_METHOD(void, PrintPreamble, (Chunk * , size_t));
 };
 }  // namespace mocks
 }  // namespace angreal

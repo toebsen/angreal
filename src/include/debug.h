@@ -15,17 +15,17 @@ namespace angreal {
 struct Chunk;
 
 class DebugTracer {
-   public:
-    virtual ~DebugTracer() = default;
+ public:
+  virtual ~DebugTracer() = default;
 
-    virtual void disassembleChunk(Chunk* chunk, const char* name);
-    virtual size_t disassembleInstruction(Chunk* chunk, size_t offset);
-    virtual void TraceStack(Stack<value_t>& stack);
-
-    virtual int unkownOpCode(uint8_t code, size_t offset);
-    virtual int simpleInstruction(const std::string& name, size_t offset);
-    virtual int constantInstruction(const std::string& name, Chunk* chunk,
-                                    size_t offset);
+  virtual void DisassembleChunk(Chunk *chunk, const char *name);
+  virtual size_t DisassembleInstruction(Chunk *chunk, size_t offset);
+  virtual void TraceStack(Stack<value_t> &stack);
+  virtual void PrintPreamble(Chunk *chunk, size_t offset);
+  virtual int UnknownOpCode(uint8_t code, size_t offset);
+  virtual int SimpleInstruction(const std::string &name, size_t offset);
+  virtual int ConstantInstruction(const std::string &name, Chunk *chunk,
+                                  size_t offset);
 };
 
 }  // namespace angreal

@@ -9,6 +9,8 @@ include(.cmake/clang-tidy.cmake)
 include(.cmake/gtest.cmake)
 
 ########## Dependencies ##############
+set(THIRD_PARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party")
+include_directories("${THIRD_PARTY_DIR}/magic_enum")
 
 ########## Project ##############
 

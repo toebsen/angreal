@@ -5,118 +5,98 @@
 #define DEBUG_TRACE_EXECUTION
 
 #include <vector>
+#include <string>
 
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-#include "chunk.h"
-#include "mock_debug_tracer.h"
-#include "value.h"
-#include "virtual_machine.h"
+#include "ut_test_vm.h"
+
+#include "test_with_param.h"
 
 using namespace angreal;
-using namespace ::testing;
 
-using testing::_;
-using testing::ElementsAre;
-using testing::Invoke;
-using testing::NiceMock;
-using testing::WithArg;
-
-constexpr auto kOffsetPlusOne = [](size_t offset) -> int { return offset + 1; };
-constexpr auto kOffsetPlusTwo = [](size_t offset) -> int { return offset + 2; };
-
-class UtVMTest : public testing::Test {
-   protected:
-    void SetUp() override {
-        // setup mock for stack history
-        ON_CALL(mock_debug_tracer, TraceStack)
-            .WillByDefault(Invoke(this, &UtVMTest::AddStackToHistory));
-
-        ON_CALL(mock_debug_tracer, simpleInstruction)
-            .WillByDefault(WithArg<1>(Invoke(kOffsetPlusOne)));
-        ON_CALL(mock_debug_tracer, unkownOpCode)
-            .WillByDefault(WithArg<1>(Invoke(kOffsetPlusOne)));
-
-        ON_CALL(mock_debug_tracer, constantInstruction)
-            .WillByDefault(WithArg<2>(Invoke(kOffsetPlusTwo)));
-        vm.Init();
-    };
-
-    void TearDown() override {
-        ASSERT_TRUE(vm.value_stack_.empty());
-        vm.DeInit();
-    };
-
-    void AddStackToHistory(const VirtualMachine::ValueStack& vs) {
-        for (auto it = vs.cbegin(); it != vs.cend(); ++it) {
-            stack_history.push_back((*it));
-        }
-    }
-
-    const value_t kArbitraryValue {42};
-    NiceMock<mocks::MockDebugTracer> mock_debug_tracer;
-    Chunk chunk;
-    VirtualMachine vm {mock_debug_tracer};
-    std::vector<value_t> stack_history;
-};
+using ::testing::_;
+using ::testing::ElementsAre;
 
 TEST_F(UtVMTest, WhenInitial_ThenNoValuesPresent) {
-    ASSERT_EQ(nullptr, vm.ip_);
-    ASSERT_EQ(nullptr, vm.chunk_);
+  ASSERT_EQ(nullptr, vm.ip_);
+  ASSERT_EQ(nullptr, vm.chunk_);
 }
 
 TEST_F(UtVMTest, WhenInterpretingReturn_ThenResultIsOk) {
-    chunk.WriteChunk(OpCode::Return, 0);
-    EXPECT_CALL(mock_debug_tracer, simpleInstruction("OP_RETURN", 0));
-    ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
+  chunk.WriteChunk(OpCode::Return, 0);
+  EXPECT_CALL(mock_debug_tracer, SimpleInstruction("Op_Return", 0));
+  ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
 }
 
 TEST_F(UtVMTest, WhenInterpretingConstant_ThenResultIsOk) {
-    auto address = chunk.Constants().Write(kArbitraryValue);
-    chunk.WriteChunk(OpCode::Constant, 0);
-    chunk.WriteChunk(address, 0);
-    chunk.WriteChunk(OpCode::Return, 0);
+  auto address = chunk.Constants().Write(kArbitraryValue);
+  chunk.WriteChunk(OpCode::Constant, 0);
+  chunk.WriteChunk(address, 0);
+  chunk.WriteChunk(OpCode::Return, 0);
 
-    EXPECT_CALL(mock_debug_tracer, constantInstruction("OP_CONSTANT", _, 0));
-    EXPECT_CALL(mock_debug_tracer, simpleInstruction("OP_RETURN", 2));
+  EXPECT_CALL(mock_debug_tracer, ConstantInstruction("Op_Constant", _, 0));
+  EXPECT_CALL(mock_debug_tracer, SimpleInstruction("Op_Return", 2));
 
-    ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
-    ASSERT_THAT(stack_history, ElementsAre(kArbitraryValue));
+  ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
+  ASSERT_THAT(stack_history, ElementsAre(kArbitraryValue));
 }
 
-TEST_F(UtVMTest, WhenInterpretingNegation_ThenResultIsOk) {
-    auto address = chunk.Constants().Write(kArbitraryValue);
-    chunk.WriteChunk(OpCode::Constant, 0);
-    chunk.WriteChunk(address, 0);
-    chunk.WriteChunk(OpCode::Negate, 0);
-    chunk.WriteChunk(OpCode::Return, 0);
+TEST_F(UtVMTest, WhenInterpretingBinaryOp_ThenResultIsOk) {
+  auto address = chunk.Constants().Write(kArbitraryValue);
+  chunk.WriteChunk(OpCode::Constant, 0);
+  chunk.WriteChunk(address, 0);
+  chunk.WriteChunk(OpCode::Negate, 0);
+  chunk.WriteChunk(OpCode::Return, 0);
 
-    EXPECT_CALL(mock_debug_tracer, constantInstruction("OP_CONSTANT", _, 0));
-    EXPECT_CALL(mock_debug_tracer, simpleInstruction("OP_NEGATE", 2));
-    EXPECT_CALL(mock_debug_tracer, simpleInstruction("OP_RETURN", 3));
+  EXPECT_CALL(mock_debug_tracer, ConstantInstruction("Op_Constant", _, 0));
+  EXPECT_CALL(mock_debug_tracer, SimpleInstruction("Op_Negate", 2));
+  EXPECT_CALL(mock_debug_tracer, SimpleInstruction("Op_Return", 3));
 
-    ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
-    ASSERT_THAT(stack_history, ElementsAre(kArbitraryValue, -kArbitraryValue));
+  ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
+  ASSERT_THAT(stack_history, ElementsAre(kArbitraryValue, -kArbitraryValue));
 }
 
-TEST_F(UtVMTest, WhenInterpretingAddition_ThenResultIsOk) {
-    auto address = chunk.Constants().Write(kArbitraryValue);
-    chunk.WriteChunk(OpCode::Constant, 0);
-    chunk.WriteChunk(address, 0);
-    auto address2 = chunk.Constants().Write(kArbitraryValue);
-    chunk.WriteChunk(OpCode::Constant, 0);
-    chunk.WriteChunk(address2, 0);
-    chunk.WriteChunk(OpCode::Add, 0);
-    chunk.WriteChunk(OpCode::Return, 0);
+namespace {
+struct BinaryOpTestConditions {
+  OpCode binary_op;
 
-    EXPECT_CALL(mock_debug_tracer, constantInstruction("OP_CONSTANT", _, 0));
-    EXPECT_CALL(mock_debug_tracer, constantInstruction("OP_CONSTANT", _, 2));
-    EXPECT_CALL(mock_debug_tracer, simpleInstruction("OP_ADD", 4));
-    EXPECT_CALL(mock_debug_tracer, simpleInstruction("OP_RETURN", 5));
+  std::string expected_binary_op_name;
+  value_t expected_result;
+};
 
-    ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
-    ASSERT_THAT(stack_history,
-                ElementsAre(kArbitraryValue, kArbitraryValue, kArbitraryValue,
-                            kArbitraryValue + kArbitraryValue));
+const BinaryOpTestConditions kBinaryOpTestConditions[] =
+    {
+        {OpCode::Add, "Op_Add", 2 * UtVMTest::kArbitraryValue},
+        {OpCode::Subtract, "Op_Subtract", 0},
+        {OpCode::Divide, "Op_Divide", 1},
+        {OpCode::Multiply, "Op_Multiply", UtVMTest::kArbitraryValue * UtVMTest::kArbitraryValue},
+    };
+}
+
+using UtVMTest_P = TestWithParam<UtVMTest, BinaryOpTestConditions>;
+
+INSTANTIATE_TEST_SUITE_P(WithAllBinaryOps,
+                         UtVMTest_P,
+                         testing::ValuesIn(kBinaryOpTestConditions));
+
+TEST_P(UtVMTest_P, WhenInterpretingAddition_ThenResultIsOk) {
+  auto address = chunk.Constants().Write(kArbitraryValue);
+  chunk.WriteChunk(OpCode::Constant, 0);
+  chunk.WriteChunk(address, 0);
+  auto address2 = chunk.Constants().Write(kArbitraryValue);
+  chunk.WriteChunk(OpCode::Constant, 0);
+  chunk.WriteChunk(address2, 0);
+  chunk.WriteChunk(test_vector_.binary_op, 0);
+  chunk.WriteChunk(OpCode::Return, 0);
+
+  EXPECT_CALL(mock_debug_tracer, ConstantInstruction("Op_Constant", _, 0));
+  EXPECT_CALL(mock_debug_tracer, ConstantInstruction("Op_Constant", _, 2));
+  EXPECT_CALL(mock_debug_tracer, SimpleInstruction(test_vector_.expected_binary_op_name, 4));
+  EXPECT_CALL(mock_debug_tracer, SimpleInstruction("Op_Return", 5));
+
+  ASSERT_EQ(InterpretResult::Ok, vm.Interpret(&chunk));
+  ASSERT_THAT(stack_history,
+              ElementsAre(kArbitraryValue, kArbitraryValue, kArbitraryValue,
+                          test_vector_.expected_result));
 }

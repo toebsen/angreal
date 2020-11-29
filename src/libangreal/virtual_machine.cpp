@@ -40,7 +40,7 @@ InterpretResult VirtualMachine::Run() {
     for (;;) {
 #ifdef DEBUG_TRACE_EXECUTION
         debug_tracer_.TraceStack(value_stack_);
-        debug_tracer_.disassembleInstruction(
+        debug_tracer_.DisassembleInstruction(
             chunk_, static_cast<size_t>(ip_ - chunk_->Begin()));
 #endif
         switch (READ_BYTE()) {
