@@ -40,7 +40,6 @@ The name is taken from the high fantasy series *Wheel Of Time* novels by Robert 
 
 ### Planned Features:
 
-- object orientation
 - move from **tree walk** to a **VM** interpreter
 
 ### Inspired by:
